@@ -53,6 +53,7 @@ TAD Mapa
         crearEst: mapa m × estacion a → mapa {a ∉ estaciones(m)}
         conectar: mapa m × estacion a × estacion b × restriccion → mapa
     otras operaciones
+        -- Se fija si es bloqueante poner al robot en la estacion e
         esBloqueante: mapa m × robot × estacion e → bool {e ∈ estaciones(m)}
         esBloqueante(m, r, e) ≡
             if ϕ?(conexiones(m, e)) then
@@ -71,6 +72,22 @@ ESTAMOS ASUMIENDO QUE NO HAY ESTACIONES NO CONEXAS
                     False
                 else
                     esBloqueante'(sinUno(c), r)
+                fi
+            fi
+
+        -- Se fija si la estacion b esta en las conexiones inmediatas de a
+        conectadas: mapa m × estacion a × estacion b → bool {a, b ∈ estaciones(m)}
+        conectadas(m, a, b) ≡ conectadas'(b, conexiones(m, a))
+
+        conectadas': estacion × conj(⟨estacion, restriccion⟩) → bool
+        conectadas'(a, c) ≡
+            if ϕ?(c) then
+                False
+            else
+                if π₁(dameUno(c)) ≡ a then
+                    True
+                else
+                    conectadas'(a, sinUno(c))
                 fi
             fi
     axiomas
@@ -106,6 +123,7 @@ TAMPOCO EN ESTE CASO
         mover: ciudad c × robot r × estacion e → ciudad {estaConectada(c, r, e)}
     otras operaciones
         infracciones: ciudad c × robot r → nat {r ∈ robots(c)}
+
         estaConectada: ciudad c × robot r × estacion e → bool {r ∈ robots(c)}
     axiomas
         mapeo(nueva(m)) ≡ m
@@ -113,8 +131,8 @@ TAMPOCO EN ESTE CASO
         mapeo(mover(c, r, e)) ≡ mapeo(c)
 
         robots(nueva(m)) ≡ ϕ
-        robots(mover(c, r, e)) ≡ robots(c)
         robots(agregar(c, r, e)) ≡ r ∪ robots(c)
+        robots(mover(c, r, e)) ≡ robots(c)
 
         estacionActual(agregar(c, r', e), r) ≡
             if r ≡ r' then
@@ -128,4 +146,6 @@ TAMPOCO EN ESTE CASO
             else
                 estacionActual(c, r)
             fi
+
+        estaConectada(c, r, e) ≡ conectadas(mapeo(c), estacionActual(c, r), e)
 Fin TAD
