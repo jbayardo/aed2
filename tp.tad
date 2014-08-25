@@ -101,8 +101,11 @@ TAD Ciudad
     generadores
         nueva: mapa → ciudad
 TODO: ACA NO DICE NADA SOBRE QUE LA ESTACION TIENE QUE PERTENECER AL MAPA
+
         agregar: ciudad c × robot r × estacion e → ciudad {r ∉ robots(c) ∧ ¬esBloqueante(mapeo(c), r, e)}
+
 TAMPOCO EN ESTE CASO
+
         mover: ciudad c × robot r × estacion e → ciudad {estaConectada(c, r, e)}
     otras operaciones
         infracciones: ciudad c × robot r → nat {r ∈ robots(c)}
@@ -128,4 +131,24 @@ TAMPOCO EN ESTE CASO
             else
                 estacionActual(c, r)
             fi
+
+        infracciones(agregar(c,r', e), r) ≡ 0
+        infracciones(mover(c, r', e), r) ≡ 
+            if r ≡ r' then
+                if ¬cumple(dameRestriccion(conexiones(mapeo(c), estacionActual(c, r')), e)) then
+                    1 + infracciones(c, r)
+                else
+                    infracciones(c, r)
+                fi
+            else
+                infracciones(c,r)
+            fi
+
+        dameRestriccion: conj(⟨estacion, restriccion⟩) c x estacion e -> restriccion {¬ ϕ?(c) ∧ e ∈ c ???}
+        dameRestriccion(c, e) ≡ if π₁(dameUno(c)) ≡ e then 
+                                    π₂(dameUno(c))
+                                else 
+                                    dameRestriccion(sinUno(c), e) 
+                                fi 
+
 Fin TAD
