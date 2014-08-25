@@ -1,0 +1,71 @@
+TAD rur ES nat
+TAD caracteristica ES string
+
+TAD Robot
+    generos robot
+    igualdad observacional
+        (∀r₁, r₂ : robot) (r₁ =obs r₂ ↔ id(r₁) =obs id(r₂))
+    observadores basicos
+        id: robot → rur
+        caracteristicas: robot → conj(caracteristica)
+    generadores
+        crear: rur × conj(caracteristica) → robot
+    axiomas
+        id(crear(r, e, c)) ≡ r
+        caracteristicas(crear(r, e, c)) ≡ c
+Fin TAD
+
+TAD Restriccion
+    generos restriccion
+    igualdad observacional
+        ??? Preguntar si hace falta.
+    observadores basicos
+        cumple: robot × restriccion → bool
+    generadores
+        AND: restriccion × restriccion → restriccion
+        OR: restriccion × restriccion → restriccion
+        NOT: restriccion → restriccion
+        VAR: caracteristica → restriccion
+    axiomas
+        cumple(r, VAR(c)) ≡ c ∈ caracteristicas(r)
+        cumple(r, NOT(c)) ≡ ¬(cumple(r, c))
+        cumple(r, AND(c1, c2)) ≡ cumple(r, c1) ∧ cumple(r, c2)
+        cumple(r, OR(c1, c2)) ≡ cumple(r, c1) ∨ cumple(r, c2)
+Fin TAD
+
+TAD Estacion
+    generos estacion
+    igualdad observacional
+    observadores basicos
+    generadores
+    axiomas
+Fin TAD
+
+TAD Senda
+    generos senda
+    igualdad observacional
+        (∀ s₁, s₂ : senda) (
+            (izquierda(s₁) =obs izquierda(s₂) ∨ izquierda(s₁) =obs derecha(s₂)) ∧
+            (derecha(s₁) =obs izquierda(s₂) ∨ derecha(s₁) =obs derecha(s₂)) ∧
+            restricciones(s₁) =obs restricciones(s₂))
+        -- LA RESTRICCION NO TIENE IGUALDAD
+    observadores basicos
+        izquierda: senda → estacion
+        derecha: senda → estacion
+        restricciones: senda → restriccion
+    generadores
+        crearSenda: estacion a × estacion b × restriccion → senda {a ≢ b}
+    axiomas
+Fin TAD
+
+TAD Ciudad
+    generos ciudad
+    igualdad observacional
+    observadores basicos
+    generadores
+        nueva: → ciudad
+        agregarEstacion: ciudad × estacion → ciudad
+        agregarSenda: ciudad × senda → ciudad
+    axiomas
+
+Fin TAD
