@@ -3,20 +3,23 @@ TAD caracteristica ES string
 
 TAD Robot
     generos robot
+    exporta id, caracteristicas, instanciar
     igualdad observacional
-        (∀r₁, r₂ : robot) (r₁ =obs r₂ ↔ id(r₁) =obs id(r₂))
+        (∀r₁, r₂ : robot) (r₁ =obs r₂ ↔
+            id(r₁) =obs id(r₂) ∧ caracteristicas(r₁) =obs caracteristicas(r₂))
     observadores basicos
         id: robot → rur
         caracteristicas: robot → conj(caracteristica)
     generadores
-        crear: rur × conj(caracteristica) → robot
+        instanciar: rur × conj(caracteristica) → robot
     axiomas
-        id(crear(r, e, c)) ≡ r
-        caracteristicas(crear(r, e, c)) ≡ c
+        id(instanciar(r, e, c)) ≡ r
+        caracteristicas(instanciar(r, e, c)) ≡ c
 Fin TAD
 
 TAD Restriccion
     generos restriccion
+    exporta AND, OR, NOT, VAR, cumple
     igualdad observacional
         ??? Preguntar si hace falta.
     observadores basicos
@@ -30,42 +33,99 @@ TAD Restriccion
         cumple(r, VAR(c)) ≡ c ∈ caracteristicas(r)
         cumple(r, NOT(c)) ≡ ¬(cumple(r, c))
         cumple(r, AND(c1, c2)) ≡ cumple(r, c1) ∧ cumple(r, c2)
-        cumple(r, OR(c1, c2)) ≡ cumple(r, c1) ∨ cumple(r, c2)
+        cumple(r, OR(c1, c2)) ≡ cumple(r, c1) ∨ₗ cumple(r, c2)
 Fin TAD
 
-TAD Estacion
-    generos estacion
-    igualdad observacional
-    observadores basicos
-    generadores
-    axiomas
-Fin TAD
+TAD estacion ES string
 
-TAD Senda
-    generos senda
+TAD Mapa
+    generos mapa
+    exporta nuevo, crearEst, conectar, esBloqueante
     igualdad observacional
-        (∀ s₁, s₂ : senda) (
-            (izquierda(s₁) =obs izquierda(s₂) ∨ izquierda(s₁) =obs derecha(s₂)) ∧
-            (derecha(s₁) =obs izquierda(s₂) ∨ derecha(s₁) =obs derecha(s₂)) ∧
-            restricciones(s₁) =obs restricciones(s₂))
-        -- LA RESTRICCION NO TIENE IGUALDAD
+        (∀ m₁, m₂ : mapa) (m₁ =obs m₂ ↔
+            estaciones(m₁) =obs estaciones(m₂) ∧ₗ
+            (∀ e ∈ estaciones(m₁)) (conexiones(m₁, e) =obs conexiones(m₂, e)))
     observadores basicos
-        izquierda: senda → estacion
-        derecha: senda → estacion
-        restricciones: senda → restriccion
+        estaciones: mapa → conj(estacion)
+        conexiones: mapa m × estacion e → conj(⟨estacion, restriccion⟩) {e ∈ estaciones(m)}
     generadores
-        crearSenda: estacion a × estacion b × restriccion → senda {a ≢ b}
+        nuevo: → mapa
+        crearEst: mapa m × estacion a → mapa {a ∉ estaciones(m)}
+        conectar: mapa m × estacion a × estacion b × restriccion → mapa
+    otras operaciones
+        esBloqueante: mapa m × robot × estacion e → bool {e ∈ estaciones(m)}
+        esBloqueante(m, r, e) ≡
+            if ϕ?(conexiones(m, e)) then
+                False
+            else
+                esBloqueante'(conexiones(m, e), r)
+            fi
+
+ESTAMOS ASUMIENDO QUE NO HAY ESTACIONES NO CONEXAS
+        esBloqueante': conj(⟨estacion, restriccion⟩) × robot → bool
+        esBloqueante'(c, r) ≡
+            if ϕ?(c) then
+                True
+            else
+                if cumple(r, π₂(dameUno(c))) then
+                    False
+                else
+                    esBloqueante'(sinUno(c), r)
+                fi
+            fi
     axiomas
+        conexiones(crearEst(m, e)) ≡ ϕ
+        conexiones(conectar(m, a, b, r), e) ≡
+            if e ≡ a then
+                ⟨b, r⟩ ∪ conexiones(m, e)
+            else
+                if e ≡ b then
+                    ⟨a, r⟩ ∪ conexiones(m, e)
+                else
+                    conexiones(m, e)
+                fi
+            fi
+
+        estaciones(nuevo) ≡ ϕ
+        estaciones(crearEst(m, e)) ≡ { e } ∪ estaciones(m)
+        estaciones(conectar(m, a, b)) ≡ estaciones(m)
 Fin TAD
 
 TAD Ciudad
     generos ciudad
     igualdad observacional
     observadores basicos
+        mapeo: ciudad → mapa
+        robots: ciudad → conj(robot)
+        estacionActual: ciudad c × robot r → estacion {r ∈ robots(c)}
     generadores
-        nueva: → ciudad
-        agregarEstacion: ciudad × estacion → ciudad
-        agregarSenda: ciudad × senda → ciudad
+        nueva: mapa → ciudad
+TODO: ACA NO DICE NADA SOBRE QUE LA ESTACION TIENE QUE PERTENECER AL MAPA
+        agregar: ciudad c × robot r × estacion e → ciudad {r ∉ robots(c) ∧ ¬esBloqueante(mapeo(c), r, e)}
+TAMPOCO EN ESTE CASO
+        mover: ciudad c × robot r × estacion e → ciudad {estaConectada(c, r, e)}
+    otras operaciones
+        infracciones: ciudad c × robot r → nat {r ∈ robots(c)}
+        estaConectada: ciudad c × robot r × estacion e → bool {r ∈ robots(c)}
     axiomas
+        mapeo(nueva(m)) ≡ m
+        mapeo(agregar(c, r, e)) ≡ mapeo(c)
+        mapeo(mover(c, r, e)) ≡ mapeo(c)
 
+        robots(nueva(m)) ≡ ϕ
+        robots(mover(c, r, e)) ≡ robots(c)
+        robots(agregar(c, r, e)) ≡ r ∪ robots(c)
+
+        estacionActual(agregar(c, r', e), r) ≡
+            if r ≡ r' then
+                e
+            else
+                estacionActual(c, r)
+            fi
+        estacionActual(mover(c, r', e), r) ≡
+            if r ≡ r' then
+                e
+            else
+                estacionActual(c, r)
+            fi
 Fin TAD
