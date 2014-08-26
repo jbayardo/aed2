@@ -13,8 +13,8 @@ TAD Robot
     generadores
         instanciar: rur × conj(caracteristica) → robot
     axiomas
-        id(instanciar(r, e, c)) ≡ r
-        caracteristicas(instanciar(r, e, c)) ≡ c
+        id(instanciar(r, c)) ≡ r
+        caracteristicas(instanciar(r, c)) ≡ c
 Fin TAD
 
 TAD Restriccion
@@ -62,7 +62,6 @@ TAD Mapa
                 esBloqueante'(conexiones(m, e), r)
             fi
 
-ESTAMOS ASUMIENDO QUE NO HAY ESTACIONES NO CONEXAS
         esBloqueante': conj(⟨estacion, restriccion⟩) × robot → bool
         esBloqueante'(c, r) ≡
             if ϕ?(c) then
@@ -91,7 +90,7 @@ ESTAMOS ASUMIENDO QUE NO HAY ESTACIONES NO CONEXAS
                 fi
             fi
     axiomas
-        conexiones(crearEst(m, e)) ≡ ϕ
+        conexiones(crearEst(m, e), k) ≡ ϕ
         conexiones(conectar(m, a, b, r), e) ≡
             if e ≡ a then
                 ⟨b, r⟩ ∪ conexiones(m, e)
@@ -123,7 +122,6 @@ TAMPOCO EN ESTE CASO
         mover: ciudad c × robot r × estacion e → ciudad {estaConectada(c, r, e)}
     otras operaciones
         infracciones: ciudad c × robot r → nat {r ∈ robots(c)}
-
         estaConectada: ciudad c × robot r × estacion e → bool {r ∈ robots(c)}
     axiomas
         mapeo(nueva(m)) ≡ m
@@ -140,12 +138,32 @@ TAMPOCO EN ESTE CASO
             else
                 estacionActual(c, r)
             fi
+
         estacionActual(mover(c, r', e), r) ≡
             if r ≡ r' then
                 e
             else
                 estacionActual(c, r)
             fi
+
+        infracciones(agregar(c,r', e), r) ≡ 0
+        infracciones(mover(c, r', e), r) ≡
+            if r ≡ r' then
+                if ¬cumple(dameRestriccion(conexiones(mapeo(c), estacionActual(c, r')), e)) then
+                    1 + infracciones(c, r)
+                else
+                    infracciones(c, r)
+                fi
+            else
+                infracciones(c,r)
+            fi
+
+        dameRestriccion: conj(⟨estacion, restriccion⟩) c x estacion e -> restriccion {¬ ϕ?(c) ∧ e ∈ c ???}
+        dameRestriccion(c, e) ≡ if π₁(dameUno(c)) ≡ e then
+                                    π₂(dameUno(c))
+                                else
+                                    dameRestriccion(sinUno(c), e)
+                                fi
 
         estaConectada(c, r, e) ≡ conectadas(mapeo(c), estacionActual(c, r), e)
 Fin TAD
