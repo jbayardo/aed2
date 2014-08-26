@@ -21,7 +21,7 @@ TAD Restriccion
     generos restriccion
     exporta AND, OR, NOT, VAR, cumple
     igualdad observacional
-        ??? Preguntar si hace falta.
+??? Preguntar si hace falta.
     observadores basicos
         cumple: robot × restriccion → bool
     generadores
@@ -33,7 +33,7 @@ TAD Restriccion
         cumple(r, VAR(c)) ≡ c ∈ caracteristicas(r)
         cumple(r, NOT(c)) ≡ ¬(cumple(r, c))
         cumple(r, AND(c1, c2)) ≡ cumple(r, c1) ∧ cumple(r, c2)
-        cumple(r, OR(c1, c2)) ≡ cumple(r, c1) ∨ₗ cumple(r, c2)
+        cumple(r, OR(c1, c2)) ≡ cumple(r, c1) ∨ cumple(r, c2)
 Fin TAD
 
 TAD estacion ES string
@@ -100,13 +100,8 @@ TAD Ciudad
         estacionActual: ciudad c × robot r → estacion {r ∈ robots(c)}
     generadores
         nueva: mapa → ciudad
-TODO: ACA NO DICE NADA SOBRE QUE LA ESTACION TIENE QUE PERTENECER AL MAPA
-
-        agregar: ciudad c × robot r × estacion e → ciudad {r ∉ robots(c) ∧ ¬esBloqueante(mapeo(c), r, e)}
-
-TAMPOCO EN ESTE CASO
-
-        mover: ciudad c × robot r × estacion e → ciudad {estaConectada(c, r, e)}
+        agregar: ciudad c × robot r × estacion e → ciudad {r ∉ robots(c) ∧ e ∈ estaciones(mapeo(c)) ∧ₗ ¬esBloqueante(mapeo(c), r, e)}
+        mover: ciudad c × robot r × estacion e → ciudad {r ∈ robots(c) ∧ₗ estaConectada(c, r, e)}
     otras operaciones
         infracciones: ciudad c × robot r → nat {r ∈ robots(c)}
         estaConectada: ciudad c × robot r × estacion e → bool {r ∈ robots(c)}
@@ -133,7 +128,7 @@ TAMPOCO EN ESTE CASO
             fi
 
         infracciones(agregar(c,r', e), r) ≡ 0
-        infracciones(mover(c, r', e), r) ≡ 
+        infracciones(mover(c, r', e), r) ≡
             if r ≡ r' then
                 if ¬cumple(dameRestriccion(conexiones(mapeo(c), estacionActual(c, r')), e)) then
                     1 + infracciones(c, r)
@@ -145,10 +140,10 @@ TAMPOCO EN ESTE CASO
             fi
 
         dameRestriccion: conj(⟨estacion, restriccion⟩) c x estacion e -> restriccion {¬ ϕ?(c) ∧ e ∈ c ???}
-        dameRestriccion(c, e) ≡ if π₁(dameUno(c)) ≡ e then 
+        dameRestriccion(c, e) ≡ if π₁(dameUno(c)) ≡ e then
                                     π₂(dameUno(c))
-                                else 
-                                    dameRestriccion(sinUno(c), e) 
-                                fi 
+                                else
+                                    dameRestriccion(sinUno(c), e)
+                                fi
 
 Fin TAD
