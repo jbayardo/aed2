@@ -122,8 +122,6 @@ TAD Mapa
             fi
 Fin TAD
 
--- TODO: Los RUR tienen que ser asignados automaticamente. Idea de que agregar
--- use solo caracteristicas.
 -- TODO: preguntar si podemos usar maybe...
 -- NOTA: las estaciones podrian no devolver ningun robot, hence Maybe.
 
@@ -196,9 +194,9 @@ TAD Ciudad
                 historial(c, r)
             fi
 
-        historial(mover(c, r', e), r) ≡
+        historial(mover(c, r', x), r) ≡
             if r ≡ r' then
-                apilar(e, historial(c, r))
+                apilar(x, historial(c, r))
             else
                 historial(c, r)
             fi
@@ -223,7 +221,6 @@ TAD Ciudad
             conectadas(mapeo(c), tope(historial(c, r)), π₁(x)) ∧ₗ
             π₂(x) ∈ caminos(mapeo(c), tope(historial(c, r)), π₁(x))
 
-        -- PREGUNTAR: si todos tienen 0 infracciones, devuelve cualquiera de ellos...
         inspeccion: ciudad c × estacion e → Maybe(robot) {e ∈ estaciones(mapeo(c))}
         inspeccion(c, e) ≡
             if ϕ?(obtenerRobots(c, e)) then
@@ -232,11 +229,11 @@ TAD Ciudad
                 maxInf(dameUno(obtenerRobots(c, e)), sinUno(obtenerRobots(c, e)))
             fi
 
-        maxInf: ⟨robot, nat⟩ → conj(⟨robot, nat⟩) → maybe(robot)
+        maxInf: ⟨robot, nat⟩ × conj(⟨robot, nat⟩) → maybe(robot)
         maxInf(r, cs) ≡
             if ϕ?(cs) then
                 if π₂(r) > 0 then
-                    π₁(r)
+                    just(π₁(r))
                 else
                     nothing
             else
@@ -264,7 +261,7 @@ TAD Ciudad
 
         infracciones(c, r) ≡ infracciones'(cars(r), historial(c, r))
 
-        infracciones': caracteristicas → pila(conexion) → nat
+        infracciones': caracteristicas × pila(conexion) → nat
         infracciones'(c, p) ≡
             if tamaño(p) ≤ 1 then
                 0
