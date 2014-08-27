@@ -39,26 +39,25 @@ TAD Restriccion
 Fin TAD
 
 TAD estacion ES string
+TAD conexion ES ⟨estacion, restriccion⟩
 
 TAD Mapa
     generos mapa
-    exporta nuevo, crearEst, conectar, esBloqueante
     igualdad observacional
         (∀ m₁, m₂ : mapa) (m₁ =obs m₂ ↔
             estaciones(m₁) =obs estaciones(m₂) ∧ₗ
             (∀ e ∈ estaciones(m₁)) (conexiones(m₁, e) =obs conexiones(m₂, e)))
     observadores basicos
         estaciones: mapa → conj(estacion)
-        conexiones: mapa m × estacion e → conj(⟨estacion, restriccion⟩) {e ∈ estaciones(m)}
+        conexiones: mapa m × estacion e → conj(conexion) {e ∈ estaciones(m)}
     generadores
         nuevo: → mapa
         crearEst: mapa m × estacion a → mapa {a ∉ estaciones(m)}
-        conectar: mapa m × estacion a × estacion b × restriccion → mapa
+        conectar: mapa m × estacion a × estacion b × restriccion → mapa {a, b ∈ estaciones(m)}
     otras operaciones
         esBloqueante: mapa m × caracteristicas × estacion e → bool {e ∈ estaciones(m)}
-        esBloqueante': conj(⟨estacion, restriccion⟩) × caracteristicas → bool
         conectadas: mapa m × estacion a × estacion b → bool {a, b ∈ estaciones(m)}
-        conectadas': estacion × conj(⟨estacion, restriccion⟩) → bool
+        caminos: mapa m × estacion a × estacion b → conj(restriccion) {a, b ∈ estaciones(m) ∧ conectadas(m, a, b)}
     axiomas
         conexiones(crearEst(m, e), k) ≡ ϕ
         conexiones(conectar(m, a, b, r), e) ≡
@@ -108,6 +107,19 @@ TAD Mapa
                     conectadas'(a, sinUno(c))
                 fi
             fi
+
+        caminos(m, a, b) ≡ caminos'(b, conexiones(m, a))
+
+        caminos'(a, c) ≡
+            if ϕ?(c) then
+                ϕ
+            else
+                if π₁(dameUno(c)) ≡ a then
+                    π₂(dameUno(c)) ∪ caminos'(a, sinUno(c))
+                else
+                    caminos'(a, sinUno(c))
+                fi
+            fi
 Fin TAD
 
 -- TODO: Los RUR tienen que ser asignados automaticamente. Idea de que agregar
@@ -150,18 +162,19 @@ TAD Ciudad
     observadores basicos
         mapeo: ciudad → mapa
         robots: ciudad → conj(robot)
-        historial: ciudad c × robot r → pila(estacion) {r ∈ robots(c)}
+        historial: ciudad c × robot r → pila(conexion) {r ∈ robots(c)}
     generadores
         nueva: mapa → ciudad
         agregar: ciudad c × caracteristicas cs × estacion e → ciudad {e ∈ estaciones(mapeo(c)) ∧ₗ ¬esBloqueante(mapeo(c), cs, e)}
-        mover: ciudad c × robot r × estacion e → ciudad {r ∈ robots(c) ∧ₗ estaConectada(c, r, e)}
+TODO: arreglar
+        mover: ciudad c × robot r × conexion x → ciudad {r ∈ robots(c) ∧ₗ esConexionValida(c, r, x)}
         borrar: ciudad c × robot r → ciudad {r ∈ robots(c)}
     otras operaciones
         ultimoId: ciudad c → rur {robots(c) ≠obs ϕ}
-        ultimoId': rur × conj(robot) → rur
         inspeccion: ciudad c × estacion e → Maybe(robot) {e ∈ estaciones(mapeo(c))}
         infracciones: ciudad c × robot r → nat {r ∈ robots(c)}
         estaConectada: ciudad c × robot r × estacion e → bool {r ∈ robots(c)}
+        esConexionValida: ciudad c × robot r × conexion x  →
     axiomas
         mapeo(nueva(m)) ≡ m
         mapeo(agregar(c, r, e)) ≡ mapeo(c)
@@ -180,7 +193,7 @@ TAD Ciudad
 
         historial(agregar(c, r', e), r) ≡
             if id(r) ≡ ultimoId(c) + 1 then
-                apilar(e, vacia)
+                apilar(⟨e, cars(r')⟩, vacia)
             else
                 historial(c, r)
             fi
@@ -205,6 +218,21 @@ TAD Ciudad
                 fi
             fi
 
+        infracciones: ciudad c × robot r → nat {r ∈ robots(c)}
+        infracciones(c, r) ≡ infracciones'(cars(r), historial(c, r))
+
+        infracciones': caracteristicas → pila(estacion) → nat
+        infracciones'(c, p) ≡
+            if tamaño(p) ≤ 1 then
+                0
+            else
+                if  then
+                    1 + infracciones'(c, desapilar(p))
+                else
+                    infracciones'(c, desapilar(p))
+                fi
+            fi
+
 TODO: rehacer esto
         infracciones(agregar(c,r', e), r) ≡ 0
         infracciones(mover(c, r', e), r) ≡
@@ -218,7 +246,7 @@ TODO: rehacer esto
                 infracciones(c,r)
             fi
 
-        dameRestriccion: conj(⟨estacion, restriccion⟩) c x estacion e -> restriccion {¬ ϕ?(c) ∧ e ∈ c ???}
+        dameRestriccion: conj(conexion) c x estacion e -> restriccion {¬ ϕ?(c) ∧ e ∈ c ???}
         dameRestriccion(c, e) ≡
             if π₁(dameUno(c)) ≡ e then
                 π₂(dameUno(c))
