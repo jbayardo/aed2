@@ -174,7 +174,7 @@ TODO: arreglar
         inspeccion: ciudad c × estacion e → Maybe(robot) {e ∈ estaciones(mapeo(c))}
         infracciones: ciudad c × robot r → nat {r ∈ robots(c)}
         estaConectada: ciudad c × robot r × estacion e → bool {r ∈ robots(c)}
-        esConexionValida: ciudad c × robot r × conexion x  →
+        esConexionValida: ciudad c × robot r × conexion x  → --TODO: Y aca que va?
     axiomas
         mapeo(nueva(m)) ≡ m
         mapeo(agregar(c, r, e)) ≡ mapeo(c)
