@@ -166,15 +166,13 @@ TAD Ciudad
     generadores
         nueva: mapa → ciudad
         agregar: ciudad c × caracteristicas cs × estacion e → ciudad {e ∈ estaciones(mapeo(c)) ∧ₗ ¬esBloqueante(mapeo(c), cs, e)}
-TODO: arreglar
-        mover: ciudad c × robot r × conexion x → ciudad {r ∈ robots(c) ∧ₗ esConexionValida(c, r, x)}
+        mover: ciudad c × robot r × conexion x → ciudad {esConexionValida(c, r, x)}
         borrar: ciudad c × robot r → ciudad {r ∈ robots(c)}
     otras operaciones
         ultimoId: ciudad c → rur {robots(c) ≠obs ϕ}
-        inspeccion: ciudad c × estacion e → Maybe(robot) {e ∈ estaciones(mapeo(c))}
+        esConexionValida: ciudad c × robot r × conexion → bool
+        -------inspeccion: ciudad c × estacion e → Maybe(robot) {e ∈ estaciones(mapeo(c))}
         infracciones: ciudad c × robot r → nat {r ∈ robots(c)}
-        estaConectada: ciudad c × robot r × estacion e → bool {r ∈ robots(c)}
-        esConexionValida: ciudad c × robot r × conexion x  →
     axiomas
         mapeo(nueva(m)) ≡ m
         mapeo(agregar(c, r, e)) ≡ mapeo(c)
@@ -207,6 +205,7 @@ TODO: arreglar
 
         ultimoId(c) ≡ ultimoId'(id(dameUno(robots(c))), sinUno(robots(c)))
 
+        ultimoId': rur × conj(robot) → rur
         ultimoId'(m, c) ≡
             if ϕ?(c) then
                 m
@@ -218,41 +217,23 @@ TODO: arreglar
                 fi
             fi
 
-        infracciones: ciudad c × robot r → nat {r ∈ robots(c)}
+        esConexionValida(c, r, x) ≡
+            r ∈ robots(c) ∧ₗ
+            π₁(x) ∈ estaciones(mapeo(c)) ∧ₗ
+            conectadas(mapeo(c), tope(historial(c, r)), π₁(x)) ∧ₗ
+            π₂(x) ∈ caminos(mapeo(c), tope(historial(c, r)), π₁(x))
+
         infracciones(c, r) ≡ infracciones'(cars(r), historial(c, r))
 
-        infracciones': caracteristicas → pila(estacion) → nat
+        infracciones': caracteristicas → pila(conexion) → nat
         infracciones'(c, p) ≡
             if tamaño(p) ≤ 1 then
                 0
             else
-                if  then
+                if ¬cumple(c, π₂(tope(p))) then
                     1 + infracciones'(c, desapilar(p))
                 else
                     infracciones'(c, desapilar(p))
                 fi
             fi
-
-TODO: rehacer esto
-        infracciones(agregar(c,r', e), r) ≡ 0
-        infracciones(mover(c, r', e), r) ≡
-            if r ≡ r' then
-                if ¬cumple(dameRestriccion(conexiones(mapeo(c), estacionActual(c, r')), e)) then
-                    1 + infracciones(c, r)
-                else
-                    infracciones(c, r)
-                fi
-            else
-                infracciones(c,r)
-            fi
-
-        dameRestriccion: conj(conexion) c x estacion e -> restriccion {¬ ϕ?(c) ∧ e ∈ c ???}
-        dameRestriccion(c, e) ≡
-            if π₁(dameUno(c)) ≡ e then
-                π₂(dameUno(c))
-            else
-                dameRestriccion(sinUno(c), e)
-            fi
-
-        estaConectada(c, r, e) ≡ conectadas(mapeo(c), estacionActual(c, r), e)
 Fin TAD
