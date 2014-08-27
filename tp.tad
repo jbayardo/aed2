@@ -1,43 +1,41 @@
 TAD rur ES nat
 TAD caracteristica ES string
+TAD caracteristicas ES conj(caracteristica)
 
 -- La igualdad de robots es solo por RUR.
 TAD Robot
     generos robot
-    exporta id, caracteristicas, instanciar
+    exporta id, cars, instanciar
     igualdad observacional
         (∀r₁, r₂ : robot) (r₁ =obs r₂ ↔ id(r₁) =obs id(r₂))
     observadores basicos
         id: robot → rur
-        caracteristicas: robot → conj(caracteristica)
+        cars: robot → caracteristicas
     generadores
-        instanciar: rur × conj(caracteristica) → robot
+        instanciar: rur × caracteristicas → robot
     axiomas
-        id(instanciar(r, c)) ≡ r
-        caracteristicas(instanciar(r, c)) ≡ c
+        id(instanciar(r, cs)) ≡ r
+        cars(instanciar(r, cs)) ≡ cs
 Fin TAD
 
 TAD Restriccion
     generos restriccion
     exporta AND, OR, NOT, VAR, cumple
     igualdad observacional
-??? Preguntar si hace falta.
-        -- Esta es igualdad de la tabla de verdad, podria hacerse igualdad del
-        -- arbol sintactico, pero seria mas restrictiva.
         (∀ r₁, r₂ : restriccion) (r₁ =obs r₂ ↔
-            (∀ r : robot) (cumple(r, r₁) =obs cumple(r, r₂)))
+            (∀ c : caracteristicas) (cumple(c, r₁) =obs cumple(c, r₂)))
     observadores basicos
-        cumple: robot × restriccion → bool
+        cumple: caracteristicas × restriccion → bool
     generadores
         AND: restriccion × restriccion → restriccion
         OR: restriccion × restriccion → restriccion
         NOT: restriccion → restriccion
         VAR: caracteristica → restriccion
     axiomas
-        cumple(r, VAR(c)) ≡ c ∈ caracteristicas(r)
-        cumple(r, NOT(c)) ≡ ¬(cumple(r, c))
-        cumple(r, AND(c1, c2)) ≡ cumple(r, c1) ∧ cumple(r, c2)
-        cumple(r, OR(c1, c2)) ≡ cumple(r, c1) ∨ cumple(r, c2)
+        cumple(cs, VAR(c)) ≡ c ∈ cs
+        cumple(cs, NOT(c)) ≡ ¬(cumple(cs, c))
+        cumple(cs, AND(c1, c2)) ≡ cumple(cs, c1) ∧ cumple(cs, c2)
+        cumple(cs, OR(c1, c2)) ≡ cumple(cs, c1) ∨ cumple(cs, c2)
 Fin TAD
 
 TAD estacion ES string
@@ -57,8 +55,8 @@ TAD Mapa
         crearEst: mapa m × estacion a → mapa {a ∉ estaciones(m)}
         conectar: mapa m × estacion a × estacion b × restriccion → mapa
     otras operaciones
-        esBloqueante: mapa m × robot × estacion e → bool {e ∈ estaciones(m)}
-        esBloqueante': conj(⟨estacion, restriccion⟩) × robot → bool
+        esBloqueante: mapa m × caracteristicas × estacion e → bool {e ∈ estaciones(m)}
+        esBloqueante': conj(⟨estacion, restriccion⟩) × caracteristicas → bool
         conectadas: mapa m × estacion a × estacion b → bool {a, b ∈ estaciones(m)}
         conectadas': estacion × conj(⟨estacion, restriccion⟩) → bool
     axiomas
@@ -148,17 +146,19 @@ TAD Ciudad
     igualdad observacional
         (∀ c₁, c₂ : ciudad) (c₁ =obs c₂ ↔
             mapeo(c₁) =obs mapeo(c₂) ∧ robots(c₁) =obs robots(c₂) ∧ₗ
-            (∀ r ∈ robots(c₁)) (estacionActual(c₁, r) =obs estacionActual(c₂, r)))
+            (∀ r ∈ robots(c₁)) (historial(c₁, r) =obs historial(c₂, r)))
     observadores basicos
         mapeo: ciudad → mapa
         robots: ciudad → conj(robot)
-        estacionActual: ciudad c × robot r → estacion {r ∈ robots(c)}
+        historial: ciudad c × robot r → pila(estacion) {r ∈ robots(c)}
     generadores
         nueva: mapa → ciudad
-        agregar: ciudad c × robot r × estacion e → ciudad {r ∉ robots(c) ∧ e ∈ estaciones(mapeo(c)) ∧ₗ ¬esBloqueante(mapeo(c), r, e)}
+        agregar: ciudad c × caracteristicas cs × estacion e → ciudad {e ∈ estaciones(mapeo(c)) ∧ₗ ¬esBloqueante(mapeo(c), cs, e)}
         mover: ciudad c × robot r × estacion e → ciudad {r ∈ robots(c) ∧ₗ estaConectada(c, r, e)}
         borrar: ciudad c × robot r → ciudad {r ∈ robots(c)}
     otras operaciones
+        ultimoId: ciudad c → rur {robots(c) ≠obs ϕ}
+        ultimoId': rur × conj(robot) → rur
         inspeccion: ciudad c × estacion e → Maybe(robot) {e ∈ estaciones(mapeo(c))}
         infracciones: ciudad c × robot r → nat {r ∈ robots(c)}
         estaConectada: ciudad c × robot r × estacion e → bool {r ∈ robots(c)}
@@ -169,24 +169,43 @@ TAD Ciudad
         mapeo(borrar(c, r)) ≡ mapeo(c)
 
         robots(nueva(m)) ≡ ϕ
-        robots(agregar(c, r, e)) ≡ r ∪ robots(c)
+        robots(agregar(c, cs, e)) ≡
+            if ϕ?(robots(c)) then
+                { instanciar(1, cs) }
+            else
+                { instanciar(ultimoId(c) + 1, cs) } ∪ robots(c)
+            fi
         robots(mover(c, r, e)) ≡ robots(c)
         robots(borrar(c, r)) ≡ robots(c) - { r }
 
-        estacionActual(agregar(c, r', e), r) ≡
-            if r ≡ r' then
-                e
+        historial(agregar(c, r', e), r) ≡
+            if id(r) ≡ ultimoId(c) + 1 then
+                apilar(e, vacia)
             else
-                estacionActual(c, r)
+                historial(c, r)
             fi
 
-        estacionActual(mover(c, r', e), r) ≡
+        historial(mover(c, r', e), r) ≡
             if r ≡ r' then
-                e
+                apilar(e, historial(c, r))
             else
-                estacionActual(c, r)
+                historial(c, r)
             fi
 
+        ultimoId(c) ≡ ultimoId'(id(dameUno(robots(c))), sinUno(robots(c)))
+
+        ultimoId'(m, c) ≡
+            if ϕ?(c) then
+                m
+            else
+                if id(dameUno(c)) > m then
+                    ultimoId'(id(dameUno(c)), sinUno(c))
+                else
+                    ultimoId'(m, sinUno(c))
+                fi
+            fi
+
+TODO: rehacer esto
         infracciones(agregar(c,r', e), r) ≡ 0
         infracciones(mover(c, r', e), r) ≡
             if r ≡ r' then
