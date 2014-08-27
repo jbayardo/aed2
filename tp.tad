@@ -1,27 +1,31 @@
 TAD rur ES nat
 TAD caracteristica ES string
 
+-- La igualdad de robots es solo por RUR.
 TAD Robot
     generos robot
     exporta id, caracteristicas, instanciar
     igualdad observacional
-        (∀r₁, r₂ : robot) (r₁ =obs r₂ ↔
-            id(r₁) =obs id(r₂) ∧ caracteristicas(r₁) =obs caracteristicas(r₂))
+        (∀r₁, r₂ : robot) (r₁ =obs r₂ ↔ id(r₁) =obs id(r₂))
     observadores basicos
         id: robot → rur
         caracteristicas: robot → conj(caracteristica)
     generadores
         instanciar: rur × conj(caracteristica) → robot
     axiomas
-        id(instanciar(r, e, c)) ≡ r
-        caracteristicas(instanciar(r, e, c)) ≡ c
+        id(instanciar(r, c)) ≡ r
+        caracteristicas(instanciar(r, c)) ≡ c
 Fin TAD
 
 TAD Restriccion
     generos restriccion
     exporta AND, OR, NOT, VAR, cumple
     igualdad observacional
-        ??? Preguntar si hace falta.
+??? Preguntar si hace falta.
+        -- Esta es igualdad de la tabla de verdad, podria hacerse igualdad del
+        -- arbol sintactico, pero seria mas restrictiva.
+        (∀ r₁, r₂ : restriccion) (r₁ =obs r₂ ↔
+            (∀ r : robot) (cumple(r, r₁) =obs cumple(r, r₂)))
     observadores basicos
         cumple: robot × restriccion → bool
     generadores
@@ -33,7 +37,7 @@ TAD Restriccion
         cumple(r, VAR(c)) ≡ c ∈ caracteristicas(r)
         cumple(r, NOT(c)) ≡ ¬(cumple(r, c))
         cumple(r, AND(c1, c2)) ≡ cumple(r, c1) ∧ cumple(r, c2)
-        cumple(r, OR(c1, c2)) ≡ cumple(r, c1) ∨ₗ cumple(r, c2)
+        cumple(r, OR(c1, c2)) ≡ cumple(r, c1) ∨ cumple(r, c2)
 Fin TAD
 
 TAD estacion ES string
@@ -54,27 +58,11 @@ TAD Mapa
         conectar: mapa m × estacion a × estacion b × restriccion → mapa
     otras operaciones
         esBloqueante: mapa m × robot × estacion e → bool {e ∈ estaciones(m)}
-        esBloqueante(m, r, e) ≡
-            if ϕ?(conexiones(m, e)) then
-                False
-            else
-                esBloqueante'(conexiones(m, e), r)
-            fi
-
-ESTAMOS ASUMIENDO QUE NO HAY ESTACIONES NO CONEXAS
         esBloqueante': conj(⟨estacion, restriccion⟩) × robot → bool
-        esBloqueante'(c, r) ≡
-            if ϕ?(c) then
-                True
-            else
-                if cumple(r, π₂(dameUno(c))) then
-                    False
-                else
-                    esBloqueante'(sinUno(c), r)
-                fi
-            fi
+        conectadas: mapa m × estacion a × estacion b → bool {a, b ∈ estaciones(m)}
+        conectadas': estacion × conj(⟨estacion, restriccion⟩) → bool
     axiomas
-        conexiones(crearEst(m, e)) ≡ ϕ
+        conexiones(crearEst(m, e), k) ≡ ϕ
         conexiones(conectar(m, a, b, r), e) ≡
             if e ≡ a then
                 ⟨b, r⟩ ∪ conexiones(m, e)
@@ -89,25 +77,89 @@ ESTAMOS ASUMIENDO QUE NO HAY ESTACIONES NO CONEXAS
         estaciones(nuevo) ≡ ϕ
         estaciones(crearEst(m, e)) ≡ { e } ∪ estaciones(m)
         estaciones(conectar(m, a, b)) ≡ estaciones(m)
+
+        -- Se fija si es bloqueante poner al robot en la estacion e
+        esBloqueante(m, r, e) ≡
+            if ϕ?(conexiones(m, e)) then
+                False
+            else
+                esBloqueante'(conexiones(m, e), r)
+            fi
+
+        esBloqueante'(c, r) ≡
+            if ϕ?(c) then
+                True
+            else
+                if cumple(r, π₂(dameUno(c))) then
+                    False
+                else
+                    esBloqueante'(sinUno(c), r)
+                fi
+            fi
+
+        -- Se fija si la estacion b esta en las conexiones inmediatas de a
+        conectadas(m, a, b) ≡ conectadas'(b, conexiones(m, a))
+
+        conectadas'(a, c) ≡
+            if ϕ?(c) then
+                False
+            else
+                if π₁(dameUno(c)) ≡ a then
+                    True
+                else
+                    conectadas'(a, sinUno(c))
+                fi
+            fi
+Fin TAD
+
+-- TODO: Los RUR tienen que ser asignados automaticamente. Idea de que agregar
+-- use solo caracteristicas.
+-- TODO: preguntar si podemos usar maybe...
+-- NOTA: las estaciones podrian no devolver ningun robot, hence Maybe.
+
+TAD Maybe(α)
+    generos maybe
+    igualdad observacional
+        (∀ m₁, m₂ : maybe(α)) (m₁ =obs m₂ ↔
+            (isJust(m₁) =obs isJust(m₂) =obs true) ∧ₗ fromJust(m₁) =obs fromJust(m₂))
+    observadores basicos
+        isJust: maybe(α) → bool
+        fromJust: maybe(α) x → α {isJust(x)}
+    generadores
+        nothing: → maybe(α)
+        just: α → maybe(α)
+    otras operaciones
+        isNothing: maybe(α) → bool
+        fromMaybe: maybe(α) × α → α
+    axiomas
+        isJust(nothing) ≡ false
+        isJust(just(x)) ≡ true
+
+        fromJust(just(x)) ≡ x
+
+        fromMaybe(nothing, a) ≡ a
+        fromMaybe(just(x), a) ≡ x
+
+        isNothing(x) ≡ ¬isJust(x)
 Fin TAD
 
 TAD Ciudad
     generos ciudad
     igualdad observacional
+        (∀ c₁, c₂ : ciudad) (c₁ =obs c₂ ↔
+            mapeo(c₁) =obs mapeo(c₂) ∧ robots(c₁) =obs robots(c₂) ∧ₗ
+            (∀ r ∈ robots(c₁)) (estacionActual(c₁, r) =obs estacionActual(c₂, r)))
     observadores basicos
         mapeo: ciudad → mapa
         robots: ciudad → conj(robot)
         estacionActual: ciudad c × robot r → estacion {r ∈ robots(c)}
     generadores
         nueva: mapa → ciudad
-TODO: ACA NO DICE NADA SOBRE QUE LA ESTACION TIENE QUE PERTENECER AL MAPA
-
-        agregar: ciudad c × robot r × estacion e → ciudad {r ∉ robots(c) ∧ ¬esBloqueante(mapeo(c), r, e)}
-
-TAMPOCO EN ESTE CASO
-
-        mover: ciudad c × robot r × estacion e → ciudad {estaConectada(c, r, e)}
+        agregar: ciudad c × robot r × estacion e → ciudad {r ∉ robots(c) ∧ e ∈ estaciones(mapeo(c)) ∧ₗ ¬esBloqueante(mapeo(c), r, e)}
+        mover: ciudad c × robot r × estacion e → ciudad {r ∈ robots(c) ∧ₗ estaConectada(c, r, e)}
+        borrar: ciudad c × robot r → ciudad {r ∈ robots(c)}
     otras operaciones
+        inspeccion: ciudad c × estacion e → Maybe(robot) {e ∈ estaciones(mapeo(c))}
         infracciones: ciudad c × robot r → nat {r ∈ robots(c)}
         estaConectada: ciudad c × robot r × estacion e → bool {r ∈ robots(c)}
         inspeccion: ciudad c × estacion e -> ciudad --- PREGUNTAR 
@@ -115,10 +167,12 @@ TAMPOCO EN ESTE CASO
         mapeo(nueva(m)) ≡ m
         mapeo(agregar(c, r, e)) ≡ mapeo(c)
         mapeo(mover(c, r, e)) ≡ mapeo(c)
+        mapeo(borrar(c, r)) ≡ mapeo(c)
 
         robots(nueva(m)) ≡ ϕ
-        robots(mover(c, r, e)) ≡ robots(c)
         robots(agregar(c, r, e)) ≡ r ∪ robots(c)
+        robots(mover(c, r, e)) ≡ robots(c)
+        robots(borrar(c, r)) ≡ robots(c) - { r }
 
         estacionActual(agregar(c, r', e), r) ≡
             if r ≡ r' then
@@ -126,6 +180,7 @@ TAMPOCO EN ESTE CASO
             else
                 estacionActual(c, r)
             fi
+
         estacionActual(mover(c, r', e), r) ≡
             if r ≡ r' then
                 e
@@ -134,7 +189,7 @@ TAMPOCO EN ESTE CASO
             fi
 
         infracciones(agregar(c,r', e), r) ≡ 0
-        infracciones(mover(c, r', e), r) ≡ 
+        infracciones(mover(c, r', e), r) ≡
             if r ≡ r' then
                 if ¬cumple(dameRestriccion(conexiones(mapeo(c), estacionActual(c, r')), e)) then
                     1 + infracciones(c, r)
@@ -146,10 +201,12 @@ TAMPOCO EN ESTE CASO
             fi
 
         dameRestriccion: conj(⟨estacion, restriccion⟩) c x estacion e -> restriccion {¬ ϕ?(c) ∧ e ∈ c ???}
-        dameRestriccion(c, e) ≡ if π₁(dameUno(c)) ≡ e then 
-                                    π₂(dameUno(c))
-                                else 
-                                    dameRestriccion(sinUno(c), e) 
-                                fi 
+        dameRestriccion(c, e) ≡
+            if π₁(dameUno(c)) ≡ e then
+                π₂(dameUno(c))
+            else
+                dameRestriccion(sinUno(c), e)
+            fi
 
+        estaConectada(c, r, e) ≡ conectadas(mapeo(c), estacionActual(c, r), e)
 Fin TAD
