@@ -110,6 +110,7 @@ TAMPOCO EN ESTE CASO
     otras operaciones
         infracciones: ciudad c × robot r → nat {r ∈ robots(c)}
         estaConectada: ciudad c × robot r × estacion e → bool {r ∈ robots(c)}
+        inspeccion: ciudad c × estacion e -> ciudad --- PREGUNTAR 
     axiomas
         mapeo(nueva(m)) ≡ m
         mapeo(agregar(c, r, e)) ≡ mapeo(c)
