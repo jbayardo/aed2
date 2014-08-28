@@ -223,10 +223,11 @@ TAD Ciudad
 
         inspeccion: ciudad c × estacion e → Maybe(robot) {e ∈ estaciones(mapeo(c))}
         inspeccion(c, e) ≡
-            if ϕ?(obtenerRobots(c, e)) then
-                nothing
+            if ϕ?(obtenerRobots(c, e)) ∨ₗ 
+                isNothing(maxInf(dameUno(obtenerRobots(c, e)), sinUno(obtenerRobots(c, e)))) then
+                c
             else
-                maxInf(dameUno(obtenerRobots(c, e)), sinUno(obtenerRobots(c, e)))
+                borrar(c, fromJust(maxInf(dameUno(obtenerRobots(c, e)), sinUno(obtenerRobots(c, e)))))
             fi
 
         maxInf: ⟨robot, nat⟩ × conj(⟨robot, nat⟩) → maybe(robot)
