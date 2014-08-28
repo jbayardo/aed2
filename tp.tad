@@ -225,7 +225,7 @@ TAD Ciudad
 
         infracciones(c, r) ≡ infracciones'(cars(r), historial(c, r))
 
-        infracciones': caracteristicas → pila(conexion) → nat
+        infracciones': caracteristicas × pila(conexion) → nat
         infracciones'(c, p) ≡
             if tamaño(p) ≤ 1 then
                 0
