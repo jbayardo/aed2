@@ -163,13 +163,14 @@ TAD Ciudad
         historial: ciudad c × robot r → pila(conexion) {r ∈ robots(c)}
     generadores
         nueva: mapa → ciudad
-        agregar: ciudad c × caracteristicas cs × estacion e → ciudad {e ∈ estaciones(mapeo(c)) ∧ₗ ¬esBloqueante(mapeo(c), cs, e)}
+        agregar: ciudad c × caracteristicas cs × estacion e → ciudad {e ∈ estaciones(mapeo(c)) ∧ₗ ¬esBloqueante(mapeo(c), cs, e)} -- TODO y si se hace una otra operacion agregar_robot que ponga el rur automaticamente? y agregar pasa a recibir un robot en vez de un conjunto de caracteristicas?
+
         mover: ciudad c × robot r × conexion x → ciudad {esConexionValida(c, r, x)}
         borrar: ciudad c × robot r → ciudad {r ∈ robots(c)}
     otras operaciones
         ultimoId: ciudad c → rur {robots(c) ≠obs ϕ}
         esConexionValida: ciudad c × robot r × conexion → bool
-        inspeccion: ciudad c × estacion e → Maybe(robot) {e ∈ estaciones(mapeo(c))}
+        inspeccion: ciudad c × estacion e → ciudad {e ∈ estaciones(mapeo(c))}
         infracciones: ciudad c × robot r → nat {r ∈ robots(c)}
     axiomas
         mapeo(nueva(m)) ≡ m
@@ -187,9 +188,9 @@ TAD Ciudad
         robots(mover(c, r, e)) ≡ robots(c)
         robots(borrar(c, r)) ≡ robots(c) - { r }
 
-        historial(agregar(c, r', e), r) ≡
+        historial(agregar(c, cs, e), r) ≡
             if id(r) ≡ ultimoId(c) + 1 then
-                apilar(⟨e, cars(r')⟩, vacia)
+                apilar(⟨e, cs⟩, vacia)
             else
                 historial(c, r)
             fi
@@ -221,12 +222,13 @@ TAD Ciudad
             conectadas(mapeo(c), tope(historial(c, r)), π₁(x)) ∧ₗ
             π₂(x) ∈ caminos(mapeo(c), tope(historial(c, r)), π₁(x))
 
-        inspeccion: ciudad c × estacion e → Maybe(robot) {e ∈ estaciones(mapeo(c))}
+        inspeccion: ciudad c × estacion e → ciudad {e ∈ estaciones(mapeo(c))}
         inspeccion(c, e) ≡
-            if ϕ?(obtenerRobots(c, e)) then
-                nothing
+            if ϕ?(obtenerRobots(c, e)) ∨ₗ 
+                isNothing(maxInf(dameUno(obtenerRobots(c, e)), sinUno(obtenerRobots(c, e)))) then
+                c
             else
-                maxInf(dameUno(obtenerRobots(c, e)), sinUno(obtenerRobots(c, e)))
+                borrar(c, fromJust(maxInf(dameUno(obtenerRobots(c, e)), sinUno(obtenerRobots(c, e)))))
             fi
 
         maxInf: ⟨robot, nat⟩ × conj(⟨robot, nat⟩) → maybe(robot)
