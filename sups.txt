@@ -6,10 +6,12 @@ las restricciones se comparan por tabla de verdad (se usa muy fuertemente)
 
 una estacion sin conexiones no es bloqueante
 
-dos estaciones pueden tener cualquier cantidad de conexiones directas entre ellas,
-siempre y cuando las restricciones sean distintas
+el mapa de la ciudad no puede cambiar una vez comenzado el sistema.
 
-una estacion puede tener tantos caminos como quiera a si misma
+dos estaciones pueden tener cualquier cantidad de conexiones directas entre ellas,
+siempre y cuando las restricciones sean distintas --- esto no es lo mismo que una sola senda con varias condiciones unidas por OR ? Ademas, por la condicion anterior, no se podrian agregar mas sendas
+
+una estacion puede tener tantos caminos como quiera a si misma --- pq? simplicidad?
 
 un robot elige el camino por si mismo, pudiendo inclusive ir por un camino que
 cuente una infraccion aun si hay caminos disponibles que no le cuenten infracciones
@@ -18,5 +20,4 @@ los rur se asignan del 1 en adelante, aumentando 1 por cada robot que se agrega.
 Si se elimina un robot, su rur no es utilizado por ningun otro robot que se agregue
 a futuro.
 
-el mapa de la ciudad no puede cambiar una vez comenzado el sistema.
 
