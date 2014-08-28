@@ -2,6 +2,8 @@ Suposiciones:
 
 los robots se comparan por id, no por caracteristicas
 
+problema con igualdad observacional de ciudades con el ultimo robot agregado.
+
 las restricciones se comparan por tabla de verdad (se usa muy fuertemente)
 
 una estacion sin conexiones no es bloqueante
