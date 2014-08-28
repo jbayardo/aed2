@@ -11,9 +11,9 @@ una estacion sin conexiones no es bloqueante
 el mapa de la ciudad no puede cambiar una vez comenzado el sistema.
 
 dos estaciones pueden tener cualquier cantidad de conexiones directas entre ellas,
-siempre y cuando las restricciones sean distintas --- esto no es lo mismo que una sola senda con varias condiciones unidas por OR ? Ademas, por la condicion anterior, no se podrian agregar mas sendas
+siempre y cuando las restricciones sean distintas
 
-una estacion puede tener tantos caminos como quiera a si misma --- pq? simplicidad?
+una estacion puede tener tantos caminos como quiera a si misma
 
 un robot elige el camino por si mismo, pudiendo inclusive ir por un camino que
 cuente una infraccion aun si hay caminos disponibles que no le cuenten infracciones
