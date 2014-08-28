@@ -169,7 +169,7 @@ TAD Ciudad
     otras operaciones
         ultimoId: ciudad c → rur {robots(c) ≠obs ϕ}
         esConexionValida: ciudad c × robot r × conexion → bool
-        inspeccion: ciudad c × estacion e → Maybe(robot) {e ∈ estaciones(mapeo(c))}
+        inspeccion: ciudad c × estacion e → ciudad {e ∈ estaciones(mapeo(c))}
         infracciones: ciudad c × robot r → nat {r ∈ robots(c)}
     axiomas
         mapeo(nueva(m)) ≡ m
@@ -221,7 +221,7 @@ TAD Ciudad
             conectadas(mapeo(c), tope(historial(c, r)), π₁(x)) ∧ₗ
             π₂(x) ∈ caminos(mapeo(c), tope(historial(c, r)), π₁(x))
 
-        inspeccion: ciudad c × estacion e → Maybe(robot) {e ∈ estaciones(mapeo(c))}
+        inspeccion: ciudad c × estacion e → ciudad {e ∈ estaciones(mapeo(c))}
         inspeccion(c, e) ≡
             if ϕ?(obtenerRobots(c, e)) ∨ₗ 
                 isNothing(maxInf(dameUno(obtenerRobots(c, e)), sinUno(obtenerRobots(c, e)))) then
