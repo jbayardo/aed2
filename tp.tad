@@ -163,7 +163,8 @@ TAD Ciudad
         historial: ciudad c × robot r → pila(conexion) {r ∈ robots(c)}
     generadores
         nueva: mapa → ciudad
-        agregar: ciudad c × caracteristicas cs × estacion e → ciudad {e ∈ estaciones(mapeo(c)) ∧ₗ ¬esBloqueante(mapeo(c), cs, e)}
+        agregar: ciudad c × caracteristicas cs × estacion e → ciudad {e ∈ estaciones(mapeo(c)) ∧ₗ ¬esBloqueante(mapeo(c), cs, e)} -- TODO y si se hace una otra operacion agregar_robot que ponga el rur automaticamente? y agregar pasa a recibir un robot en vez de un conjunto de caracteristicas?
+        
         mover: ciudad c × robot r × conexion x → ciudad {esConexionValida(c, r, x)}
         borrar: ciudad c × robot r → ciudad {r ∈ robots(c)}
     otras operaciones
