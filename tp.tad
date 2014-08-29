@@ -1,66 +1,63 @@
 TAD rur ES nat
 TAD caracteristica ES string
+TAD caracteristicas ES conj(caracteristica)
 
 -- La igualdad de robots es solo por RUR.
 TAD Robot
     generos robot
-    exporta id, caracteristicas, instanciar
+    exporta id, cars, instanciar
     igualdad observacional
         (∀r₁, r₂ : robot) (r₁ =obs r₂ ↔ id(r₁) =obs id(r₂))
     observadores basicos
         id: robot → rur
-        caracteristicas: robot → conj(caracteristica)
+        cars: robot → caracteristicas
     generadores
-        instanciar: rur × conj(caracteristica) → robot
+        instanciar: rur × caracteristicas → robot
     axiomas
-        id(instanciar(r, c)) ≡ r
-        caracteristicas(instanciar(r, c)) ≡ c
+        id(instanciar(r, cs)) ≡ r
+        cars(instanciar(r, cs)) ≡ cs
 Fin TAD
 
 TAD Restriccion
     generos restriccion
     exporta AND, OR, NOT, VAR, cumple
     igualdad observacional
-??? Preguntar si hace falta.
-        -- Esta es igualdad de la tabla de verdad, podria hacerse igualdad del
-        -- arbol sintactico, pero seria mas restrictiva.
         (∀ r₁, r₂ : restriccion) (r₁ =obs r₂ ↔
-            (∀ r : robot) (cumple(r, r₁) =obs cumple(r, r₂)))
+            (∀ c : caracteristicas) (cumple(c, r₁) =obs cumple(c, r₂)))
     observadores basicos
-        cumple: robot × restriccion → bool
+        cumple: caracteristicas × restriccion → bool
     generadores
         AND: restriccion × restriccion → restriccion
         OR: restriccion × restriccion → restriccion
         NOT: restriccion → restriccion
         VAR: caracteristica → restriccion
     axiomas
-        cumple(r, VAR(c)) ≡ c ∈ caracteristicas(r)
-        cumple(r, NOT(c)) ≡ ¬(cumple(r, c))
-        cumple(r, AND(c1, c2)) ≡ cumple(r, c1) ∧ cumple(r, c2)
-        cumple(r, OR(c1, c2)) ≡ cumple(r, c1) ∨ cumple(r, c2)
+        cumple(cs, VAR(c)) ≡ c ∈ cs
+        cumple(cs, NOT(c)) ≡ ¬(cumple(cs, c))
+        cumple(cs, AND(c1, c2)) ≡ cumple(cs, c1) ∧ cumple(cs, c2)
+        cumple(cs, OR(c1, c2)) ≡ cumple(cs, c1) ∨ cumple(cs, c2)
 Fin TAD
 
 TAD estacion ES string
+TAD conexion ES ⟨estacion, restriccion⟩
 
 TAD Mapa
     generos mapa
-    exporta nuevo, crearEst, conectar, esBloqueante
     igualdad observacional
         (∀ m₁, m₂ : mapa) (m₁ =obs m₂ ↔
             estaciones(m₁) =obs estaciones(m₂) ∧ₗ
             (∀ e ∈ estaciones(m₁)) (conexiones(m₁, e) =obs conexiones(m₂, e)))
     observadores basicos
         estaciones: mapa → conj(estacion)
-        conexiones: mapa m × estacion e → conj(⟨estacion, restriccion⟩) {e ∈ estaciones(m)}
+        conexiones: mapa m × estacion e → conj(conexion) {e ∈ estaciones(m)}
     generadores
         nuevo: → mapa
         crearEst: mapa m × estacion a → mapa {a ∉ estaciones(m)}
-        conectar: mapa m × estacion a × estacion b × restriccion → mapa
+        conectar: mapa m × estacion a × estacion b × restriccion → mapa {a, b ∈ estaciones(m)}
     otras operaciones
-        esBloqueante: mapa m × robot × estacion e → bool {e ∈ estaciones(m)}
-        esBloqueante': conj(⟨estacion, restriccion⟩) × robot → bool
+        esBloqueante: mapa m × caracteristicas × estacion e → bool {e ∈ estaciones(m)}
         conectadas: mapa m × estacion a × estacion b → bool {a, b ∈ estaciones(m)}
-        conectadas': estacion × conj(⟨estacion, restriccion⟩) → bool
+        caminos: mapa m × estacion a × estacion b → conj(restriccion) {a, b ∈ estaciones(m) ∧ conectadas(m, a, b)}
     axiomas
         conexiones(crearEst(m, e), k) ≡ ϕ
         conexiones(conectar(m, a, b, r), e) ≡
@@ -110,10 +107,21 @@ TAD Mapa
                     conectadas'(a, sinUno(c))
                 fi
             fi
+
+        caminos(m, a, b) ≡ caminos'(b, conexiones(m, a))
+
+        caminos'(a, c) ≡
+            if ϕ?(c) then
+                ϕ
+            else
+                if π₁(dameUno(c)) ≡ a then
+                    π₂(dameUno(c)) ∪ caminos'(a, sinUno(c))
+                else
+                    caminos'(a, sinUno(c))
+                fi
+            fi
 Fin TAD
 
--- TODO: Los RUR tienen que ser asignados automaticamente. Idea de que agregar
--- use solo caracteristicas.
 -- TODO: preguntar si podemos usar maybe...
 -- NOTA: las estaciones podrian no devolver ningun robot, hence Maybe.
 
@@ -148,18 +156,20 @@ TAD Ciudad
     igualdad observacional
         (∀ c₁, c₂ : ciudad) (c₁ =obs c₂ ↔
             mapeo(c₁) =obs mapeo(c₂) ∧ robots(c₁) =obs robots(c₂) ∧ₗ
-            (∀ r ∈ robots(c₁)) (estacionActual(c₁, r) =obs estacionActual(c₂, r)))
+            (∀ r ∈ robots(c₁)) (historial(c₁, r) =obs historial(c₂, r)))
     observadores basicos
         mapeo: ciudad → mapa
         robots: ciudad → conj(robot)
-        estacionActual: ciudad c × robot r → estacion {r ∈ robots(c)}
+        historial: ciudad c × robot r → pila(conexion) {r ∈ robots(c)}
     generadores
         nueva: mapa → ciudad
-        agregar: ciudad c × robot r × estacion e → ciudad {r ∉ robots(c) ∧ e ∈ estaciones(mapeo(c)) ∧ₗ ¬esBloqueante(mapeo(c), r, e)}
-        mover: ciudad c × robot r × estacion e → ciudad {r ∈ robots(c) ∧ₗ estaConectada(c, r, e)}
+        agregar: ciudad c × caracteristicas cs × estacion e → ciudad {e ∈ estaciones(mapeo(c)) ∧ₗ ¬esBloqueante(mapeo(c), cs, e)}
+        mover: ciudad c × robot r × conexion x → ciudad {esConexionValida(c, r, x)}
         borrar: ciudad c × robot r → ciudad {r ∈ robots(c)}
     otras operaciones
-        inspeccion: ciudad c × estacion e → Maybe(robot) {e ∈ estaciones(mapeo(c))}
+        ultimoId: ciudad c → rur {robots(c) ≠obs ϕ}
+        esConexionValida: ciudad c × robot r × conexion → bool
+        inspeccion: ciudad c × estacion e → ciudad {e ∈ estaciones(mapeo(c))}
         infracciones: ciudad c × robot r → nat {r ∈ robots(c)}
         estaConectada: ciudad c × robot r × estacion e → bool {r ∈ robots(c)}
         inspeccion: ciudad c × estacion e -> ciudad --- PREGUNTAR 
@@ -170,43 +180,99 @@ TAD Ciudad
         mapeo(borrar(c, r)) ≡ mapeo(c)
 
         robots(nueva(m)) ≡ ϕ
-        robots(agregar(c, r, e)) ≡ r ∪ robots(c)
+        robots(agregar(c, cs, e)) ≡
+            if ϕ?(robots(c)) then
+                { instanciar(1, cs) }
+            else
+                { instanciar(ultimoId(c) + 1, cs) } ∪ robots(c)
+            fi
         robots(mover(c, r, e)) ≡ robots(c)
         robots(borrar(c, r)) ≡ robots(c) - { r }
 
-        estacionActual(agregar(c, r', e), r) ≡
-            if r ≡ r' then
-                e
+        historial(agregar(c, cs, e), r) ≡
+            if id(r) ≡ ultimoId(c) + 1 then
+                apilar(⟨e, cs⟩, vacia)
             else
-                estacionActual(c, r)
+                historial(c, r)
             fi
 
-        estacionActual(mover(c, r', e), r) ≡
+        historial(mover(c, r', x), r) ≡
             if r ≡ r' then
-                e
+                apilar(x, historial(c, r))
             else
-                estacionActual(c, r)
+                historial(c, r)
             fi
 
-        infracciones(agregar(c,r', e), r) ≡ 0
-        infracciones(mover(c, r', e), r) ≡
-            if r ≡ r' then
-                if ¬cumple(dameRestriccion(conexiones(mapeo(c), estacionActual(c, r')), e)) then
-                    1 + infracciones(c, r)
+        ultimoId(c) ≡ ultimoId'(id(dameUno(robots(c))), sinUno(robots(c)))
+
+        ultimoId': rur × conj(robot) → rur
+        ultimoId'(m, c) ≡
+            if ϕ?(c) then
+                m
+            else
+                if id(dameUno(c)) > m then
+                    ultimoId'(id(dameUno(c)), sinUno(c))
                 else
-                    infracciones(c, r)
+                    ultimoId'(m, sinUno(c))
                 fi
-            else
-                infracciones(c,r)
             fi
 
-        dameRestriccion: conj(⟨estacion, restriccion⟩) c x estacion e -> restriccion {¬ ϕ?(c) ∧ e ∈ c ???}
-        dameRestriccion(c, e) ≡
-            if π₁(dameUno(c)) ≡ e then
-                π₂(dameUno(c))
+        esConexionValida(c, r, x) ≡
+            r ∈ robots(c) ∧ₗ
+            π₁(x) ∈ estaciones(mapeo(c)) ∧ₗ
+            conectadas(mapeo(c), tope(historial(c, r)), π₁(x)) ∧ₗ
+            π₂(x) ∈ caminos(mapeo(c), tope(historial(c, r)), π₁(x))
+
+        inspeccion: ciudad c × estacion e → ciudad {e ∈ estaciones(mapeo(c))}
+        inspeccion(c, e) ≡
+            if ϕ?(obtenerRobots(c, e)) ∨ₗ
+                isNothing(maxInf(dameUno(obtenerRobots(c, e)), sinUno(obtenerRobots(c, e)))) then
+                c
             else
-                dameRestriccion(sinUno(c), e)
+                borrar(c, fromJust(maxInf(dameUno(obtenerRobots(c, e)), sinUno(obtenerRobots(c, e)))))
             fi
 
-        estaConectada(c, r, e) ≡ conectadas(mapeo(c), estacionActual(c, r), e)
+        maxInf: ⟨robot, nat⟩ × conj(⟨robot, nat⟩) → maybe(robot)
+        maxInf(r, cs) ≡
+            if ϕ?(cs) then
+                if π₂(r) > 0 then
+                    just(π₁(r))
+                else
+                    nothing
+            else
+                if π₂(dameUno(cs)) > π₂(r) then
+                    maxInf(dameUno(cs), sinUno(cs))
+                else
+                    maxInf(r, sinUno(cs))
+                fi
+            fi
+
+        obtenerRobots: ciudad c × estacion e → conj(⟨robot, nat⟩) {e ∈ estaciones(mapeo(c))}
+        obtenerRobots(c, e) ≡ obtenerRobots'(c, robots(c), e)
+
+        obtenerRobots': ciudad c × conj(robot) k × estacion e → conj(⟨robot, nat⟩) {k ⊆ robots(c) ∧ e ∈ estaciones(mapeo(c))}
+        obtenerRobots'(c, cs, e) ≡
+            if ϕ?(cs) then
+                ϕ
+            else
+                if tope(historial(c, dameUno(cs))) ≡ e then
+                    ⟨dameUno(cs), infracciones(c, dameUno(cs))⟩ ∪ obtenerRobots'(c, sinUno(cs), e)
+                else
+                    obtenerRobots'(c, sinUno(cs), e)
+                fi
+            fi
+
+        infracciones(c, r) ≡ infracciones'(cars(r), historial(c, r))
+
+        infracciones': caracteristicas × pila(conexion) → nat
+        infracciones'(c, p) ≡
+            if tamaño(p) ≤ 1 then
+                0
+            else
+                if ¬cumple(c, π₂(tope(p))) then
+                    1 + infracciones'(c, desapilar(p))
+                else
+                    infracciones'(c, desapilar(p))
+                fi
+            fi
 Fin TAD
