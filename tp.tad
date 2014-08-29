@@ -171,8 +171,6 @@ TAD Ciudad
         esConexionValida: ciudad c × robot r × conexion → bool
         inspeccion: ciudad c × estacion e → ciudad {e ∈ estaciones(mapeo(c))}
         infracciones: ciudad c × robot r → nat {r ∈ robots(c)}
-        estaConectada: ciudad c × robot r × estacion e → bool {r ∈ robots(c)}
-        inspeccion: ciudad c × estacion e -> ciudad --- PREGUNTAR 
     axiomas
         mapeo(nueva(m)) ≡ m
         mapeo(agregar(c, r, e)) ≡ mapeo(c)
