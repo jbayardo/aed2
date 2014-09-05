@@ -1,8 +1,6 @@
 TAD rur ES nat
 TAD caracteristica ES string
-TAD caracteristicas ES conj(caracteristica)
 
--- La igualdad de robots es solo por RUR.
 TAD Robot
     generos robot
     exporta id, cars, instanciar
@@ -10,9 +8,9 @@ TAD Robot
         (∀r₁, r₂ : robot) (r₁ =obs r₂ ↔ id(r₁) =obs id(r₂))
     observadores basicos
         id: robot → rur
-        cars: robot → caracteristicas
+        cars: robot → conj(caracteristica)
     generadores
-        instanciar: rur × caracteristicas → robot
+        instanciar: rur × conj(caracteristica) → robot
     axiomas
         id(instanciar(r, cs)) ≡ r
         cars(instanciar(r, cs)) ≡ cs
@@ -23,9 +21,9 @@ TAD Restriccion
     exporta AND, OR, NOT, VAR, cumple
     igualdad observacional
         (∀ r₁, r₂ : restriccion) (r₁ =obs r₂ ↔
-            (∀ c : caracteristicas) (cumple(c, r₁) =obs cumple(c, r₂)))
+            (∀ c : conj(caracteristica)) (cumple(c, r₁) =obs cumple(c, r₂)))
     observadores basicos
-        cumple: caracteristicas × restriccion → bool
+        cumple: conj(caracteristica) × restriccion → bool
     generadores
 -- PREGUNTAR deberiamos agregar constantes true y false para hacer caminos que
 -- sean siempre/nunca navegables?
@@ -42,6 +40,7 @@ Fin TAD
 
 TAD estacion ES string
 TAD conexion ES ⟨estacion, restriccion⟩
+TAD conexiones ES conj(conexion)
 
 TAD Mapa
     generos mapa
@@ -58,8 +57,8 @@ TAD Mapa
         crearEst: mapa m × estacion a → mapa {a ∉ estaciones(m)}
         conectar: mapa m × estacion a × estacion b × restriccion → mapa {a, b ∈ estaciones(m)}
     otras operaciones
-        esBloqueante: mapa m × caracteristicas × estacion e → bool {e ∈ estaciones(m)}
-        esBloqueante': conj(conexion) × caracteristicas → bool
+        esBloqueante: mapa m × conj(caracteristica) × estacion e → bool {e ∈ estaciones(m)}
+        esBloqueante': conj(conexion) × conj(caracteristica) → bool
         conectadas: mapa m × estacion a × estacion b → bool {a, b ∈ estaciones(m)}
         conectadas': estacion × conj(conexion) → bool
         caminos: mapa m × estacion a × estacion b → conj(restriccion) {a, b ∈ estaciones(m) ∧ conectadas(m, a, b)}
@@ -141,7 +140,7 @@ TAD Ciudad
         historial: ciudad c × robot r → pila(conexion) {r ∈ robots(c)}
     generadores
         nueva: mapa → ciudad
-        agregar: ciudad c × caracteristicas cs × estacion e → ciudad {e ∈ estaciones(mapeo(c)) ∧ₗ ¬esBloqueante(mapeo(c), cs, e)}
+        agregar: ciudad c × conj(caracteristica) cs × estacion e → ciudad {e ∈ estaciones(mapeo(c)) ∧ₗ ¬esBloqueante(mapeo(c), cs, e)}
         mover: ciudad c × robot r × conexion x → ciudad {esConexionValida(c, r, x)}
         borrar: ciudad c × robot r → ciudad {r ∈ robots(c)}
     otras operaciones
@@ -151,7 +150,7 @@ TAD Ciudad
         inspeccion: ciudad c × estacion e → ciudad {e ∈ estaciones(mapeo(c))}
         inspeccion': ciudad c × estacion e × ⟨robot, nat⟩ r × conj(⟨robot, nat⟩) k → ciudad {e ∈ estaciones(mapeo(c)) ∧ k ⊆ obtenerRobots(c, e) ∧ r ∈ obtenerRobots(c, e)}
         infracciones: ciudad c × robot r → nat {r ∈ robots(c)}
-        infracciones': caracteristicas × pila(conexion) → nat
+        infracciones': conj(caracteristica) × pila(conexion) → nat
         obtenerRobots: ciudad c × estacion e → conj(⟨robot, nat⟩) {e ∈ estaciones(mapeo(c))}
         obtenerRobots': ciudad c × conj(robot) k × estacion e → conj(⟨robot, nat⟩) {k ⊆ robots(c) ∧ e ∈ estaciones(mapeo(c))}
     axiomas
