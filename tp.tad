@@ -27,6 +27,8 @@ TAD Restriccion
     observadores basicos
         cumple: caracteristicas × restriccion → bool
     generadores
+-- PREGUNTAR deberiamos agregar constantes true y false para hacer caminos que
+-- sean siempre/nunca navegables?
         AND: restriccion × restriccion → restriccion
         OR: restriccion × restriccion → restriccion
         NOT: restriccion → restriccion
@@ -43,6 +45,7 @@ TAD conexion ES ⟨estacion, restriccion⟩
 
 TAD Mapa
     generos mapa
+    exporta estaciones, conexiones, nuevo, crearEst, conectar, esBloqueante, conectadas, caminos
     igualdad observacional
         (∀ m₁, m₂ : mapa) (m₁ =obs m₂ ↔
             estaciones(m₁) =obs estaciones(m₂) ∧ₗ
@@ -56,8 +59,12 @@ TAD Mapa
         conectar: mapa m × estacion a × estacion b × restriccion → mapa {a, b ∈ estaciones(m)}
     otras operaciones
         esBloqueante: mapa m × caracteristicas × estacion e → bool {e ∈ estaciones(m)}
+        esBloqueante': conj(conexion) × caracteristicas → bool
         conectadas: mapa m × estacion a × estacion b → bool {a, b ∈ estaciones(m)}
+        conectadas': estacion × conj(conexion) → bool
         caminos: mapa m × estacion a × estacion b → conj(restriccion) {a, b ∈ estaciones(m) ∧ conectadas(m, a, b)}
+-- PREGUNTAR si deberiamos poner condiciones en esta funcion, aunque pueda funcionar igual
+        caminos': estacion × conj(conexion) → conj(restriccion)
     axiomas
         conexiones(crearEst(m, e), k) ≡ ϕ
         conexiones(conectar(m, a, b, r), e) ≡
@@ -75,7 +82,6 @@ TAD Mapa
         estaciones(crearEst(m, e)) ≡ { e } ∪ estaciones(m)
         estaciones(conectar(m, a, b)) ≡ estaciones(m)
 
-        -- Se fija si es bloqueante poner al robot en la estacion e
         esBloqueante(m, r, e) ≡
             if ϕ?(conexiones(m, e)) then
                 False
@@ -94,7 +100,6 @@ TAD Mapa
                 fi
             fi
 
-        -- Se fija si la estacion b esta en las conexiones inmediatas de a
         conectadas(m, a, b) ≡ conectadas'(b, conexiones(m, a))
 
         conectadas'(a, c) ≡
@@ -122,37 +127,10 @@ TAD Mapa
             fi
 Fin TAD
 
--- TODO: preguntar si podemos usar maybe...
--- NOTA: las estaciones podrian no devolver ningun robot, hence Maybe.
-
-TAD Maybe(α)
-    generos maybe
-    igualdad observacional
-        (∀ m₁, m₂ : maybe(α)) (m₁ =obs m₂ ↔
-            (isJust(m₁) =obs isJust(m₂) =obs true) ∧ₗ fromJust(m₁) =obs fromJust(m₂))
-    observadores basicos
-        isJust: maybe(α) → bool
-        fromJust: maybe(α) x → α {isJust(x)}
-    generadores
-        nothing: → maybe(α)
-        just: α → maybe(α)
-    otras operaciones
-        isNothing: maybe(α) → bool
-        fromMaybe: maybe(α) × α → α
-    axiomas
-        isJust(nothing) ≡ false
-        isJust(just(x)) ≡ true
-
-        fromJust(just(x)) ≡ x
-
-        fromMaybe(nothing, a) ≡ a
-        fromMaybe(just(x), a) ≡ x
-
-        isNothing(x) ≡ ¬isJust(x)
-Fin TAD
-
 TAD Ciudad
     generos ciudad
+-- PREGUNTAR bien que cosas deberian ir en exporta.
+    exporta nueva, agregar, mover, inspeccion
     igualdad observacional
         (∀ c₁, c₂ : ciudad) (c₁ =obs c₂ ↔
             mapeo(c₁) =obs mapeo(c₂) ∧ robots(c₁) =obs robots(c₂) ∧ₗ
@@ -168,9 +146,14 @@ TAD Ciudad
         borrar: ciudad c × robot r → ciudad {r ∈ robots(c)}
     otras operaciones
         ultimoId: ciudad c → rur {robots(c) ≠obs ϕ}
+        ultimoId': rur × conj(robot) → rur
         esConexionValida: ciudad c × robot r × conexion → bool
         inspeccion: ciudad c × estacion e → ciudad {e ∈ estaciones(mapeo(c))}
+        inspeccion': ciudad c × estacion e × ⟨robot, nat⟩ r × conj(⟨robot, nat⟩) k → ciudad {e ∈ estaciones(mapeo(c)) ∧ k ⊆ obtenerRobots(c, e) ∧ r ∈ obtenerRobots(c, e)}
         infracciones: ciudad c × robot r → nat {r ∈ robots(c)}
+        infracciones': caracteristicas × pila(conexion) → nat
+        obtenerRobots: ciudad c × estacion e → conj(⟨robot, nat⟩) {e ∈ estaciones(mapeo(c))}
+        obtenerRobots': ciudad c × conj(robot) k × estacion e → conj(⟨robot, nat⟩) {k ⊆ robots(c) ∧ e ∈ estaciones(mapeo(c))}
     axiomas
         mapeo(nueva(m)) ≡ m
         mapeo(agregar(c, r, e)) ≡ mapeo(c)
@@ -203,7 +186,6 @@ TAD Ciudad
 
         ultimoId(c) ≡ ultimoId'(id(dameUno(robots(c))), sinUno(robots(c)))
 
-        ultimoId': rur × conj(robot) → rur
         ultimoId'(m, c) ≡
             if ϕ?(c) then
                 m
@@ -221,34 +203,30 @@ TAD Ciudad
             conectadas(mapeo(c), tope(historial(c, r)), π₁(x)) ∧ₗ
             π₂(x) ∈ caminos(mapeo(c), tope(historial(c, r)), π₁(x))
 
-        inspeccion: ciudad c × estacion e → ciudad {e ∈ estaciones(mapeo(c))}
         inspeccion(c, e) ≡
-            if ϕ?(obtenerRobots(c, e)) ∨ₗ
-                isNothing(maxInf(dameUno(obtenerRobots(c, e)), sinUno(obtenerRobots(c, e)))) then
+            if ϕ?(obtenerRobots(c, e)) then
                 c
             else
-                borrar(c, fromJust(maxInf(dameUno(obtenerRobots(c, e)), sinUno(obtenerRobots(c, e)))))
+                inspeccion'(c, e, dameUno(obtenerRobots(c, e)), sinUno(obtenerRobots(c, e)))
             fi
 
-        maxInf: ⟨robot, nat⟩ × conj(⟨robot, nat⟩) → maybe(robot)
-        maxInf(r, cs) ≡
+        inspeccion'(c, e, r, cs) ≡
             if ϕ?(cs) then
                 if π₂(r) > 0 then
-                    just(π₁(r))
+                    borrar(c, r)
                 else
-                    nothing
+                    c
+                fi
             else
                 if π₂(dameUno(cs)) > π₂(r) then
-                    maxInf(dameUno(cs), sinUno(cs))
+                    inspeccion'(c, e, dameUno(cs), sinUno(cs))
                 else
-                    maxInf(r, sinUno(cs))
+                    inspeccion'(c, e, r, sinUno(cs))
                 fi
             fi
 
-        obtenerRobots: ciudad c × estacion e → conj(⟨robot, nat⟩) {e ∈ estaciones(mapeo(c))}
         obtenerRobots(c, e) ≡ obtenerRobots'(c, robots(c), e)
 
-        obtenerRobots': ciudad c × conj(robot) k × estacion e → conj(⟨robot, nat⟩) {k ⊆ robots(c) ∧ e ∈ estaciones(mapeo(c))}
         obtenerRobots'(c, cs, e) ≡
             if ϕ?(cs) then
                 ϕ
@@ -262,7 +240,6 @@ TAD Ciudad
 
         infracciones(c, r) ≡ infracciones'(cars(r), historial(c, r))
 
-        infracciones': caracteristicas × pila(conexion) → nat
         infracciones'(c, p) ≡
             if tamaño(p) ≤ 1 then
                 0
