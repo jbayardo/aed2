@@ -1,0 +1,79 @@
+\documentclass[a4paper,titlepage]{report}
+
+\usepackage{fullpage}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=false
+  tabsize=4
+}
+
+\begin{document}
+
+\title{Algorítmos y Estructuras de Datos II\\
+Trabajo Práctico 1\\
+Grupo 6}
+
+\author{
+	Bayardo, Julián\\
+	\texttt{850/13}
+	\and
+	Cuneo, Christian\\
+	\texttt{755/13}
+	\and
+	Gambaccini, Ezequiel\\
+	\texttt{715/13}
+	\and
+	Lebrero Rial, Ignacio Manuel\\
+	\texttt{751/13}
+}
+
+\date{9 de Septiembre del 2014}
+
+\maketitle
+
+\section{Aclaraciones}
+
+Para comprender perfectamente nuestro modelado hay que tener en cuenta estos puntos:
+
+La ciudad está formada por un mapa, los robots que están en circulación en el sistema y los movimientos de estos robots desde que ingresaron al sistema. El mapa no puede cambiar una vez que el sistema comenzó.
+
+El mapa que modelamos comprende que una estación se puede conectar a otra estación, o a si misma, por una cantidad no limitada de sendas, todas estas deben tener restricciones distintas. También puede haber estaciones sin sendas conectadas, y estas no serán estaciones bloqueantes bajo ninguna circunstancia.
+
+Las restricciones de cada senda están modeladas en forma de árbol donde todas las hojas son características y los nodos son conectores lógicos.
+
+El sistema asigna RURs desde el 1 de forma incremental a los robots que ingresan al sistema, nunca se van a reutilizar RURs de robots quitados de circulación.
+
+Un robot elige la senda a circular (siempre y cuando sea un movimiento valido), pudiendo inclusive ir por una senda que cuente una infracción aun si hay sendas disponibles que no le cuenten infracciones.
+Como aclara el enunciado, los robots se identifican sólo por el RUR, por lo tanto la igualdad entre dos robots es juzgada sólo por ese observador. 
+
+Se toma que dos ciudades son iguales cuando el mapa es igual observacionalmente y cuando el conjunto de robots en circulación (y sus historiales) son los mismos observacionalmente, no se tienen en cuenta los robots que hayan sido quitados de circulación a lo largo del funcionamiento del sistema, ni sus historiales. 
+
+En este sistema no se modelo el tiempo, esta permitido en cualquier momento llevar a cabo una inspección.
+
+\section{TAD}
+\lstinputlisting{tp.tad}
+
+\end{document}
