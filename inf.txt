@@ -8,7 +8,10 @@ Las restricciones de cada senda estan modeladas en forma de arbol donde todas la
 
 El sistema asigna RURs desde el 1 de forma incremental a los robots que ingresan al sistema, nunca se reusan RURs de robots quitados de circualcion.
 
-Un robot elige la senda a circular por si mismo (siempre y cuando sea un movimiento valido), pudiendo inclusive ir por una senda que cuente una infraccion aun si hay sendas disponibles que no le cuenten infracciones.
+Un robot elige la senda a circular (siempre y cuando sea un movimiento valido), pudiendo inclusive ir por una senda que cuente una infraccion aun si hay sendas disponibles que no le cuenten infracciones.
+Como aclara el enunciado, los robots se identifican solo por el RUR, por lo tanto la igualdad entre dos robots es juzgada solo por ese observador. 
 
 Se toma que dos ciudades son iguales cuando el mapa es igual observacionalmente y cuando el conjunto de robots en circulacion 
 (y sus historiales) son los mismos observacionalmente, no se tienen en cuenta los robots que hayan sido quitados de circulacion a lo largo del funcionamiento del sistema, ni sus historiales. 
+
+En este sistema no se modelo el tiempo, esta permitido en cualquier momento llevar a cabo una inspeccion
