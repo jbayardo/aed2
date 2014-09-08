@@ -133,7 +133,9 @@ TAD Ciudad
     igualdad observacional
         (∀ c₁, c₂ : ciudad) (c₁ =obs c₂ ↔
             mapeo(c₁) =obs mapeo(c₂) ∧ robots(c₁) =obs robots(c₂) ∧ₗ
-            (∀ r ∈ robots(c₁)) (historial(c₁, r) =obs historial(c₂, r)))
+            (∀ r ∈ robots(c₁)) (historial(c₁, r) =obs historial(c₂, r)) ∧
+-- si exportamos borrar, esto tiene que estar
+            ((robots(c₁) ≠obs ϕ) → ultimoId(c₁) =obs ultimoId(c₂)))
     observadores basicos
         mapeo: ciudad → mapa
         robots: ciudad → conj(robot)
