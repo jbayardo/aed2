@@ -85,7 +85,7 @@ TAD Mapa
 		estaciones(crearEst(m, e)) ≡ { e } ∪ estaciones(m)
 		estaciones(conectar(m, a, b)) ≡ estaciones(m)
 
-		esBloqueante(m, r, e) ≡
+		esBloqueante(m, r, e) ≡.
 			if ϕ?(conexiones(m, e)) then
 				False
 			else
@@ -96,11 +96,7 @@ TAD Mapa
 			if ϕ?(c) then
 				True
 			else
-				if cumple(r, π₂(dameUno(c))) then
-					False
-				else
-					esBloqueante'(sinUno(c), r)
-				fi
+				¬(cumple(r, π₂(dameUno(c)))) ∧ₗ esBloqueante'(sinUno(c), r)
 			fi
 
 		conectadas(m, a, b) ≡ conectadas'(b, conexiones(m, a))
@@ -129,12 +125,14 @@ Fin TAD
 TAD Ciudad
 	generos ciudad
 -- PREGUNTAR bien que cosas deberian ir en exporta.
-	exporta nueva, agregar, mover, inspeccion
+-- Deberian todas las operaciones funcionar con RURs?
+-- Hace falta una funcion que inserte y devuelva la nueva ciudad con el robot?
+	exporta nueva, agregar, buscar, ultimoId, mover, inspeccion
 	igualdad observacional
 		(∀ c₁, c₂ : ciudad) (c₁ =obs c₂ ↔
 			(mapeo(c₁) =obs mapeo(c₂) ∧ robots(c₁) =obs robots(c₂)) ∧ₗ
 			(∀ r ∈ robots(c₁)) (historial(c₁, r) =obs historial(c₂, r)) ∧ₗ
-			((robots(c₁) ≠obs ϕ) → ultimoId(c₁) =obs ultimoId(c₂)))
+			((robots(c₁) ≠obs ϕ) ⟹  ultimoId(c₁) =obs ultimoId(c₂)))
 	observadores basicos
 		mapeo: ciudad → mapa
 		robots: ciudad → conj(robot)
@@ -148,7 +146,7 @@ TAD Ciudad
 		buscar: ciudad c × rur i → robot {(∃r ∈ robots(c)) (id(r) =obs i)}
 		buscar': conj(robot) c × rur i → robot {(∃r ∈ c) (id(r) =obs i)}
 		ultimoId: ciudad c → rur {robots(c) ≠obs ϕ}
-		ultimoId': rur × conj(robot) → rur
+		ultimoId': ciudad c × rur i × conj(robot) k → rur {k ⊆ robots(c) ∧ (∃r ∈ robots(c)) (id(r) =obs i)}
 		esConexionValida: ciudad c × robot r × conexion → bool
 		inspeccion: ciudad c × estacion e → ciudad {e ∈ estaciones(mapeo(c))}
 		inspeccion': ciudad c × estacion e × ⟨robot, nat⟩ r × conj(⟨robot, nat⟩) k → ciudad {e ∈ estaciones(mapeo(c)) ∧ k ⊆ obtenerRobots(c, e) ∧ r ∈ obtenerRobots(c, e)}
@@ -243,6 +241,6 @@ TAD Ciudad
 			if tamaño(p) ≤ 1 then
 				0
 			else
-				infracciones'(c, desapilar(p)) + β(¬cumple(c, π₂(tope(p))))
+				β(¬cumple(c, π₂(tope(p)))) + infracciones'(c, desapilar(p))
 			fi
 Fin TAD
