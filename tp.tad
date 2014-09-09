@@ -2,45 +2,45 @@ TAD rur ES nat
 TAD caracteristica ES string
 
 TAD Robot
-	generos robot
-	exporta id, cars, instanciar
-	igualdad observacional
-		(∀r₁, r₂ : robot) (r₁ =obs r₂ ↔ id(r₁) =obs id(r₂))
-	observadores basicos
-		id: robot → rur
-		cars: robot → conj(caracteristica)
-	generadores
-		instanciar: rur i × conj(caracteristica) cs → robot {i ≥ 1 ∧ cs ≠obs ϕ}
-	axiomas
-		id(instanciar(r, cs)) ≡ r
-		cars(instanciar(r, cs)) ≡ cs
+  generos robot
+  exporta id, cars, instanciar
+  igualdad observacional
+    (∀r₁, r₂ : robot) (r₁ =obs r₂ ↔ id(r₁) =obs id(r₂))
+  observadores basicos
+    id: robot → rur
+    cars: robot → conj(caracteristica)
+  generadores
+    instanciar: rur i × conj(caracteristica) cs → robot {i ≥ 1 ∧ cs ≠obs ϕ}
+  axiomas
+    id(instanciar(r, cs)) ≡ r
+    cars(instanciar(r, cs)) ≡ cs
 Fin TAD
 
 TAD Restriccion
-	generos restriccion
-	exporta AND, OR, NOT, VAR, cumple
-	igualdad observacional
-		(∀ r₁, r₂ : restriccion) (r₁ =obs r₂ ↔
-			(∀ c : conj(caracteristica)) (cumple(c, r₁) =obs cumple(c, r₂)))
-	observadores basicos
-		cumple: conj(caracteristica) × restriccion → bool
-	generadores
-		AND: restriccion × restriccion → restriccion
-		OR: restriccion × restriccion → restriccion
-		NOT: restriccion → restriccion
-		VAR: caracteristica → restriccion
-	otras operaciones
-		TRUE: → restriccion
-		FALSE: → restriccion
-	axiomas
-		cumple(cs, VAR(c)) ≡ c ∈ cs
-		cumple(cs, NOT(c)) ≡ ¬(cumple(cs, c))
-		cumple(cs, AND(c1, c2)) ≡ cumple(cs, c1) ∧ cumple(cs, c2)
-		cumple(cs, OR(c1, c2)) ≡ cumple(cs, c1) ∨ cumple(cs, c2)
+  generos restriccion
+  exporta AND, OR, NOT, VAR, cumple
+  igualdad observacional
+    (∀ r₁, r₂ : restriccion) (r₁ =obs r₂ ↔
+      (∀ c : conj(caracteristica)) (cumple(c, r₁) =obs cumple(c, r₂)))
+  observadores basicos
+    cumple: conj(caracteristica) × restriccion → bool
+  generadores
+    AND: restriccion × restriccion → restriccion
+    OR: restriccion × restriccion → restriccion
+    NOT: restriccion → restriccion
+    VAR: caracteristica → restriccion
+  otras operaciones
+    TRUE: → restriccion
+    FALSE: → restriccion
+  axiomas
+    cumple(cs, VAR(c)) ≡ c ∈ cs
+    cumple(cs, NOT(c)) ≡ ¬(cumple(cs, c))
+    cumple(cs, AND(c1, c2)) ≡ cumple(cs, c1) ∧ cumple(cs, c2)
+    cumple(cs, OR(c1, c2)) ≡ cumple(cs, c1) ∨ cumple(cs, c2)
 
-		TRUE ≡ OR(VAR("dummy"), NOT(VAR("dummy")))
+    TRUE ≡ OR(VAR("dummy"), NOT(VAR("dummy")))
 
-		FALSE ≡ AND(VAR("dummy"), NOT(VAR("dummy")))
+    FALSE ≡ AND(VAR("dummy"), NOT(VAR("dummy")))
 Fin TAD
 
 TAD estacion ES string
@@ -48,199 +48,210 @@ TAD conexion ES ⟨estacion, restriccion⟩
 TAD conexiones ES conj(conexion)
 
 TAD Mapa
-	generos mapa
-	exporta estaciones, conexiones, nuevo, crearEst, conectar, esBloqueante, conectadas, caminos
-	igualdad observacional
-		(∀ m₁, m₂ : mapa) (m₁ =obs m₂ ↔
-			estaciones(m₁) =obs estaciones(m₂) ∧ₗ
-			(∀ e ∈ estaciones(m₁)) (conexiones(m₁, e) =obs conexiones(m₂, e)))
-	observadores basicos
-		estaciones: mapa → conj(estacion)
-		conexiones: mapa m × estacion e → conj(conexion) {e ∈ estaciones(m)}
-	generadores
-		nuevo: → mapa
-		crearEst: mapa m × estacion a → mapa {a ∉ estaciones(m)}
-		conectar: mapa m × estacion a × estacion b × restriccion → mapa {a, b ∈ estaciones(m)}
-	otras operaciones
-		esBloqueante: mapa m × conj(caracteristica) × estacion e → bool {e ∈ estaciones(m)}
-		esBloqueante': conj(conexion) × conj(caracteristica) → bool
-		conectadas: mapa m × estacion a × estacion b → bool {a, b ∈ estaciones(m)}
-		conectadas': estacion × conj(conexion) → bool
-		caminos: mapa m × estacion a × estacion b → conj(restriccion) {a, b ∈ estaciones(m) ∧ conectadas(m, a, b)}
-		caminos': estacion × conj(conexion) → conj(restriccion)
-	axiomas
-		conexiones(crearEst(m, e), k) ≡ ϕ
-		conexiones(conectar(m, a, b, r), e) ≡
-			(if e ≡ a then
-				⟨b, r⟩
-			else
-				if e ≡ b then
-					⟨a, r⟩
-				else
-					ϕ
-				fi
-			fi) ∪ conexiones(m, e)
+  generos mapa
+  exporta estaciones, conexiones, nuevo, crearEst, conectar,
+          esBloqueante, conectadas, caminos
+  igualdad observacional
+    (∀ m₁, m₂ : mapa) (m₁ =obs m₂ ↔
+      estaciones(m₁) =obs estaciones(m₂) ∧ₗ
+      (∀ e ∈ estaciones(m₁)) (conexiones(m₁, e) =obs conexiones(m₂, e)))
+  observadores basicos
+    estaciones : mapa → conj(estacion)
+    conexiones : mapa m × estacion e → conj(conexion) {e ∈ estaciones(m)}
+  generadores
+    nuevo    : → mapa
+    crearEst : mapa m × estacion a → mapa {a ∉ estaciones(m)}
+    conectar : mapa m × estacion a × estacion b × restriccion → mapa {a, b ∈ estaciones(m)}
+  otras operaciones
+    esBloqueante  : mapa m × conj(caracteristica) × estacion e → bool {e ∈ estaciones(m)}
+    esBloqueante' : conj(conexion) × conj(caracteristica) → bool
 
-		estaciones(nuevo) ≡ ϕ
-		estaciones(crearEst(m, e)) ≡ { e } ∪ estaciones(m)
-		estaciones(conectar(m, a, b)) ≡ estaciones(m)
+    conectadas    : mapa m × estacion a × estacion b → bool {a, b ∈ estaciones(m)}
+    conectadas'   : estacion × conj(conexion) → bool
 
-		esBloqueante(m, r, e) ≡.
-			if ϕ?(conexiones(m, e)) then
-				False
-			else
-				esBloqueante'(conexiones(m, e), r)
-			fi
+    caminos       : mapa m × estacion a × estacion b → conj(restriccion)
+                  {a, b ∈ estaciones(m) ∧ conectadas(m, a, b)}
+    caminos'      : estacion × conj(conexion) → conj(restriccion)
+  axiomas
+    conexiones(crearEst(m, e), k) ≡ ϕ
+    conexiones(conectar(m, a, b, r), e) ≡
+      (if e ≡ a then
+        ⟨b, r⟩
+      else
+        if e ≡ b then
+          ⟨a, r⟩
+        else
+          ϕ
+        fi
+      fi) ∪ conexiones(m, e)
 
-		esBloqueante'(c, r) ≡
-			if ϕ?(c) then
-				True
-			else
-				¬(cumple(r, π₂(dameUno(c)))) ∧ₗ esBloqueante'(sinUno(c), r)
-			fi
+    estaciones(nuevo) ≡ ϕ
+    estaciones(crearEst(m, e)) ≡ { e } ∪ estaciones(m)
+    estaciones(conectar(m, a, b)) ≡ estaciones(m)
 
-		conectadas(m, a, b) ≡ conectadas'(b, conexiones(m, a))
+    esBloqueante(m, r, e) ≡.
+      if ϕ?(conexiones(m, e)) then
+        False
+      else
+        esBloqueante'(conexiones(m, e), r)
+      fi
 
-		conectadas'(a, c) ≡
-			if ϕ?(c) then
-				False
-			else
-				π₁(dameUno(c)) ≡ a) ∨ₗ conectadas'(a, sinUno(c))
-			fi
+    esBloqueante'(c, r) ≡
+      if ϕ?(c) then
+        True
+      else
+        ¬(cumple(r, π₂(dameUno(c)))) ∧ₗ esBloqueante'(sinUno(c), r)
+      fi
 
-		caminos(m, a, b) ≡ caminos'(b, conexiones(m, a))
+    conectadas(m, a, b) ≡ conectadas'(b, conexiones(m, a))
 
-		caminos'(a, c) ≡
-			if ϕ?(c) then
-				ϕ
-			else
-				(if π₁(dameUno(c)) ≡ a then
-					π₂(dameUno(c))
-				else
-					ϕ
-				fi) ∪ caminos'(a, sinUno(c))
-			fi
+    conectadas'(a, c) ≡
+      if ϕ?(c) then
+        False
+      else
+        π₁(dameUno(c)) ≡ a) ∨ₗ conectadas'(a, sinUno(c))
+      fi
+
+    caminos(m, a, b) ≡ caminos'(b, conexiones(m, a))
+
+    caminos'(a, c) ≡
+      if ϕ?(c) then
+        ϕ
+      else
+        (if π₁(dameUno(c)) ≡ a then
+          π₂(dameUno(c))
+        else
+          ϕ
+        fi) ∪ caminos'(a, sinUno(c))
+      fi
 Fin TAD
 
 TAD Ciudad
-	generos ciudad
--- PREGUNTAR bien que cosas deberian ir en exporta.
--- Deberian todas las operaciones funcionar con RURs?
--- Hace falta una funcion que inserte y devuelva la nueva ciudad con el robot?
-	exporta nueva, agregar, buscar, ultimoId, mover, inspeccion
-	igualdad observacional
-		(∀ c₁, c₂ : ciudad) (c₁ =obs c₂ ↔
-			(mapeo(c₁) =obs mapeo(c₂) ∧ robots(c₁) =obs robots(c₂)) ∧ₗ
-			(∀ r ∈ robots(c₁)) (historial(c₁, r) =obs historial(c₂, r)) ∧ₗ
-			((robots(c₁) ≠obs ϕ) ⟹  ultimoId(c₁) =obs ultimoId(c₂)))
-	observadores basicos
-		mapeo: ciudad → mapa
-		robots: ciudad → conj(robot)
-		historial: ciudad c × robot r → pila(conexion) {r ∈ robots(c)}
-	generadores
-		nueva: mapa → ciudad
-		agregar: ciudad c × conj(caracteristica) cs × estacion e → ciudad {cs ≠obs ϕ ∧ e ∈ estaciones(mapeo(c)) ∧ₗ ¬esBloqueante(mapeo(c), cs, e)}
-		mover: ciudad c × robot r × conexion x → ciudad {esConexionValida(c, r, x)}
-		borrar: ciudad c × robot r → ciudad {r ∈ robots(c)}
-	otras operaciones
-		buscar: ciudad c × rur i → robot {(∃r ∈ robots(c)) (id(r) =obs i)}
-		buscar': conj(robot) c × rur i → robot {(∃r ∈ c) (id(r) =obs i)}
-		ultimoId: ciudad c → rur {robots(c) ≠obs ϕ}
-		ultimoId': ciudad c × rur i × conj(robot) k → rur {k ⊆ robots(c) ∧ (∃r ∈ robots(c)) (id(r) =obs i)}
-		esConexionValida: ciudad c × robot r × conexion → bool
-		inspeccion: ciudad c × estacion e → ciudad {e ∈ estaciones(mapeo(c))}
-		inspeccion': ciudad c × estacion e × ⟨robot, nat⟩ r × conj(⟨robot, nat⟩) k → ciudad {e ∈ estaciones(mapeo(c)) ∧ k ⊆ obtenerRobots(c, e) ∧ r ∈ obtenerRobots(c, e)}
-		infracciones: ciudad c × robot r → nat {r ∈ robots(c)}
-		infracciones': conj(caracteristica) × pila(conexion) → nat
-		obtenerRobots: ciudad c × estacion e → conj(⟨robot, nat⟩) {e ∈ estaciones(mapeo(c))}
-		obtenerRobots': ciudad c × conj(robot) k × estacion e → conj(⟨robot, nat⟩) {k ⊆ robots(c) ∧ e ∈ estaciones(mapeo(c))}
-	axiomas
-		mapeo(nueva(m)) ≡ m
-		mapeo(agregar(c, r, e)) ≡ mapeo(c)
-		mapeo(mover(c, r, e)) ≡ mapeo(c)
-		mapeo(borrar(c, r)) ≡ mapeo(c)
+  generos ciudad
+  exporta nueva, agregar, mover, borrar,
+          mapeo, robots, historial, buscar, ultimoId, inspeccion
+  igualdad observacional
+    (∀ c₁, c₂ : ciudad) (c₁ =obs c₂ ↔
+      (mapeo(c₁) =obs mapeo(c₂) ∧ robots(c₁) =obs robots(c₂)) ∧ₗ
+      (∀ r ∈ robots(c₁)) (historial(c₁, r) =obs historial(c₂, r)) ∧ₗ
+      ((robots(c₁) ≠obs ϕ) ⟹  ultimoId(c₁) =obs ultimoId(c₂)))
+  observadores basicos
+    mapeo     : ciudad → mapa
+    robots    : ciudad → conj(robot)
+    historial : ciudad c × robot r → pila(conexion) {r ∈ robots(c)}
+  generadores
+    nueva   : mapa → ciudad
+    agregar : ciudad c × conj(caracteristica) cs × estacion e → ciudad
+              {cs ≠obs ϕ ∧ₗ e ∈ estaciones(mapeo(c)) ∧ₗ ¬esBloqueante(mapeo(c), cs, e)}
+    mover   : ciudad c × robot r × conexion x → ciudad {esConexionValida(c, r, x)}
+    borrar  : ciudad c × robot r → ciudad {r ∈ robots(c)}
+  otras operaciones
+    esConexionValida: ciudad × robot × conexion → bool
 
-		robots(nueva(m)) ≡ ϕ
-		robots(agregar(c, cs, e)) ≡
-			{ instanciar(if ϕ?(robots(c)) then 1 else ultimoId(c) + 1 fi, cs) } ∪ robots(c)
-		robots(mover(c, r, e)) ≡ robots(c)
-		robots(borrar(c, r)) ≡ robots(c) - { r }
+    buscar         : ciudad c × rur i → robot {(∃r ∈ robots(c)) (id(r) =obs i)}
+    buscar'        : conj(robot) c × rur i → robot {(∃r ∈ c) (id(r) =obs i)}
 
-		historial(agregar(c, cs, e), r) ≡
-			if id(r) ≡ ultimoId(c) + 1 then
-				apilar(⟨e, cs⟩, vacia)
-			else
-				historial(c, r)
-			fi
+    ultimoId       : ciudad c → rur {robots(c) ≠obs ϕ}
+    ultimoId'      : ciudad c × rur i × conj(robot) k → rur
+                    {k ⊆ robots(c) ∧ (∃r ∈ robots(c)) (id(r) =obs i)}
 
-		historial(mover(c, r', x), r) ≡
-			if r ≡ r' then
-				apilar(x, historial(c, r))
-			else
-				historial(c, r)
-			fi
+    inspeccion     : ciudad c × estacion e → ciudad {e ∈ estaciones(mapeo(c))}
+    inspeccion'    : ciudad c × estacion e × ⟨robot, nat⟩ r × conj(⟨robot, nat⟩) k → ciudad
+                    {e∈estaciones(mapeo(c)) ∧ₗ k⊆obtenerRobots(c, e) ∧ₗ r∈obtenerRobots(c, e)}
 
-		buscar(c, i) ≡ buscar'(robots(c), i)
+    infracciones   : ciudad c × robot r → nat {r ∈ robots(c)}
+    infracciones'  : conj(caracteristica) × pila(conexion) → nat
 
-		buscar'(cs, i) ≡
-			if id(dameUno(cs)) ≡ i then
-				dameUno(cs)
-			else
-				buscar'(sinUno(cs), i)
-			fi
+    obtenerRobots  : ciudad c × estacion e → conj(⟨robot, nat⟩) {e ∈ estaciones(mapeo(c))}
+    obtenerRobots' : ciudad c × conj(robot) k × estacion e → conj(⟨robot, nat⟩)
+                    {e ∈ estaciones(mapeo(c)) ∧ k ⊆ robots(c)}
+  axiomas
+    mapeo(nueva(m)) ≡ m
+    mapeo(agregar(c, r, e)) ≡ mapeo(c)
+    mapeo(mover(c, r, e)) ≡ mapeo(c)
+    mapeo(borrar(c, r)) ≡ mapeo(c)
 
-		ultimoId(c) ≡ ultimoId'(id(dameUno(robots(c))), sinUno(robots(c)))
+    robots(nueva(m)) ≡ ϕ
+    robots(agregar(c, cs, e)) ≡
+      { instanciar(if ϕ?(robots(c)) then 1 else ultimoId(c) + 1 fi, cs) } ∪ robots(c)
+    robots(mover(c, r, e)) ≡ robots(c)
+    robots(borrar(c, r)) ≡ robots(c) - { r }
 
-		ultimoId'(m, c) ≡
-			if ϕ?(c) then
-				m
-			else
-				ultimoId'(if id(dameUno(c)) > m then id(dameUno(c)) else m fi, sinUno(c))
-			fi
+    historial(agregar(c, cs, e), r) ≡
+      if id(r) ≡ ultimoId(c) + 1 then
+        apilar(⟨e, cs⟩, vacia)
+      else
+        historial(c, r)
+      fi
 
-		esConexionValida(c, r, x) ≡
-			r ∈ robots(c) ∧ₗ
-			π₁(x) ∈ estaciones(mapeo(c)) ∧ₗ
-			conectadas(mapeo(c), tope(historial(c, r)), π₁(x)) ∧ₗ
-			π₂(x) ∈ caminos(mapeo(c), tope(historial(c, r)), π₁(x))
+    historial(mover(c, r', x), r) ≡
+      if r ≡ r' then
+        apilar(x, historial(c, r))
+      else
+        historial(c, r)
+      fi
 
-		inspeccion(c, e) ≡
-			if ϕ?(obtenerRobots(c, e)) then
-				c
-			else
-				inspeccion'(c, e, dameUno(obtenerRobots(c, e)), sinUno(obtenerRobots(c, e)))
-			fi
+    esConexionValida(c, r, x) ≡
+      r ∈ robots(c) ∧ₗ
+      π₁(x) ∈ estaciones(mapeo(c)) ∧ₗ
+      conectadas(mapeo(c), tope(historial(c, r)), π₁(x)) ∧ₗ
+      π₂(x) ∈ caminos(mapeo(c), tope(historial(c, r)), π₁(x))
 
-		inspeccion'(c, e, r, cs) ≡
-			if ϕ?(cs) then
-				if π₂(r) > 0 then
-					borrar(c, r)
-				else
-					c
-				fi
-			else
-				inspeccion'(c, e, if π₂(dameUno(cs)) > π₂(r) then dameUno(cs) else r fi, sinUno(cs))
-			fi
+    buscar(c, i) ≡ buscar'(robots(c), i)
 
-		obtenerRobots(c, e) ≡ obtenerRobots'(c, robots(c), e)
+    buscar'(cs, i) ≡
+      if id(dameUno(cs)) ≡ i then
+        dameUno(cs)
+      else
+        buscar'(sinUno(cs), i)
+      fi
 
-		obtenerRobots'(c, cs, e) ≡
-			if ϕ?(cs) then
-				ϕ
-			else
-				(if tope(historial(c, dameUno(cs))) ≡ e then
-					⟨dameUno(cs), infracciones(c, dameUno(cs))⟩
-				else
-					ϕ
-				fi) ∪ obtenerRobots'(c, sinUno(cs), e)
-			fi
+    ultimoId(c) ≡ ultimoId'(id(dameUno(robots(c))), sinUno(robots(c)))
 
-		infracciones(c, r) ≡ infracciones'(cars(r), historial(c, r))
+    ultimoId'(m, c) ≡
+      if ϕ?(c) then
+        m
+      else
+        ultimoId'(if id(dameUno(c)) > m then id(dameUno(c)) else m fi, sinUno(c))
+      fi
 
-		infracciones'(c, p) ≡
-			if tamaño(p) ≤ 1 then
-				0
-			else
-				β(¬cumple(c, π₂(tope(p)))) + infracciones'(c, desapilar(p))
-			fi
+    inspeccion(c, e) ≡
+      if ϕ?(obtenerRobots(c, e)) then
+        c
+      else
+        inspeccion'(c, e, dameUno(obtenerRobots(c, e)), sinUno(obtenerRobots(c, e)))
+      fi
+
+    inspeccion'(c, e, r, cs) ≡
+      if ϕ?(cs) then
+        if π₂(r) > 0 then
+          borrar(c, r)
+        else
+          c
+        fi
+      else
+        inspeccion'(c, e, if π₂(dameUno(cs)) > π₂(r) then dameUno(cs) else r fi, sinUno(cs))
+      fi
+
+    obtenerRobots(c, e) ≡ obtenerRobots'(c, robots(c), e)
+
+    obtenerRobots'(c, cs, e) ≡
+      if ϕ?(cs) then
+        ϕ
+      else
+        (if tope(historial(c, dameUno(cs))) ≡ e then
+          ⟨dameUno(cs), infracciones(c, dameUno(cs))⟩
+        else
+          ϕ
+        fi) ∪ obtenerRobots'(c, sinUno(cs), e)
+      fi
+
+    infracciones(c, r) ≡ infracciones'(cars(r), historial(c, r))
+
+    infracciones'(c, p) ≡
+      if tamaño(p) ≤ 1 then
+        0
+      else
+        β(¬cumple(c, π₂(tope(p)))) + infracciones'(c, desapilar(p))
+      fi
 Fin TAD
