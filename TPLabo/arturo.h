@@ -196,23 +196,22 @@ Arturo<T>::Arturo(const Arturo<T> &other) {
 
 	if (other.len > 0) {
 		this->sentarArturo(other.arturo->dato);
+		this->talking = this->arturo;
 
 		int i = 1;
-		Nodo *cur = other.arturo->next;
+		Nodo *cur = other.arturo->prev;
 
 		while (i < other.tamanio()) {
 			this->incorporarCaballero(cur->dato);
 
-			if (other.talking == cur) {
+			if (other.talking->dato == cur->dato) {
 				this->talking = this->arturo->next;
-			}
-
-			if (other.interrupt == cur) {
+			} else if (other.interrupt == cur) {
 				this->interrupt = this->arturo->next;
 			}
 
 			i++;
-			cur = cur->next;
+			cur = cur->prev;
 		}
 	}
 }
@@ -446,7 +445,7 @@ ostream& Arturo<T>::mostrarArturo(ostream& os) const {
 			}
 
 			if (cur->next != this->talking) {
-				os << ", ";
+				os << ",";
 			}
 
 			cur = cur->next;
