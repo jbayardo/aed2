@@ -117,13 +117,18 @@ TAD Ciudad
   observadores basicos
     mapeo: ciudad → mapa
     robots: ciudad → conj(robot)
-    infracciones: ciudad c × rur i → nat {(∃r ∈ robots(c)) π₁() }
+    infracciones: ciudad c × rur i → nat {(∃r ∈ robots(c)) π₁(r) =obs i}
   generadores
     nueva: mapa → ciudad
-    agregar: ciudad × conj(caracteristica) × estacion → ciudad
-    mover: ciudad × rur × estacion → ciudad
-    inspeccion: ciudad × estacion → ciudad
+    agregar: ciudad c × conj(caracteristica) cs × estacion e → ciudad
+      {¬(cs =obs ϕ) ∧ₗ e ∈ estaciones(mapeo(c)) ∧ₗ ¬esBloqueante(mapeo(c), cs, e)}
+    mover: ciudad c × rur i × estacion e → ciudad
+      {e ∈ estaciones(mapeo(c)) ∧ (∃r ∈ robots(c)) π₁(r) =obs i ∧ EXISTE UNA CONEXION}
+    inspeccion: ciudad c × estacion e → ciudad {e ∈ estaciones(mapeo(c))}
   otras operaciones
+    posicion: ciudad c × rur i → estacion {(∃r ∈ robots(c)) π₁(r) =obs i}
+    id: ciudad c → rur {¬(robots(c) =obs ϕ)}
+    masInfracciones: ciudad c × estacion e → robot {e ∈ estaciones(mapeo(c))}
   axiomas
     mapeo(nueva(m)) ≡ m
     mapeo(agregar(c, cs, e)) ≡ mapeo(c)
@@ -131,19 +136,48 @@ TAD Ciudad
     mapeo(inspeccion(c, e)) ≡ mapeo(c)
 
     robots(nueva) ≡ ϕ
-    robots(agregar(c, cs, e)) ≡ ⟨id(c) + 1, cs⟩ ∪ robots(c)
+    robots(agregar(c, cs, e)) ≡ Ag(⟨id(c) + 1, cs⟩, robots(c))
     robots(mover(c, r, e)) ≡ robots(c)
-    robots(inspeccion(c, e)) ≡ robots(c) - masInfracciones(c)
+    robots(inspeccion(c, e)) ≡ robots(c) - masInfracciones(c, e)
 
+    masInfracciones(c, e) ≡ masInfracciones'(robotsEnEstacion(robots(c), e))
+
+    masInfracciones'()
+
+    robotsEnEstacion(c, e) ≡ if (ϕ?(c))
+                              then ϕ
+                              else if()
     infracciones(agregar(c, cs, e), r) ≡
       if id(c) + 1 ≡ r then
         0
       else
         infracciones(c)
     infracciones(mover(c, i, e), r) ≡
-      β(r ≡ i ∧ₗ ¬(cumple(camino(mapeo(c), )))) + infracciones(c, r)
-
+      if r ≡ i then
+        if cumple(camino(mapeo(c), posicion(c, r), e)) then
+          infracciones(c, r)
+        else
+          1 + infracciones(c, r)
+      else
+        infracciones(c, r)
     infracciones(inspeccion(c, e), r) ≡ infracciones(c, r)
+
+    posicion(agregar(c, cs, e), r) ≡
+      if id(c) + 1 ≡ r then
+        e
+      else
+        posicion(c, r)
+    posicion(mover(c, i, e), r) ≡
+      if i ≡ r then
+        e
+      else
+        posicion(c, r)
+    posicion(inspeccion(c, e), r) ≡ posicion(c, r)
+
+    id(nueva) ≡ 0
+    id(agregar(c, cs, e)) ≡ 1 + id(c)
+    id(mover(c, i, e)) ≡ id(c)
+    id(inspeccion(c, e)) ≡ id(c)
 Fin TAD
 
 TAD Ciudad
