@@ -128,7 +128,7 @@ TAD Ciudad
   otras operaciones
     posicion: ciudad c × rur i → estacion {(∃r ∈ robots(c)) π₁(r) =obs i}
     id: ciudad c → rur {¬(robots(c) =obs ϕ)}
-    masInfracciones: ciudad c × estacion e → robot {e ∈ estaciones(mapeo(c))}
+    masInfracciones: ciudad c × estacion e → conj(robot) {e ∈ estaciones(mapeo(c)) ∧ TODO Q haya algun robot}
   axiomas
     mapeo(nueva(m)) ≡ m
     mapeo(agregar(c, cs, e)) ≡ mapeo(c)
@@ -140,13 +140,44 @@ TAD Ciudad
     robots(mover(c, r, e)) ≡ robots(c)
     robots(inspeccion(c, e)) ≡ robots(c) - masInfracciones(c, e)
 
-    masInfracciones(c, e) ≡ masInfracciones'(robotsEnEstacion(robots(c), e))
+    masInfracciones(c, e) ≡ if(ϕ?(robotsEnEstacion(c, robots(c), e))) then
+                              ϕ
+                            else
+                              if(infracciones(c, π₁(maxInfractor(c, 
+                                              sinUno(robotsEnEstacion(c, robots(c), e)), 
+                                              dameUno(robotsEnEstacion(c, robots(c), e))))
+                                              ) > 0) then
+                              Ag(maxInfractor(c, sinUno(robotsEnEstacion(c, robots(c), e)), 
+                                              dameUno(robotsEnEstacion(c, robots(c), e))), ϕ)
+                              else ϕ
+                            fi
 
-    masInfracciones'()
 
-    robotsEnEstacion(c, e) ≡ if (ϕ?(c))
-                              then ϕ
-                              else if()
+    maxInfractor: ciudad c x conj(robot) cr x robot r -> robot r
+
+    maxInfractor(c, cr, r) ≡ if (ϕ?(cr)) then r
+                              else
+                                if(infracciones(c, π₁(dameUno(cr))) > r)) then
+                                  maxInfractor(c, sinUno(cr), dameUno(cr))
+                                else
+                                  maxInfractor(c, sinUno(cr), r)
+                                fi
+                              fi
+
+
+    robotsEnEstacion: ciudad c x conj(robot) r x estacion e -> conj(robot)
+
+    robotsEnEstacion(c, r, e) ≡ if (ϕ?(r)) then ϕ
+                                else 
+                                    if(posicion(c, (π₁(dameUno(r))) = e) then 
+                                      Ag(dameUno(r), robotsEnEstacion(c, sinUno(r), e))
+                                    else 
+                                      robotsEnEstacion(c, sinUno(r), e) 
+                                    fi
+                                fi
+
+
+
     infracciones(agregar(c, cs, e), r) ≡
       if id(c) + 1 ≡ r then
         0
@@ -161,6 +192,8 @@ TAD Ciudad
       else
         infracciones(c, r)
     infracciones(inspeccion(c, e), r) ≡ infracciones(c, r)
+
+
 
     posicion(agregar(c, cs, e), r) ≡
       if id(c) + 1 ≡ r then
