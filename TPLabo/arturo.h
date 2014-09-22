@@ -171,7 +171,7 @@ class Arturo {
 	Nodo *arturo;
 	Nodo *talking;
 	Nodo *interrupt;
-	unsigned long len;
+	int len;
 };
 
 template<class T>
@@ -204,9 +204,11 @@ Arturo<T>::Arturo(const Arturo<T> &other) {
 		while (i < other.tamanio()) {
 			this->incorporarCaballero(cur->dato);
 
-			if (other.talking->dato == cur->dato) {
+			if (other.talking != NULL && other.talking->dato == cur->dato) {
 				this->talking = this->arturo->next;
-			} else if (other.interrupt == cur) {
+			}
+
+            if (other.interrupt != NULL && other.interrupt->dato == cur->dato) {
 				this->interrupt = this->arturo->next;
 			}
 
@@ -271,7 +273,7 @@ void Arturo<T>::expulsarCaballero(const T& c) {
 	} else {
 		Nodo *cur = this->arturo->next;
 
-		while (cur != this->arturo && cur->dato != c) {
+		while (cur != this->arturo && !(cur->dato == c)) {
 			cur = cur->next;
 		}
 
@@ -368,14 +370,14 @@ void Arturo<T>::cambioDeLugar(const T& c) {
 		cur = cur->next;
 	}
 
-	Nodo *tmp = cur->prev;
+	Nodo *tmp = cur->next;
 
-	cur->prev->next = this->arturo;
-	cur->prev = this->arturo;
+    cur->next->prev = this->arturo;
+	cur->next = this->arturo;
 	this->arturo->prev->next = this->arturo->next;
 	this->arturo->next->prev = this->arturo->prev;
-	this->arturo->next = cur;
-	this->arturo->prev = tmp;
+	this->arturo->prev = cur;
+	this->arturo->next = tmp;
 }
 
 /*
@@ -402,20 +404,31 @@ int Arturo<T>::tamanio() const {
  */
 template <typename T>
 bool Arturo<T>::operator==(const Arturo<T> &other) const {
-	Nodo *fst = this->arturo;
-	Nodo *snd = other.arturo;
-	bool output = this->len == other.tamanio();
+    if (this->tamanio() != other.tamanio()) {
+        return false;
+    } else if (this->talking->dato != other.talking->dato) {
+        return false;
+    } else if ((other.interrupt == NULL && this->interrupt != NULL) ||
+               (other.interrupt != NULL && this->interrupt == NULL)) {
+        return false;
+    } else if (other.interrupt != NULL && this->interrupt != NULL &&
+               other.interrupt->dato != this->interrupt->dato) {
+        return false;
+    }
 
-	output &= this->talking == other.talking;
-	output &= this->interrupt == other.interrupt;
+    Nodo *fst = this->arturo;
+    Nodo *snd = other.arturo;
 
-	while (fst != NULL && snd != NULL && output) {
-		output = fst->dato == snd->dato;
+	while (fst != this->arturo && snd != other.arturo) {
+        if (fst->dato != snd->dato) {
+            return false;
+        }
+
 		fst = fst->next;
 		snd = snd->next;
 	}
 
-	return output;
+	return true;
 }
 
 /*
@@ -445,7 +458,7 @@ ostream& Arturo<T>::mostrarArturo(ostream& os) const {
 			}
 
 			if (cur->next != this->talking) {
-				os << ",";
+				os << ", ";
 			}
 
 			cur = cur->next;
