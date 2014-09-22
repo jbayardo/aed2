@@ -98,9 +98,9 @@ TAD Mapa
         π₁(dameUno(c)) ≡ a) ∨ₗ conectadas'(a, sinUno(c))
       fi
 
-    caminos(m, a, b) ≡ caminos'(b, conexiones(m, a))
+    camino(m, a, b) ≡ camino'(b, conexiones(m, a))
 
-    caminos'(a, c) ≡
+    camino'(a, c) ≡
       if π₁(dameUno(c)) ≡ a then
           π₂(dameUno(c))
       else
@@ -117,7 +117,7 @@ TAD Ciudad
   observadores basicos
     mapeo: ciudad → mapa
     robots: ciudad → conj(robot)
-    infracciones: ciudad × rur → nat
+    infracciones: ciudad c × rur i → nat {(∃r ∈ robots(c)) π₁() }
   generadores
     nueva: mapa → ciudad
     agregar: ciudad × conj(caracteristica) × estacion → ciudad
@@ -130,7 +130,20 @@ TAD Ciudad
     mapeo(mover(c, r, e)) ≡ mapeo(c)
     mapeo(inspeccion(c, e)) ≡ mapeo(c)
 
-    robots(nueva) ≡
+    robots(nueva) ≡ ϕ
+    robots(agregar(c, cs, e)) ≡ ⟨id(c) + 1, cs⟩ ∪ robots(c)
+    robots(mover(c, r, e)) ≡ robots(c)
+    robots(inspeccion(c, e)) ≡ robots(c) - masInfracciones(c)
+
+    infracciones(agregar(c, cs, e), r) ≡
+      if id(c) + 1 ≡ r then
+        0
+      else
+        infracciones(c)
+    infracciones(mover(c, i, e), r) ≡
+      β(r ≡ i ∧ₗ ¬(cumple(camino(mapeo(c), )))) + infracciones(c, r)
+
+    infracciones(inspeccion(c, e), r) ≡ infracciones(c, r)
 Fin TAD
 
 TAD Ciudad
