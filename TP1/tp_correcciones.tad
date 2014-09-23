@@ -114,10 +114,21 @@ TAD Ciudad
   generos ciudad
   exporta
   igualdad observacional
+  (∀ c₁, c₂: Ciudad) (c₁ =obs c₂ ↔
+    mapeo(c₁) =obs mapeo(c₂) ∧ robots(c₁) =obs robots(c₂)
+    ∧ₗ ((∀ r₁, r₂ : robot) r₁ ∈ robots(c₁) ∧ r₂ ∈ robots(c₁)
+                              ∧ₗ (infracciones(c₁, π₁(r₁)) = infracciones(c₂, π₂(r₂))
+                                  ∧ posicion(c₁, π₁(r₁)) = posicion(c₂, π₂(r₂))) 
+          )
+  )
+
+
   observadores basicos
     mapeo: ciudad → mapa
-    robots: ciudad → conj(robot)
+    robots: ciudad → conj(robot)    
+    posicion: ciudad c × rur i → estacion {(∃r ∈ robots(c)) π₁(r) =obs i}
     infracciones: ciudad c × rur i → nat {(∃r ∈ robots(c)) π₁(r) =obs i}
+
   generadores
     nueva: mapa → ciudad
     agregar: ciudad c × conj(caracteristica) cs × estacion e → ciudad
@@ -126,13 +137,19 @@ TAD Ciudad
       {e ∈ estaciones(mapeo(c)) ∧ (∃r ∈ robots(c)) π₁(r) =obs i ∧ EXISTE UNA CONEXION}
     inspeccion: ciudad c × estacion e → ciudad {e ∈ estaciones(mapeo(c))}
   otras operaciones
-    posicion: ciudad c × rur i → estacion {(∃r ∈ robots(c)) π₁(r) =obs i}
     id: ciudad c → rur {¬(robots(c) =obs ϕ)}
     masInfracciones: ciudad c × estacion e → conj(robot) {e ∈ estaciones(mapeo(c)) ∧ TODO Q haya algun robot}
 
     -- RTP 1 -------------------------------------------------------------------
     huboInspeccion: ciudad → bool
     inspecciones: ciudad c × estacion e → nat {e ∈ estaciones(mapeo(c))}
+
+    caracteristicaMasInfractora: ciudad c -> caracteristica
+    maxCarInfractora: conj(caracteristica) cc x caracteristica car x dicc(caracteristica, nat) d -> caracteristica
+    infraccionesXCaracteristica: ciudad c x conj(robot) r -> dicc(caracteristica, nat)
+    agregarCarInfDicc: conj(caracteristica) cc x nat i x dicc(caracteristica, nat) d-> dicc(caracteristica, nat)
+    prevVal: caracteristica k x dicc(caracteristica, nat) d -> nat
+
   axiomas
     mapeo(nueva(m)) ≡ m
     mapeo(agregar(c, cs, e)) ≡ mapeo(c)
@@ -224,4 +241,37 @@ TAD Ciudad
     inspecciones(agregar(c, cs, e), p) ≡ inspecciones(c)
     inspecciones(mover(c, i, e), p) ≡ inspecciones(c)
     inspecciones(inspeccion(c, e), p) ≡ β(e ≡ p) + inspecciones(c, p)
+
+    caracteristicaMasInfractora(c) ≡ if (ϕ?(claves(infraccionesXCaracteristica(c, robots(c))))) then "dummy"
+                else maxCarInfractora(
+                      sinUno(claves(infraccionesXCaracteristica(c, robots(c)))),
+                      dameUno(claves(infraccionesXCaracteristica(c, robots(c)))),
+                      infraccionesXCaracteristica(c, robots(c))
+                    )
+                fi
+
+    maxCarInfractora(cc, car, d) ≡ if (ϕ?(cc)) then car 
+                     else 
+                        if(obtener(dameUno(cc), d) > obtener(car, d)) then
+                          maxCarInfractora(sinUno(cc), dameUno(cc), d)
+                        else 
+                          maxCarInfractora(sinUno(cc), car, d)
+                        fi
+                      fi
+
+
+
+    infraccionesXCaracteristica(c,r) ≡ if (ϕ?(r)) then vacio
+                      else agregarCarInfDicc(
+                          π₂(dameUno(r)), 
+                          infracciones(c, π₁(dameUno(r))), 
+                          infraccionesXCaracteristica(c, sinUno(r)
+                      ) fi
+
+    agregarCarInfDicc(cc, i, d) ≡ if (ϕ?(cc)) then d
+                    else definir(dameUno(cc), i + prevVal(dameUno(cc), d),
+                        agregarCarInfDicc(sinUno(cc), i, d))
+                    fi
+
+    prevVal(k, d) ≡ if (def?(k, d)) then obtener(k, d) else 0 fi
 Fin TAD
