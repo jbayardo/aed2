@@ -117,8 +117,8 @@ TAD Ciudad
   (∀ c₁, c₂: Ciudad) (c₁ =obs c₂ ↔
     mapeo(c₁) =obs mapeo(c₂) ∧ robots(c₁) =obs robots(c₂)
     ∧ₗ ((∀ r₁, r₂ : robot) r₁ ∈ robots(c₁) ∧ r₂ ∈ robots(c₁)
-                              ∧ₗ (infracciones(c₁, π₁(r₁)) = infracciones(c₂, π₂(r₂))
-                                  ∧ posicion(c₁, π₁(r₁)) = posicion(c₂, π₂(r₂))) 
+                              ∧ₗ (infracciones(c₁, π₁(r₁)) = infracciones(c₂, π₁(r₂))
+                                  ∧ posicion(c₁, π₁(r₁)) = posicion(c₂, π₁(r₂))) 
           )
   )
 
