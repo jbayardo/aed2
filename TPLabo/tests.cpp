@@ -60,6 +60,7 @@ void check_expulsar() {
  ******************************************************************************/
 
 /*
+
  * Crea una mesa de int vacia y no agrega elementos
  */
 void check_crear_mesa_vacia() {
@@ -111,10 +112,10 @@ void check_mostrar_arturo(){
         ASSERT_EQ(to_s(mesa), "[ARTURO(10)]");
 
         mesa.incorporarCaballero(cab1);
-        ASSERT_EQ(to_s(mesa), "[ARTURO(10),1]");
+        ASSERT_EQ(to_s(mesa), "[ARTURO(10), 1]");
 
         mesa.incorporarCaballero(cab2);
-        ASSERT_EQ(to_s(mesa), "[ARTURO(10),2,1]");
+        ASSERT_EQ(to_s(mesa), "[ARTURO(10), 2, 1]");
 
 }
 
@@ -126,15 +127,15 @@ void check_agregar_y_sacar_caballeros(){
 
         mesa.incorporarCaballero(cab1);
         ASSERT_EQ(mesa.tamanio(), 2);
-        ASSERT_EQ(to_s(mesa), "[ARTURO(10),1]");
+        ASSERT_EQ(to_s(mesa), "[ARTURO(10), 1]");
 
         mesa.incorporarCaballero(cab2);
         ASSERT_EQ(mesa.tamanio(), 3);
-        ASSERT_EQ(to_s(mesa), "[ARTURO(10),2,1]");
+        ASSERT_EQ(to_s(mesa), "[ARTURO(10), 2, 1]");
 
         mesa.expulsarCaballero(cab2);
         ASSERT_EQ(mesa.tamanio(), 2);
-        ASSERT_EQ(to_s(mesa), "[ARTURO(10),1]");
+        ASSERT_EQ(to_s(mesa), "[ARTURO(10), 1]");
 }
 
 void check_copiar_y_comparar(){
@@ -145,20 +146,20 @@ void check_copiar_y_comparar(){
         mesa.incorporarCaballero(cab2);
         Arturo<int> mesa2(mesa);
         ASSERT_EQ(mesa.tamanio(), mesa2.tamanio());
-        ASSERT_EQ(to_s(mesa), "[ARTURO(10),2,1]");
-        ASSERT_EQ(to_s(mesa2), "[ARTURO(10),2,1]");
+        ASSERT_EQ(to_s(mesa), "[ARTURO(10), 2, 1]");
+        ASSERT_EQ(to_s(mesa2), "[ARTURO(10), 2, 1]");
         ASSERT(mesa==mesa2);
 
         mesa.expulsarCaballero(2);
         ASSERT(!(mesa==mesa2));
-        ASSERT_EQ(to_s(mesa), "[ARTURO(10),1]");
-        ASSERT_EQ(to_s(mesa2), "[ARTURO(10),2,1]");
+        ASSERT_EQ(to_s(mesa), "[ARTURO(10), 1]");
+        ASSERT_EQ(to_s(mesa2), "[ARTURO(10), 2, 1]");
         mesa.expulsarCaballero(1);
         mesa.expulsarCaballero(10);
 
         ASSERT(!(mesa==mesa2));
         ASSERT_EQ(to_s(mesa), "[]");
-        ASSERT_EQ(to_s(mesa2), "[ARTURO(10),2,1]");
+        ASSERT_EQ(to_s(mesa2), "[ARTURO(10), 2, 1]");
 }
 
 void check_caballeroActual(){
@@ -170,32 +171,32 @@ void check_caballeroActual(){
         mesa.incorporarCaballero(cab1);
         ASSERT_EQ(mesa.tamanio(), 4);
 
-        ASSERT_EQ(to_s(mesa), "[ARTURO(Arturo),Beto,Cleto,Dante]");
+        ASSERT_EQ(to_s(mesa), "[ARTURO(Arturo), Beto, Cleto, Dante]");
         ASSERT_EQ(mesa.caballeroActual(), "Arturo");
         mesa.proximoCaballero();
-        ASSERT_EQ(to_s(mesa), "[Beto,Cleto,Dante,ARTURO(Arturo)]");
+        ASSERT_EQ(to_s(mesa), "[Beto, Cleto, Dante, ARTURO(Arturo)]");
         ASSERT_EQ(mesa.caballeroActual(), "Beto");
         mesa.proximoCaballero();
-        ASSERT_EQ(to_s(mesa), "[Cleto,Dante,ARTURO(Arturo),Beto]");
+        ASSERT_EQ(to_s(mesa), "[Cleto, Dante, ARTURO(Arturo), Beto]");
         ASSERT_EQ(mesa.caballeroActual(), "Cleto");
         mesa.proximoCaballero();
-        ASSERT_EQ(to_s(mesa), "[Dante,ARTURO(Arturo),Beto,Cleto]");
+        ASSERT_EQ(to_s(mesa), "[Dante, ARTURO(Arturo), Beto, Cleto]");
         ASSERT_EQ(mesa.caballeroActual(), "Dante");
         mesa.proximoCaballero();
-        ASSERT_EQ(to_s(mesa), "[ARTURO(Arturo),Beto,Cleto,Dante]");
+        ASSERT_EQ(to_s(mesa), "[ARTURO(Arturo), Beto, Cleto, Dante]");
         ASSERT_EQ(mesa.caballeroActual(), "Arturo");
 
         mesa.caballeroAnterior();
-        ASSERT_EQ(to_s(mesa), "[Dante,ARTURO(Arturo),Beto,Cleto]");
+        ASSERT_EQ(to_s(mesa), "[Dante, ARTURO(Arturo), Beto, Cleto]");
         ASSERT_EQ(mesa.caballeroActual(), "Dante");
         mesa.caballeroAnterior();
-        ASSERT_EQ(to_s(mesa), "[Cleto,Dante,ARTURO(Arturo),Beto]");
+        ASSERT_EQ(to_s(mesa), "[Cleto, Dante, ARTURO(Arturo), Beto]");
         ASSERT_EQ(mesa.caballeroActual(), "Cleto");
         mesa.caballeroAnterior();
-        ASSERT_EQ(to_s(mesa), "[Beto,Cleto,Dante,ARTURO(Arturo)]");
+        ASSERT_EQ(to_s(mesa), "[Beto, Cleto, Dante, ARTURO(Arturo)]");
         ASSERT_EQ(mesa.caballeroActual(), "Beto");
         mesa.caballeroAnterior();
-        ASSERT_EQ(to_s(mesa), "[ARTURO(Arturo),Beto,Cleto,Dante]");
+        ASSERT_EQ(to_s(mesa), "[ARTURO(Arturo), Beto, Cleto, Dante]");
         ASSERT_EQ(mesa.caballeroActual(), "Arturo");
 }
 
@@ -210,32 +211,32 @@ void check_hablaArturo(){
         mesa.proximoCaballero();
         mesa.proximoCaballero();
         ASSERT_EQ(mesa.caballeroActual(), "Cleto");
-        ASSERT_EQ(to_s(mesa), "[Cleto,Dante,ARTURO(Arturo),Beto]");
+        ASSERT_EQ(to_s(mesa), "[Cleto, Dante, ARTURO(Arturo), Beto]");
         mesa.hablaArturo();
         ASSERT_EQ(mesa.caballeroActual(), "Arturo");
-        ASSERT_EQ(to_s(mesa), "[ARTURO(Arturo),Beto,*Cleto,Dante]");
+        ASSERT_EQ(to_s(mesa), "[ARTURO(Arturo), Beto, *Cleto, Dante]");
         mesa.proximoCaballero();
         ASSERT_EQ(mesa.caballeroActual(), "Dante");
-        ASSERT_EQ(to_s(mesa), "[Dante,ARTURO(Arturo),Beto,Cleto]");
+        ASSERT_EQ(to_s(mesa), "[Dante, ARTURO(Arturo), Beto, Cleto]");
         mesa.hablaArturo();
         ASSERT_EQ(mesa.caballeroActual(), "Arturo");
-        ASSERT_EQ(to_s(mesa), "[ARTURO(Arturo),Beto,Cleto,*Dante]");
+        ASSERT_EQ(to_s(mesa), "[ARTURO(Arturo), Beto, Cleto, *Dante]");
         mesa.caballeroAnterior();
         ASSERT_EQ(mesa.caballeroActual(), "Cleto");
-        ASSERT_EQ(to_s(mesa), "[Cleto,Dante,ARTURO(Arturo),Beto]");
+        ASSERT_EQ(to_s(mesa), "[Cleto, Dante, ARTURO(Arturo), Beto]");
         mesa.hablaArturo();
         ASSERT_EQ(mesa.caballeroActual(), "Arturo");
-        ASSERT_EQ(to_s(mesa), "[ARTURO(Arturo),Beto,*Cleto,Dante]");
+        ASSERT_EQ(to_s(mesa), "[ARTURO(Arturo), Beto, *Cleto, Dante]");
         mesa.expulsarCaballero("Cleto");
         ASSERT_EQ(mesa.caballeroActual(), "Arturo");
-        ASSERT_EQ(to_s(mesa), "[ARTURO(Arturo),Beto,Dante]");
+        ASSERT_EQ(to_s(mesa), "[ARTURO(Arturo), Beto, Dante]");
         ASSERT_EQ(mesa.tamanio(), 3);
         mesa.proximoCaballero();
         ASSERT_EQ(mesa.caballeroActual(), "Beto");
-        ASSERT_EQ(to_s(mesa), "[Beto,Dante,ARTURO(Arturo)]");
+        ASSERT_EQ(to_s(mesa), "[Beto, Dante, ARTURO(Arturo)]");
         mesa.proximoCaballero();
         ASSERT_EQ(mesa.caballeroActual(), "Dante");
-        ASSERT_EQ(to_s(mesa), "[Dante,ARTURO(Arturo),Beto]");
+        ASSERT_EQ(to_s(mesa), "[Dante, ARTURO(Arturo), Beto]");
 }
 
 void check_cambioDeLugar(){
@@ -249,42 +250,23 @@ void check_cambioDeLugar(){
         mesa.proximoCaballero();
         mesa.proximoCaballero();
         ASSERT_EQ(mesa.caballeroActual(), "Cleto");
-        ASSERT_EQ(to_s(mesa), "[Cleto,Dante,ARTURO(Arturo),Beto]");
+        ASSERT_EQ(to_s(mesa), "[Cleto, Dante, ARTURO(Arturo), Beto]");
         mesa.cambioDeLugar("Cleto");
         ASSERT_EQ(mesa.caballeroActual(), "Cleto");
-        ASSERT_EQ(to_s(mesa), "[Cleto,ARTURO(Arturo),Dante,Beto]");
+        ASSERT_EQ(to_s(mesa), "[Cleto, ARTURO(Arturo), Dante, Beto]");
         mesa.proximoCaballero();
         ASSERT_EQ(mesa.caballeroActual(), "Arturo");
-        ASSERT_EQ(to_s(mesa), "[ARTURO(Arturo),Dante,Beto,Cleto]");
+        ASSERT_EQ(to_s(mesa), "[ARTURO(Arturo), Dante, Beto, Cleto]");
         mesa.proximoCaballero();
         ASSERT_EQ(mesa.caballeroActual(), "Dante");
-        ASSERT_EQ(to_s(mesa), "[Dante,Beto,Cleto,ARTURO(Arturo)]");
+        ASSERT_EQ(to_s(mesa), "[Dante, Beto, Cleto, ARTURO(Arturo)]");
         mesa.hablaArturo();
         ASSERT_EQ(mesa.caballeroActual(), "Arturo");
-        ASSERT_EQ(to_s(mesa), "[ARTURO(Arturo),*Dante,Beto,Cleto]");
+        ASSERT_EQ(to_s(mesa), "[ARTURO(Arturo), *Dante, Beto, Cleto]");
         mesa.proximoCaballero();
         ASSERT_EQ(mesa.caballeroActual(), "Beto");
-        ASSERT_EQ(to_s(mesa), "[Beto,Cleto,ARTURO(Arturo),Dante]");
+        ASSERT_EQ(to_s(mesa), "[Beto, Cleto, ARTURO(Arturo), Dante]");
 }
-
-
-void check_expulsar_no_saca_a_arturo(){
-
-        Arturo<string> mesa;
-        string arturo = "Arturo", cab1 = "Beto", cab2 = "Cleto", cab3 = "Dante";
-        mesa.sentarArturo(arturo);
-        mesa.incorporarCaballero(cab3);
-        mesa.incorporarCaballero(cab2);
-        mesa.incorporarCaballero(cab1);
-
-
-        Arturo<string> mesa2(mesa);
-
-        mesa.expulsarCaballero(arturo);
-
-        ASSERT(mesa2 == mesa);
-}
-
 
 void check_arturo_de_arturo(){
         Arturo<string> mesa1;
@@ -306,7 +288,7 @@ void check_arturo_de_arturo(){
 
         ASSERT(dobleMesa.caballeroActual() == mesa2);
 
-        ASSERT_EQ(to_s(dobleMesa), "[ARTURO([ARTURO(Arturo2),Jeremías]),[ARTURO(Arturo1),Beto,Cleto,Dante]]");
+        ASSERT_EQ(to_s(dobleMesa), "[ARTURO([ARTURO(Arturo2), Jeremías]), [ARTURO(Arturo1), Beto, Cleto, Dante]]");
 }
 
 
@@ -318,7 +300,7 @@ void check_interrumpidos_distintos_dan_mesas_distintas(){
         mesa1.incorporarCaballero(cab2);
         mesa1.incorporarCaballero(cab1);
         mesa1.proximoCaballero();
-        ASSERT_EQ(to_s(mesa1), "[Beto,Cleto,Dante,ARTURO(Arturo)]");
+        ASSERT_EQ(to_s(mesa1), "[Beto, Cleto, Dante, ARTURO(Arturo)]");
 
         Arturo<string> mesa2;
         mesa2.sentarArturo(arturo);
@@ -327,12 +309,12 @@ void check_interrumpidos_distintos_dan_mesas_distintas(){
         mesa2.incorporarCaballero(cab1);
         mesa2.proximoCaballero();
         mesa2.proximoCaballero();
-        ASSERT_EQ(to_s(mesa2), "[Cleto,Dante,ARTURO(Arturo),Beto]");
+        ASSERT_EQ(to_s(mesa2), "[Cleto, Dante, ARTURO(Arturo), Beto]");
 
         mesa1.hablaArturo();
-        ASSERT_EQ(to_s(mesa1), "[ARTURO(Arturo),*Beto,Cleto,Dante]");
+        ASSERT_EQ(to_s(mesa1), "[ARTURO(Arturo), *Beto, Cleto, Dante]");
         mesa2.hablaArturo();
-        ASSERT_EQ(to_s(mesa2), "[ARTURO(Arturo),Beto,*Cleto,Dante]");
+        ASSERT_EQ(to_s(mesa2), "[ARTURO(Arturo), Beto, *Cleto, Dante]");
 
         ASSERT(!(mesa1 == mesa2));
 }
@@ -353,8 +335,8 @@ void check_arturos_distintos_son_mesas_distintas(){
         mesa2.incorporarCaballero(cab2);
         mesa2.incorporarCaballero(cab1);
 
-        ASSERT_EQ(to_s(mesa1), "[ARTURO(Arturo1),Beto,Cleto,Dante]");
-        ASSERT_EQ(to_s(mesa2), "[ARTURO(Arturo2),Beto,Cleto,Dante]");
+        ASSERT_EQ(to_s(mesa1), "[ARTURO(Arturo1), Beto, Cleto, Dante]");
+        ASSERT_EQ(to_s(mesa2), "[ARTURO(Arturo2), Beto, Cleto, Dante]");
         ASSERT(!(mesa1 == mesa2));
 }
 
@@ -366,14 +348,14 @@ void check_dar_una_vuelta_es_la_misma_mesa(){
         mesa1.incorporarCaballero(cab3);
         mesa1.incorporarCaballero(cab2);
         mesa1.incorporarCaballero(cab1);
-        ASSERT_EQ(to_s(mesa1), "[ARTURO(Arturo),Beto,Cleto,Dante]");
+        ASSERT_EQ(to_s(mesa1), "[ARTURO(Arturo), Beto, Cleto, Dante]");
 
         Arturo<string> mesa2;
         mesa2.sentarArturo(arturo);
         mesa2.incorporarCaballero(cab3);
         mesa2.incorporarCaballero(cab2);
         mesa2.incorporarCaballero(cab1);
-        ASSERT_EQ(to_s(mesa2), "[ARTURO(Arturo),Beto,Cleto,Dante]");
+        ASSERT_EQ(to_s(mesa2), "[ARTURO(Arturo), Beto, Cleto, Dante]");
 
         ASSERT(mesa1 == mesa2);
 
@@ -381,7 +363,7 @@ void check_dar_una_vuelta_es_la_misma_mesa(){
         mesa1.proximoCaballero();
         mesa1.proximoCaballero();
         mesa1.proximoCaballero();
-        ASSERT_EQ(to_s(mesa1), "[ARTURO(Arturo),Beto,Cleto,Dante]");
+        ASSERT_EQ(to_s(mesa1), "[ARTURO(Arturo), Beto, Cleto, Dante]");
 
         ASSERT(mesa1 == mesa2);
 }
@@ -396,11 +378,10 @@ int main() {
         RUN_TEST(check_caballeroActual);
         RUN_TEST(check_hablaArturo);
         RUN_TEST(check_cambioDeLugar);
-        RUN_TEST(check_expulsar_no_saca_a_arturo);
         RUN_TEST(check_arturo_de_arturo);
-        RUN_TEST(check_interrumpidos_distintos_dan_mesas_distintas);
-        RUN_TEST(check_arturos_distintos_son_mesas_distintas);
-        RUN_TEST(check_dar_una_vuelta_es_la_misma_mesa);
+        RUN_TEST(check_interrumpidos_distintos_dan_mesas_distintas)
+        RUN_TEST(check_arturos_distintos_son_mesas_distintas)
+        RUN_TEST(check_dar_una_vuelta_es_la_misma_mesa)
 
         RUN_TEST(check_cambio_turno);
         RUN_TEST(check_expulsar);
