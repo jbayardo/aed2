@@ -1,0 +1,55 @@
+* El orden no deberia ser representacion -> servicios usados -> interfaz?
+
+INTERFAZ
+
+interfaz       : cola
+usa            :
+se explica con : secu(α)
+genero         : cola(α)
+operaciones    :
+
+encolar(in/out c: cola(α), in k: α)
+{c₀ =obs ^c}
+{^c =obs encolar(^k, c₀)}
+
+* Deberia decir algo sobre que no estoy devolviendo nada?
+* Se explica con hace referencia a otro modulo, no?
+* Genero viene a ser el mismo genero que el TAD, no?
+* Que pongo en usa? estrictamente esta usando α
+
+desencolar(in/out c: cola(α)) → res : α
+{¬vacia?(^c) ∧ c₀ =obs ^c}
+{^c =obs desencolar(c₀) ∧ ^res =obs proximo(cₒ)}
+
+* Por que en la aridad uso c : cola(α) y no c : estr?
+* Por que hace falta el renombre c₀ = ^c? (para hablar sobre el estado anterior?)
+* No puedo dar un algoritmo explicito para desencolar porque no tengo la interfaz de cola(α)
+
+tamano(in c: cola(α)) → res : nat
+{true}
+{^res =obs tamano(^c)}
+
+* Esta igualdad que estoy usando no deberia ser la igualdad definicional ≡?
+
+REPRESENTACION
+
+cola(α) se representa con estr donde estr es secu(α)
+
+* Hace falta el renombre si la estructura es simple?
+* Se supone que los nombres cola(α) y secu(α) pertenecen al mundo de los modulos de abstraccion, no?
+
+Rep: ^'(estr) → boolean
+Rep ≡ true
+
+* Verificar si esta bien
+* La aridad de Rep no debería ser equivalente a secu(α) → boolean? este secu viviria en el mundo de TADs
+
+Abs: ^'(estr e) → cola(α) {Rep(e)}
+(∀ e : ^'(estr)) Abs(e) =obs c : cola(α) /
+    vacia?(c) =obs vacia(e) ∧ₗ
+    ¬vacia?(c) ⟹ₗ (prim(e) =obs proximo(c) ∧ fin(e) =obs desencolar(c))
+
+* Hay ambiguedad respecto de vacia
+* La igualdad prim(e) =obs proximo(c) no deberia ser definicional? (seria una condicion mas fuerte)
+* Nunca estoy diciendo como hace ^ para convertir de una secuencia en la representacion al TAD secu
+* La aridad de Abs no seria equivalente a Abs: secu(α) → cola(α)? en este caso podría decir explícitamente cómo construir cola(α)

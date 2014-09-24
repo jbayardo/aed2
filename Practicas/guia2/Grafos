@@ -1,0 +1,31 @@
+TAD Grafo
+    generos grafo
+    exporta nuevo, agregar, conectar, nodos, conexiones
+    igualdad observacional
+    observadores basicos
+      nodos: grafo → conj(nat)
+      conexiones: grafo g × nat n → conj(nat) {n ∈ nodos(g)}
+    generadores
+      nuevo: → grafo
+      agregar: grafo g × nat n → grafo {n ∉ nodos(g)}
+      conectar: grafo g × nat m × nat n → grafo {m, n ∈ nodos(g) ∧ₗ n ∉ conexiones(g, m)}
+    axiomas
+      nodos(nuevo) ≡ ϕ
+      nodos(agregar(g, n)) ≡ nodos(g) ∪ { n }
+      nodos(conectar(g, m, n)) ≡ nodos(g)
+
+      conexiones(agregar(g, n), m) ≡
+        if n ≡ m then ϕ
+        else conexiones(g, m)
+        fi
+      conexiones(conectar(g, n, k), m) ≡
+        if n ≡ m then conexiones(g, m) ∪ { n }
+        else conexiones(g, m)
+        fi
+Fin TAD
+
+Luego, el esquema de inducción:
+
+P(nuevo) ∧ (∀g : grafo) P(g) ⟹
+  [(∀n : nat) n ∉ nodos(g) ⟹ₗ P(agregar(g, n))] ∧
+  [(∀n, m : nat) (m, n ∈ nodos(g) ∧ₗ n ∉ conexiones(g, m)) ⟹ₗ P(conectar(g, m, n))]

@@ -1,0 +1,26 @@
+bool : P(true) ∧ P(false)
+
+nat  :
+    comun   : P(0) ∧ (∀n : nat) P(n) ⟹ P(suc(n))
+    corrida : P(k) ∧ (∀n : nat) k ≤ n ⟹ (P(n) ⟹ P(suc(n)))
+    global  : P(0) ∧ (∀n : nat) ((∀k : nat) k ≤ n ⟹ P(k)) ⟹ P(suc(n))
+
+secu(α): P(<>) ∧ (∀s : secu(α)) P(s) ⟹ (∀k : α) P(k ∙ s)
+
+conj(α): P(ϕ) ∧ (∀c : conj(α)) P(c) ⟹ (∀k : α) P(Ag(k, c))
+
+multiconj(α): P(ϕ) ∧ (∀c : conj(α)) P(c) ⟹ (∀k : α) P(Ag(k, c))
+
+ad(α):
+    [(∀n : nat) P(crearArreglo(n))] ∧
+    [(∀a : ad(α)) P(a) ⟹ (∀k : nat) (k < tam(a) ⟹ (∀p : α) P(a[k] ← p))]
+
+pila(α): P(vacia) ∧ (∀p : pila(α)) P(p) ⟹ (∀k : α) P(apilar(k, p))
+
+cola(α): P(vacia) ∧ (∀p : cola(α)) P(p) ⟹ (∀k : α) P(encolar(k, p))
+
+ab(α): P(nil) ∧ (∀a, b : ab(α)) (P(a) ∧ P(b)) ⟹ (∀k : α) P(bin(a, k, b))
+
+dicc(α, β): P(vacio) ∧ (∀d : dicc(α, β)) P(d) ⟹ (∀a : α, b : β) P(definir(a, b, d))
+
+colaPrior(α): P(vacia) ∧ (∀p : colaPrior(α)) P(p) ⟹ (∀k : α) P(encolar(k, p))

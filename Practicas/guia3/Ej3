@@ -1,0 +1,15 @@
+INTERFAZ
+
+REPRESENTACION
+
+cacotada se representa con estr, donde
+    estr es tupla⟨inicio: nat, fin: nat, elem: array[0..n] de α⟩
+
+Rep: ^'(estr) → boolean
+Rep(e) ≡ true ⟺ e.fin - e.inicio >= 0
+
+* En realidad e.fin = π₁(e), no?
+
+Abs: ^'(estr) e → colaacotada(α) {Rep(e)}
+(∀e : ^'(estr)) Abs(e) =obs c : colaacotada(α) /
+    capacidad(c) =obs n ∧

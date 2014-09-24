@@ -1,0 +1,46 @@
+INTERFAZ
+
+interfaz       : conjunto
+usa            :
+se explica con : secu(α)
+genero         : conj(α)
+operaciones    :
+
+agregar(in/out c : conj(α), in k : α)
+{c₀ =obs ^c}
+{^c =obs Ag(^k, c₀)}
+
+esta(in c : conj(α), in k : conj(α)) → res : bool
+{true}
+{^res =obs ^k ∈ ^c}
+
+cardinal(in c : conj(α)) → res : nat
+{true}
+{^res =obs #^c}
+
+REPRESENTACION
+
+conjunto(α) se representa con estr donde estr(α) es secu(α)
+
+Rep: ^'(estr(α)) → boolean
+Rep(e) ≡ true ⟺ e =obs sinRepetidos(e)
+
+* El tipo es bool o boolean? no deberia ser bool?
+* Lo hice sinRepetidos solo porque puedo, pero en realidad con true bastaba
+
+sinRepetidos: secu(α) → secu(α)
+sinRepetidos(xs) ≡
+  if vacia?(xs) then
+    xs
+  else
+    if esta?(prim(xs), fin(xs)) then
+      sinRepetidos(xs)
+    else
+      prim(xs) ∙ sinRepetidos(fin(xs))
+    fi
+  fi
+
+Abs: ^'(estr(α)) e → conj(α) {Rep(e)}
+(∀ e : ^'(estr(α))) Abs(e) =obs c : conj(α) /
+  vacia?(e) =obs ϕ?(c) ∧ₗ
+  ((∀k : α) esta?(k, e) =obs k ∈ c)
