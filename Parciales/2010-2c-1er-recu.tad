@@ -1,0 +1,37 @@
+1)
+
+* Preguntar especie agresividad string
+
+TAD Zoo
+    generos zoo
+    exporta
+    usa
+    igualdad observacional
+    observadores
+        especies: zoo → conj(especie)
+        cantidad: zoo z × especie e → nat {e ∈ especies(z)}
+    generadores
+        abrir : → zoo
+        ingresar: zoo z × especie e × nat n → zoo {puedenIngresar(z, e, n)}
+    otras operaciones
+        eliminables: zoo × especie × nat → conj(especie)
+        eliminables': zoo × especie × nat × conj(especie) → conj(especie)
+        puedenIngresar: zoo × especie × nat → bool
+    axiomas
+        especies(abrir) ≡ ϕ
+        especies(ingresar(z, e, n)) ≡ especies(z) ∪ { e }
+
+        cantidad(nuevo, p) ≡ 0
+        cantidad(ingresar(z, e, n), p) ≡ n * β(p =obs e) + cantidad(z, p)
+
+        eliminables(z, e, n) ≡ eliminables'(z, e, n, especies(z))
+
+        eliminables'(z, e, n, cs) ≡
+            if ϕ?(cs) then
+                ϕ
+            else
+                eliminables'(z, e, n, sinUno(cs)) ∪
+                if  cantidad(z, dameUno(cs)) < cantidad(z, e) + n ∧
+                    agresividad(dameUno(cs)) < agresividad(e) then { e } else ϕ fi
+            fi
+Fin TAD
