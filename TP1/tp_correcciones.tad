@@ -141,7 +141,7 @@ TAD Ciudad
 
   otras operaciones
     id: ciudad c → rur {¬(robots(c) =obs ϕ)}
-    
+
     masInfracciones: ciudad c × estacion e → conj(robot) {e ∈ estaciones(mapeo(c))}
     
     huboInspeccion: ciudad → bool
@@ -171,6 +171,7 @@ TAD Ciudad
                  {r ⊆ robots(c)}
 
   axiomas
+  TODO: Mete todos los paratodos esos de los axiomas
     mapeo(nueva(m)) ≡ m
     mapeo(agregar(c, cs, e)) ≡ mapeo(c)
     mapeo(mover(c, r, e)) ≡ mapeo(c)
