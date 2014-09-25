@@ -1,28 +1,39 @@
 1)
 
 * Preguntar especie agresividad string
+* Verificar igualdad observacional
 
 TAD Zoo
     generos zoo
     exporta
     usa
     igualdad observacional
+        (∀ z₁, z₂ : zoo) (z₁ =obs z₂ ⟺
+            especies(z₁) =obs especies(z₂) ∧
+            (∀ e : especie) cantidad(z₁, e) =obs cantidad(z₂, e))
     observadores
         especies: zoo → conj(especie)
-        cantidad: zoo z × especie e → nat {e ∈ especies(z)}
+        cantidad: zoo z × especie e → nat
     generadores
         abrir : → zoo
-        ingresar: zoo z × especie e × nat n → zoo {puedenIngresar(z, e, n)}
+        ingresar: zoo z × especie e × nat n → zoo {n > 0 ∧ₗ puedenIngresar(z, e, n)}
     otras operaciones
-        eliminables: zoo × especie × nat → conj(especie)
-        eliminables': zoo × especie × nat × conj(especie) → conj(especie)
+        eliminables: zoo × especie × nat n → conj(especie) {n > 0}
+        eliminables': zoo z × especie e × nat n × conj(especie) cs → conj(especie)
+            {n > 0 ∧ cs ⊆ especies(z)}
         puedenIngresar: zoo × especie × nat → bool
+        sumar: zoo × conj(especie) → nat
     axiomas
         especies(abrir) ≡ ϕ
-        especies(ingresar(z, e, n)) ≡ especies(z) ∪ { e }
+        especies(ingresar(z, e, n)) ≡ (especies(z) ∪ { e }) - eliminables(z, e, n)
 
         cantidad(nuevo, p) ≡ 0
-        cantidad(ingresar(z, e, n), p) ≡ n * β(p =obs e) + cantidad(z, p)
+        cantidad(ingresar(z, e, n), p) ≡
+            if p ∈ eliminables(z, e, n) then
+                0
+            else
+                n * β(e =obs p) + cantidad(z, p)
+            fi
 
         eliminables(z, e, n) ≡ eliminables'(z, e, n, especies(z))
 
@@ -31,7 +42,147 @@ TAD Zoo
                 ϕ
             else
                 eliminables'(z, e, n, sinUno(cs)) ∪
-                if  cantidad(z, dameUno(cs)) < cantidad(z, e) + n ∧
-                    agresividad(dameUno(cs)) < agresividad(e) then { e } else ϕ fi
+                (if  cantidad(z, dameUno(cs)) < cantidad(z, e) + n ∧ agresividad(dameUno(cs)) < agresividad(e) then
+                    { dameUno(cs) }
+                else
+                    if cantidad(z, dameUno(cs)) > cantidad(z, e) + n ∧ agresividad(dameUno(cs)) > agresividad(e) then
+                        { e }
+                    else
+                        ϕ
+                    fi
+                fi)
             fi
+
+        puedenIngresar(z, e, n) ≡
+            if sumar(z, eliminables(z, e, n)) > sumar(z, especies(z)) / 2 ∨ₗ
+               (e ∈ eliminables(z, e, n) ∧
+                    sumar(z, eliminables(z, e, n)) + n > sumar(z, especies(z)) / 2) then
+                false
+            else
+                true
+            fi
+
+        sumar(z, cs) ≡
+            if ϕ?(cs) then 0
+            else cantidad(z, dameUno(cs)) + sumar(z, sinUno(cs)) fi
 Fin TAD
+
+2)
+
+1) P(<>) ∧ (∀s : secu(α)) (P(s) ⟹ (∀a : α) P(a ∙ s))
+
+2) El predicado unario que queremos demostrar es
+
+P(s) ≡ (∀a : α, i : nat) (1 ≤ i ≤ |s| + 1 ⟹ₗ ((s ∘ a)[i] = if 1 ≤ i ≤ |s| then s[i] else a fi))
+
+Veamos el caso base:
+
+P(<>) ≡ (∀a : α, i : nat) (1 ≤ i ≤ |<>| + 1 ⟹ₗ ((<> ∘ a)[i] = if 1 ≤ i ≤ |<>| then <>[i] else a fi))
+
+Por l₁, |<>| ≡ 0, entonces
+
+P(<>) ≡ (∀a : α, i : nat) (1 ≤ i ≤ 1 ⟹ₗ ((<> ∘ a)[i] = if 1 ≤ i ≤ 0 then <>[i] else a fi))
+
+Por ∘₁, tenemos
+
+P(<>) ≡ (∀a : α, i : nat) (1 ≤ i ≤ 1 ⟹ₗ ((a ∙ <>)[i] = if 1 ≤ i ≤ 0 then <>[i] else a fi))
+
+Más aun, sabemos que (∄ i : nat) 1 ≤ i ≤ 0, por lo que
+
+P(<>) ≡ (∀a : α, i : nat) (1 ≤ i ≤ 1 ⟹ₗ ((a ∙ <>)[i] = a))
+
+Por [], tenemos que
+
+P(<>) ≡ (∀a : α, i : nat) (1 ≤ i ≤ 1 ⟹ₗ (if i = 1 then a else <>[i-1] fi = a))
+
+En el caso en que i < 1, o i > 1 la precondición no se cumple, por lo tanto es
+verdadero. En el caso en que i = 1, tenemos que
+
+if i = 1 then a else <>[i-1] fi = a ≡ a = a ≡ true
+
+3) Ahora, para el caso inductivo, queremos ver que
+
+HI (∀a : α, i : nat) (1 ≤ i ≤ |s| + 1 ⟹ₗ ((s ∘ a)[i] = if 1 ≤ i ≤ |s| then s[i] else a fi))
+TI (∀b : α) (∀a : α, i : nat) ((K): 1 ≤ i ≤ |b ∙ s| + 1 ⟹ₗ (L): (((b ∙ s) ∘ a)[i] = if 1 ≤ i ≤ |b ∙ s| then (b ∙ s)[i] else a fi))
+
+En el caso en que la HI es falsa, automaticamente todo es verdadero. Si la HI es
+verdadera, queremos ver que la TI es verdadera.
+
+Observemos que si (K) es falso, la TI se vuelve verdadera. Finalmente, en el caso
+en que (K) es verdadero, queremos ver que (L) también lo es.
+
+((b ∙ s) ∘ a)[i] = if 1 ≤ i ≤ |b ∙ s| then (b ∙ s)[i] else a fi ≡ por ∘₂
+(b ∙ (s ∘ a))[i] = if 1 ≤ i ≤ |b ∙ s| then (b ∙ s)[i] else a fi ≡ por l₂
+(b ∙ (s ∘ a))[i] = if 1 ≤ i ≤ |s| + 1 then (b ∙ s)[i] else a fi ≡ por []
+if i = 1 then b else (s ∘ a)[i-1] fi = if 1 ≤ i ≤ |s| + 1 then (if i = 1 then b else s[i-1] fi) else a fi
+
+En el caso en que i = 1, tenemos que
+
+if 1 = 1 then b else (s ∘ a)[0] fi = if 1 ≤ 1 ≤ |s| + 1 then (if 1 = 1 then b else s[0] fi) else a fi ≡
+b = if 1 = 1 then b else s[0] fi ≡ b = b ≡ true
+
+-------------------------------- De aqui en adelante es super turbio -----------
+
+En el caso en que ¬(i = 1), tenemos:
+
+(s ∘ a)[i-1] = if 1 ≤ i ≤ |s| + 1 then s[i-1] fi else a fi :(M)
+
+Por el lema, i-1 cumple 1 ≤ i-1 ≤ |s| ≡ true, por lo que, por HI, tenemos
+
+((s ∘ a)[i-1] = if 1 ≤ i-1 ≤ |s| then s[i-1] else a fi
+
+Equivalentemente,
+
+((s ∘ a)[i-1] = if 1 + 1 ≤ i ≤ |s| + 1 then s[i-1] else a fi
+
+((s ∘ a)[i-1] = if 2 ≤ i ≤ |s| + 1 then s[i-1] else a fi
+
+Entonces, (M):
+
+if 2 ≤ i ≤ |s| + 1 then s[i-1] else a fi = if 1 ≤ i ≤ |s| + 1 then s[i-1] fi else a fi ≡
+
+------------------------------------- Fin de turbiesa --------------------------
+
+3)
+
+a) instanteConMasEventos se corresponde en eventos
+b) que dos eventos de un mismo empleado no se solapen
+c) las secuencias de eventos estan ordenadas temporalmente
+
+Rep: ^(estr) → boolean
+Rep(e) ≡ true ⟺
+    (a) ∧ (b) ∧ (c)
+
+(a): e.instanceConMasEventos =obs maximo(concatenar(e.eventos, claves(e.eventos)))
+
+maximo: secu(⟨nat, nat⟩) → nat
+maximo(<>) ≡ 0
+maximo(x ∙ xs) ≡
+    if ocurrencias(π₁(x), x ∙ xs) > ocurrencias(maximo(xs), x ∙ xs) then π₁(x)
+    else maximo(xs) fi
+
+ocurrencias: nat → secu(⟨nat, nat⟩) → nat
+ocurrencias(n, <>) ≡ 0
+ocurrencias(n, x ∙ xs) ≡ β(π₁(x) =obs n) + ocurrencias(n, xs)
+
+concatenar: dicc(empleado, secu(⟨nat, nat⟩)) d → conj(empleado) cs → secu(⟨nat, nat⟩)
+    {cs ⊆ claves(d)}
+concatenar(d, cs) ≡
+    if ϕ?(cs) then <> else obtener(d, dameUno(cs)) & concatenar(d, sinUno(cs)) fi
+
+(b y c): (∀empleado ∈ claves(e.eventos)) verif(obtener(empleado, e.eventos))
+
+verif: secu(⟨nat, nat⟩) → bool
+verif(<>) ≡ false
+verif(x ∙ xs) ≡
+    if vacia?(xs) then true
+    else π₁(x) ≤ π₂(x) ∧ π₁(x) < π₁(prim(xs)) ∧ π₂(x) < π₁(prim(xs)) ∧ verif(xs) fi
+
+Abs: ^(estr) → agenda
+(∀e : ^(estr)) Abs(e) =obs a : agenda /
+    empleados(a) =obs claves(e.eventos) ∧
+    (∀p ∈ claves(e.eventos)) eventos(p, a) =obs toConj(obtener(p, e.eventos))
+
+toConj: secu(α) → conj(α)
+toConj(<>) ≡ ϕ
+toConj(x ∙ xs) ≡ Ag(x, toConj(xs))

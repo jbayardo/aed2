@@ -1,0 +1,11 @@
+En Marvel City conviven entre los ciudadanos comunes numerosos superhéroes que luchan día a día contra supervillanos. La gente de la ciudad está interesada en hacer un sistema que les permita manejar cierta infor- mación relativa a estos héroes y villanos. Les interesa que el sistema pueda registrar a todos los superhéroes y los supervillanos que hay en la ciudad. Nuevos héroes y villanos llegan cada tanto a la ciudad, y una vez que llegaron ya no la abandonan. El sistema tiene que ser capaz de registrar estas nuevas apariciones y así poder saber en todo momento qué héroes y villanos habitan la ciudad. Por otro lado, es importante llevar un registro de las peleas que se producen. Las peleas se producen siempre entre un grupo de héroes contra un grupo de villanos. No es necesario registrar el resultado de una pelea, dado que el grupo de villanos es siempre derrotado. Sí se quiere saber dado un villano y un héroe, cuántas veces pelearon entre sí. Cuando un villano es derrotado tres veces es encerrado en la cárcel de por vida. Si un villano está en la cárcel no puede pelear contra los superhéroes. El sistema debe poder responder si un villano está en la cárcel.
+
+TAD Ciudad
+  generos
+  igualdad observacional
+  observadores
+  generadores
+
+  otras operaciones
+  axiomas
+Fin TAD
