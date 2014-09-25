@@ -263,6 +263,9 @@ TAD Ciudad
     huboInspeccion(mover(c, i, e)) ≡ huboInspeccion(c)
     huboInspeccion(inspeccion(c, e)) ≡ true
 
+TODO: inspecciones deberia ser observador???????
+      Preguntar a Pachi o Pablo, y hacer que firmen un papel con su opinion
+      
     inspecciones(nueva, e) ≡ 0
     inspecciones(agregar(c, cs, e'), e) ≡ inspecciones(c)
     inspecciones(mover(c, i, e'), e) ≡ inspecciones(c)
