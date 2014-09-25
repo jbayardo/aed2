@@ -25,7 +25,6 @@ conjunto(α) se representa con estr donde estr(α) es secu(α)
 Rep: ^'(estr(α)) → boolean
 Rep(e) ≡ true ⟺ e =obs sinRepetidos(e)
 
-* El tipo es bool o boolean? no deberia ser bool?
 * Lo hice sinRepetidos solo porque puedo, pero en realidad con true bastaba
 
 sinRepetidos: secu(α) → secu(α)

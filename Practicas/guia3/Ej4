@@ -1,0 +1,40 @@
+INTERFAZ
+
+interfaz       :
+usa            :
+se explica con :
+genero         :
+operaciones    :
+
+cte(in n : nat) → res : polinomio
+{true}
+{^res = Cte(^n)}
+
+X() → res : polinomio
+{true}
+{^res = X()}
+
+sumar(in p1 : polinomio, in p2 : polinomio) → res : polinomio
+{true}
+{^res = ^p1 + ^p2}
+
+producto(in p1 : polinomio, in p2 : polinomio) → res : polinomio
+{true}
+{^res = ^p1 * ^p2}
+
+grado(in p : polinomio) → res : nat
+{true}
+{^res = grado(^p)}
+
+evaluar(in p : polinomio, in n : nat) → res : nat
+{true}
+{^res = evaluar(^p, ^n)}
+
+REPRESENTACION
+
+polinomio se representa con estr, donde
+  estr es tupla⟨grado : nat, coef : array[0..n] de nat⟩
+
+Rep: ^'(estr) → boolean
+Rep(e) ≡ true ⟺ π₁(e) =obs maxCoef(π₂(e))
+

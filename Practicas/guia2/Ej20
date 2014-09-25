@@ -2,8 +2,7 @@ bool : P(true) ∧ P(false)
 
 nat  :
     comun   : P(0) ∧ (∀n : nat) P(n) ⟹ P(suc(n))
-    corrida : P(k) ∧ (∀n : nat) k ≤ n ⟹ (P(n) ⟹ P(suc(n)))
-    global  : P(0) ∧ (∀n : nat) ((∀k : nat) k ≤ n ⟹ P(k)) ⟹ P(suc(n))
+    prop  : P(0) ∧ (∀n : nat) ((∀k : nat) k ≤ n ⟹ P(k)) ⟹ P(suc(n))
 
 secu(α): P(<>) ∧ (∀s : secu(α)) P(s) ⟹ (∀k : α) P(k ∙ s)
 
