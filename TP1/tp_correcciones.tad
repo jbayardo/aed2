@@ -117,6 +117,7 @@ TAD Ciudad
   (∀ c₁, c₂: Ciudad) (c₁ =obs c₂ ↔
     mapeo(c₁) =obs mapeo(c₂) ∧ robots(c₁) =obs robots(c₂)
     ∧ₗ ((∀ r₁, r₂ : robot) r₁ ∈ robots(c₁) ∧ r₂ ∈ robots(c₁)
+                              ∧ r₁ = r₂
                               ∧ₗ (infracciones(c₁, π₁(r₁)) = infracciones(c₂, π₁(r₂))
                                   ∧ posicion(c₁, π₁(r₁)) = posicion(c₂, π₁(r₂))) 
           )
@@ -134,21 +135,40 @@ TAD Ciudad
     agregar: ciudad c × conj(caracteristica) cs × estacion e → ciudad
       {¬(cs =obs ϕ) ∧ₗ e ∈ estaciones(mapeo(c)) ∧ₗ ¬esBloqueante(mapeo(c), cs, e)}
     mover: ciudad c × rur i × estacion e → ciudad
-      {e ∈ estaciones(mapeo(c)) ∧ (∃r ∈ robots(c)) π₁(r) =obs i ∧ EXISTE UNA CONEXION}
+      {e ∈ estaciones(mapeo(c)) ∧ (∃r ∈ robots(c)) π₁(r) =obs i ∧ 
+      conectadas(mapeo(c), posicion(c, i), e)}
     inspeccion: ciudad c × estacion e → ciudad {e ∈ estaciones(mapeo(c))}
+
   otras operaciones
     id: ciudad c → rur {¬(robots(c) =obs ϕ)}
-    masInfracciones: ciudad c × estacion e → conj(robot) {e ∈ estaciones(mapeo(c)) ∧ TODO Q haya algun robot}
-
-    -- RTP 1 -------------------------------------------------------------------
+    
+    masInfracciones: ciudad c × estacion e → conj(robot) {e ∈ estaciones(mapeo(c))}
+    
     huboInspeccion: ciudad → bool
+
     inspecciones: ciudad c × estacion e → nat {e ∈ estaciones(mapeo(c))}
 
     caracteristicaMasInfractora: ciudad c -> caracteristica
+                                {hayInfractor?(c)}
+
     maxCarInfractora: conj(caracteristica) cc x caracteristica car x dicc(caracteristica, nat) d -> caracteristica
+
     infraccionesXCaracteristica: ciudad c x conj(robot) r -> dicc(caracteristica, nat)
+
     agregarCarInfDicc: conj(caracteristica) cc x nat i x dicc(caracteristica, nat) d-> dicc(caracteristica, nat)
+
+    maxInfractor: ciudad c x conj(robot) cr x robot r -> robot r
+                  {r ⊆ robots(c)}
+
     prevVal: caracteristica k x dicc(caracteristica, nat) d -> nat
+
+    hayInfractor?: ciudad c -> bool
+
+    infractores: conj(robots) r x ciudad c -> conj(robots)
+                {r ⊆ robots(c)}
+
+    robotsEnEstacion: ciudad c x conj(robot) r x estacion e -> conj(robot)
+                 {r ⊆ robots(c)}
 
   axiomas
     mapeo(nueva(m)) ≡ m
@@ -166,6 +186,7 @@ TAD Ciudad
         0
       else
         infracciones(c)
+
     infracciones(mover(c, i, e), r) ≡
       if r ≡ i then
         if cumple(camino(mapeo(c), posicion(c, r), e)) then
@@ -174,6 +195,7 @@ TAD Ciudad
           1 + infracciones(c, r)
       else
         infracciones(c, r)
+
     infracciones(inspeccion(c, e), r) ≡ infracciones(c, r)
 
     posicion(agregar(c, cs, e), r) ≡
@@ -181,11 +203,13 @@ TAD Ciudad
         e
       else
         posicion(c, r)
+
     posicion(mover(c, i, e), r) ≡
       if i ≡ r then
         e
       else
         posicion(c, r)
+
     posicion(inspeccion(c, e), r) ≡ posicion(c, r)
 
     id(nueva) ≡ 0
@@ -197,21 +221,24 @@ TAD Ciudad
       if(ϕ?(robotsEnEstacion(c, robots(c), e))) then
         ϕ
       else
-        if(infracciones(c, π₁(maxInfractor(c,
-                        sinUno(robotsEnEstacion(c, robots(c), e)),
-                        dameUno(robotsEnEstacion(c, robots(c), e))))
-                        ) > 0) then
-        Ag(maxInfractor(c, sinUno(robotsEnEstacion(c, robots(c), e)),
-                        dameUno(robotsEnEstacion(c, robots(c), e))), ϕ)
-        else ϕ
+        if ϕ?(robotsEnEstacion(c, robots(c), e)) then 
+          ϕ
+        else
+          if(infracciones(c, π₁(maxInfractor(c,
+                          sinUno(robotsEnEstacion(c, robots(c), e)),
+                          dameUno(robotsEnEstacion(c, robots(c), e))))
+                          ) > 0) then
+          Ag(maxInfractor(c, sinUno(robotsEnEstacion(c, robots(c), e)),
+                          dameUno(robotsEnEstacion(c, robots(c), e))), ϕ)
+          else ϕ
+        fi
       fi
 
-    maxInfractor: ciudad c x conj(robot) cr x robot r -> robot r
     maxInfractor(c, cr, r) ≡
       if (ϕ?(cr)) then
         r
       else
-        if(infracciones(c, π₁(dameUno(cr))) > r)) then
+        if(infracciones(c, π₁(dameUno(cr))) > infracciones(c, π₁(r))) then
           maxInfractor(c, sinUno(cr), dameUno(cr))
         else
           maxInfractor(c, sinUno(cr), r)
@@ -219,7 +246,6 @@ TAD Ciudad
       fi
 
 
-    robotsEnEstacion: ciudad c x conj(robot) r x estacion e -> conj(robot)
     robotsEnEstacion(c, r, e) ≡
       if (ϕ?(r)) then
         ϕ
@@ -231,24 +257,22 @@ TAD Ciudad
           fi
       fi
 
----- RTP 1 ---------------------------------------------------------------------
     huboInspeccion(nueva) ≡ false
     huboInspeccion(agregar(c, cs, e)) ≡ huboInspeccion(c)
     huboInspeccion(mover(c, i, e)) ≡ huboInspeccion(c)
     huboInspeccion(inspeccion(c, e)) ≡ true
 
-    inspecciones(nueva, p) ≡ 0
-    inspecciones(agregar(c, cs, e), p) ≡ inspecciones(c)
-    inspecciones(mover(c, i, e), p) ≡ inspecciones(c)
-    inspecciones(inspeccion(c, e), p) ≡ β(e ≡ p) + inspecciones(c, p)
+    inspecciones(nueva, e) ≡ 0
+    inspecciones(agregar(c, cs, e'), e) ≡ inspecciones(c)
+    inspecciones(mover(c, i, e'), e) ≡ inspecciones(c)
+    inspecciones(inspeccion(c, e'), e) ≡ β(e' = e) + inspecciones(c, e)
 
-    caracteristicaMasInfractora(c) ≡ if (ϕ?(claves(infraccionesXCaracteristica(c, robots(c))))) then "dummy"
-                else maxCarInfractora(
+    caracteristicaMasInfractora(c) ≡ maxCarInfractora(
                       sinUno(claves(infraccionesXCaracteristica(c, robots(c)))),
                       dameUno(claves(infraccionesXCaracteristica(c, robots(c)))),
                       infraccionesXCaracteristica(c, robots(c))
                     )
-                fi
+                
 
     maxCarInfractora(cc, car, d) ≡ if (ϕ?(cc)) then car 
                      else 
@@ -274,4 +298,19 @@ TAD Ciudad
                     fi
 
     prevVal(k, d) ≡ if (def?(k, d)) then obtener(k, d) else 0 fi
+
+    hayInfractor?(c) ≡ #infractores(robots(c), c) > 0
+
+    infractores(r, c) ≡ if ϕ?(r) then
+                          ϕ
+                        else
+                          if(infracciones(c, π₁(dameUno(r))) > 0) then 
+                            Ag(dameUno(r), infractores(sinUno(r), c))
+                          else
+                            infractores(sinUno(r), c)
+                          fi
+                        fi
+
+
+
 Fin TAD
