@@ -1,0 +1,135 @@
+TAD fumador es ⟨string, recurso⟩
+
+TAD Oficina
+    generos oficina
+    igualdad observacional
+        (∀o₁, o₂ : oficina) (o₁ =obs o₂ ⟺
+            oficinistas(o₁) =obs oficinistas(o₂) ∧ₗ
+            (∀f ∈ oficinistas(o₁)) (
+                fumando?(o₁, f) =obs fumando?(o₂, f) ∧
+                #veces(o₁, f) =obs #veces(o₂, f)
+            )
+        )
+    observadores
+        oficinistas: oficina → conj(fumador)
+        fumando?: oficina o × fumador f → bool
+            {f ∈ oficinistas(o)}
+        #veces: oficina o × fumador f → nat
+            {f ∈ oficinistas(o)}
+    generadores
+        nueva: conj(fumador) → oficina
+        ofrecer: oficina o × recurso r → oficina
+            {(∃f ∈ oficinistas(o)) ¬fumando?(o, f) ∧ π₂(f) =obs r}
+        terminar: oficina o × fumador f → oficina
+            {f ∈ oficinistas(o) ∧ₗ fumando?(o, f)}
+    otras operaciones
+        losQueNecesitan: oficina o × conj(fumador) fs × recurso r → conj(fumador)
+            {fs ⊆ fumadores(o)}
+    axiomas (∀o : oficina, f, f' : fumador, fs : conj(fumador), r : recurso)
+        oficinistas(nueva(fs)) ≡ fs
+        oficinistas(ofrecer(o, r)) ≡ oficinistas(o)
+        oficinistas(terminar(o, f)) ≡ oficinistas(o)
+
+        fumando?(nueva(fs), f) ≡ false
+        fumando?(ofrecer(o, r), f) ≡
+            if dameUno(losQueNecesitan(o, fumadores(o), r)) =obs f then true
+            else fumando?(o, f) fi
+        fumando?(terminar(o, f'), f) ≡
+            if f' =obs f then false
+            else fumando?(o, f) fi
+
+        losQueNecesitan(o, fs, r) ≡
+            if ϕ?(fs) then ϕ
+            else
+                losQueNecesitan(o, sinUno(fs), r) ∪
+                if π₂(dameUno(fs)) =obs r then { dameUno(fs) } else ϕ fi
+            fi
+
+        #veces(nueva(fs), f) ≡ 0
+        #veces(ofrecer(o, r), f) ≡ #veces(o, f)
+        #veces(terminar(o, f'), f) ≡ β(f' =obs f) + #veces(o, f)
+Fin TAD
+
+2)
+
+a) El esquema de inducción para árboles binarios dado un predicado unario P, es:
+
+CASO BASE P(nil) ∧
+(∀a, b : bin(α))
+HIPOTESIS INDUCTIVA    P(a) ∧ P(b) ⟹
+TESIS INDUCTIVA            (∀k : α) P(bin(a, k, b))
+
+b)
+
+El predicado unario es
+    P(t) :≡ (∀w : secu(α)) (inorder(t) & w ≡ recorrido(t, w))
+
+Veamos el caso base:
+
+P(nil) ≡
+(∀w : secu(α)) (inorder(nil) & w ≡ recorrido(nil, w)) ≡ por r₁ y i₁
+(∀w : secu(α)) (<> & w ≡ w) ≡
+(∀w : secu(α)) (w ≡ w) ≡ por reflexividad
+(∀w : secu(α)) (true) ≡
+true
+
+c) Queremos ver que (∀a, b : bin(α)) P(a) ∧ P(b) ⟹ (∀k : α) P(bin(a, k, b)).
+Observemos que si P(a) ∧ P(b) ≡ false, el predicado es verdadero. Por lo que
+solo tiene sentido ver el caso en que P(a) ∧ P(b) ≡ true.
+
+Luego, hace falta demostrar:
+
+(∀k : α) (∀w : secu(α)) (inorder(bin(a, k, b)) & w ≡ recorrido(bin(a, k, b), w))
+
+donde a y b son arboles para los que sabemos que vale P.
+
+inorder(bin(a, k, b)) & w         ≡ recorrido(bin(a, k, b), w) ≡
+inorder(a) & (k ∙ inorder(b)) & w ≡ recorrido(a, k ∙ recorrido(b, w))
+
+Pero, por el lema 1, s & (m ∙ s') ≡ s ∘ m & s', luego
+
+(inorder(a) ∘ k) & inorder(b) & w ≡ recorrido(a, k ∙ recorrido(b, w))
+
+Pero por HI, inorder(b) & w ≡ recorrido(b, w):
+
+(inorder(a) ∘ k) & recorrido(b, w) ≡ recorrido(a, k ∙ recorrido(b, w))
+
+Pero una vez más por lema 1, (inorder(a) ∘ k) & recorrido(b, w) ≡ inorder(a) & k ∙ recorrido(b, w)
+es decir
+
+inorder(a) & k ∙ recorrido(b, w) ≡ recorrido(a, k ∙ recorrido(b, w))
+
+Pero por HI, inorder(a) & k ∙ recorrido(b, w) ≡ recorrido(a, k ∙ recorrido(b, w))
+
+Que es lo que queríamos demostrar. Ahora sólo falta ver que vale el lema 1. Como
+el lema 1 es sobre secuencias, usaremos el esquema de inducción sobre secuencias:
+
+P(<>) ∧ (∀s : secu(α)) P(s) ⟹ (∀k : α) P(k ∙ s)
+
+P(s) ≡ (∀s' : secu(α)) (∀m : α) s & (m ∙ s') ≡ (s ∘ m) & s'
+
+Veamos que vale el caso base:
+
+P(<>) ≡ (∀s' : secu(α)) (∀m : α) <> & (m ∙ s') ≡ (<> ∘ m) & s' ≡
+(∀s' : secu(α)) (∀m : α) m ∙ s' ≡ (m ∙ <>) & s' ≡
+(∀s' : secu(α)) (∀m : α) m ∙ s' ≡ m ∙ (s' & <>) ≡
+(∀s' : secu(α)) (∀m : α) m ∙ s' ≡ m ∙ s' ≡
+true
+
+Veamos que vale el caso inductivo. Si no valiese para s, eso significaría que la
+proposición sería trivialmente verdadera. Por lo que supongamos que vale para s,
+veamos que (∀k : α) P(k ∙ s), es decir:
+
+(∀s' : secu(α)) (∀m : α)
+    (k ∙ s) & (m ∙ s') ≡ ((k ∙ s) ∘ m) & s'
+
+(k ∙ s) & (m ∙ s') ≡ Por &₂
+k ∙ (s & (m ∙ s')) ≡ Por HI
+k ∙ ((s ∘ m) & s') ≡ Por &₂
+(k ∙ (s ∘ m)) & s' ≡ Por ∘₂
+((k ∙ s) ∘ m) & s'
+
+Que es lo que queriamos demostrar.
+
+3)
+

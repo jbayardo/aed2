@@ -1,11 +1,61 @@
-En Marvel City conviven entre los ciudadanos comunes numerosos superhéroes que luchan día a día contra supervillanos. La gente de la ciudad está interesada en hacer un sistema que les permita manejar cierta infor- mación relativa a estos héroes y villanos. Les interesa que el sistema pueda registrar a todos los superhéroes y los supervillanos que hay en la ciudad. Nuevos héroes y villanos llegan cada tanto a la ciudad, y una vez que llegaron ya no la abandonan. El sistema tiene que ser capaz de registrar estas nuevas apariciones y así poder saber en todo momento qué héroes y villanos habitan la ciudad. Por otro lado, es importante llevar un registro de las peleas que se producen. Las peleas se producen siempre entre un grupo de héroes contra un grupo de villanos. No es necesario registrar el resultado de una pelea, dado que el grupo de villanos es siempre derrotado. Sí se quiere saber dado un villano y un héroe, cuántas veces pelearon entre sí. Cuando un villano es derrotado tres veces es encerrado en la cárcel de por vida. Si un villano está en la cárcel no puede pelear contra los superhéroes. El sistema debe poder responder si un villano está en la cárcel.
-
+1)
 TAD Ciudad
-  generos
+  generos ciudad
   igualdad observacional
+    (∀ c₁, c₂ : ciudad) (c₁ =obs c₂ ⟺
+        superheroes(c₁) =obs superheroes(c₂) ∧
+        villanos(c₁) =obs villanos(c₂) ∧ₗ
+        (∀s ∈ superheroes(c₁), v ∈ villanos(c1))
+            #peleas(c₁, s, v) =obs #peleas(c₂, s, v))
   observadores
+    superheroes: ciudad → conj(superheroe)
+    villanos: ciudad → conj(villano)
+    #peleas: ciudad c × superheroe s × villano v → nat
+        {s ∈ superheroes(c) ∧ v ∈ superheroes(v)}
   generadores
-
+    nueva: → ciudad
+    agSuper: ciudad c × superheroe s → ciudad {¬(s ∈ superheroes(c))}
+    agVillano: ciudad c × villano v → ciudad {¬(v ∈ villanos(c))}
+    pelea: ciudad c × conj(superheroe) ss × conj(villano) vs → ciudad
+        {ss ⊆ superheroes(c) ∧ vs ⊆ villanos(c) ∧ₗ (∀v ∈ vs) ¬encarcelado?(c, v)}
   otras operaciones
-  axiomas
+    encarcelado?: ciudad c × villano v → bool {v ∈ villanos(c)}
+    #peleasGen: ciudad c × villano v × conj(superheroe) ss → nat
+        {v ∈ villanos(c) ∧ ss ⊆ superheroes(c)}
+    encarcelados: ciudad c → conj(villano)
+    encarcelados': ciudad c × conj(villano) vs → conj(villano) {vs ⊆ villanos(c)}
+  axiomas (∀ c : ciudad, v : villano, s : superheroe, ss : conj(superheroe), vs : conj(villano), s' : superheroe, v' : villano)
+    superheroes(nueva) ≡ phi
+    superheroes(agSuper(c, s)) ≡ Ag(s, superheroes(c))
+    superheroes(agVillano(c, v)) ≡ superheroes(c)
+    superheroes(pelea(c, ss, vs)) ≡ superheroes(c)
+
+    villanos(nueva) ≡ ϕ
+    villanos(agSuper(c, s)) ≡ villanos(c)
+    villanos(agVillano(c, v)) ≡ Ag(v, villanos(c))
+    villanos(pelea(c, ss, vs)) ≡ villanos(c) - encarcelados(pelea(c, ss, vs))
+
+    encarcelados(c) ≡ encarcelados'(c, villanos(c))
+
+    encarcelados'(c, vs) ≡
+        if ϕ?(vs) then ϕ
+        else
+            encarcelados'(sinUno(vs)) ∪
+            if encarcelado?(dameUno(vs)) then {dameUno(vs)}
+            else ϕ fi
+        fi
+
+    #peleas(agSuper(c, s'), s, v) ≡
+        if s' =obs s then 0
+        else #peleas(c, s, v) fi
+    #peleas(agVillano(c, v'), s, v) ≡
+        if v' =obs v then 0
+        else #peleas(c, s, v) fi
+    #peleas(pelea(c, ss, vs), s, v) ≡ β(s ∈ ss ∧ v ∈ vs) + #peleas(c, s, v)
+
+    encarcelado?(c, v) ≡ #peleasGen(c, v, superheroes(c)) ≥ 3
+
+    #peleasGen(c, v, ss) ≡
+        if ϕ?(ss) then 0
+        else peleas(c, dameUno(ss), v) + #peleasGen(c, v, sinUno(ss)) fi
 Fin TAD
