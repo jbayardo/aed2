@@ -1,0 +1,139 @@
+1)
+
+TAD Sistema
+    generos sistema
+    igualdad observacional
+        (∀s₁, s₂ : sistema) (s₁ =obs s₂ ⟺
+            bases(s₁) =obs bases(s₂) ∧ autos(s₁) =obs autos(s₂) ∧ rango(s₁) =obs rango(s₂))
+    observadores
+        bases: sistema → dicc(base, posicion)
+        autos: sistema → dicc(auto, posicion)
+        rango: sistema → kilometro
+    generadores
+        nuevo: kilometro × dicc(base, posicion) × dicc(auto, posicion) → sistema
+        desplazar: sistema s × auto a × posicion p → sistema
+            {a ∈ claves(autos(s))}
+        alertar: sistema s × auto a → sistema
+            {a ∈ claves(autos(s)) ∧ₗ alerta?(s, a)}
+    otras operaciones
+        alerta?: sistema s × auto a → bool
+            {a ∈ claves(autos(s))}
+        hayAlcanzable: kilometro × posicion × conj(posicion) → bool
+        significados: dicc(α, β) → conj(β)
+        significados': dicc(α, β) d → conj(α) cs → conj(β)
+            {cs ⊆ claves(d)}
+    axiomas
+        bases(nuevo(r, b, a)) ≡ b
+        bases(desplazar(s, a, p)) ≡ bases(s)
+        bases(alertar(s, a)) ≡ bases(s)
+
+        autos(nuevo(r, b, a)) ≡ a
+        autos(desplazar(s, a, p)) ≡ definir(a, p, autos(s))
+        autos(alertar(s, a)) ≡ autos(s)
+
+        rango(nuevo(r, b, a)) ≡ r
+        rango(desplazar(s, a, p)) ≡ rango(s)
+        rango(alertar(s, a)) ≡ rango(s)
+
+        alerta?(s, a) ≡
+            hayAlcanzable(
+                rango(s),
+                obtener(a, autos(s)),
+                significados(bases(s)) ∪ significados(autos(s))
+            )
+
+        hayAlcanzable(k, p, ps) ≡
+            if ϕ?(ps) then false
+            else
+                if distancia(p, dameUno(ps)) ≤ k then true
+                else hayAlcanzable(k, p, sinUno(ps)) fi
+            fi
+
+        significados(d) ≡ significados'(d, claves(d))
+
+        significados'(d, cs) ≡
+            if ϕ?(cs) then ϕ
+            else { obtener(d, dameUno(cs)) } ∪ significados'(d, sinUno(cs)) fi
+Fin TAD
+
+2)
+
+Esquema de inducción:
+
+P(<>) ∧ (∀s : secu(α)) P(s) ⟹ (∀k : α) P(k ∙ s)
+
+P(s) ≡ (∀a, b : nat) rotar(a, rotar(b, s)) = rotar(a + b, s)
+
+El caso base:
+
+P(<>) ≡ (∀a, b : nat) rotar(a, rotar(b, <>)) = rotar(a + b, <>) ≡
+(∀a, b : nat) rotar(a, <>) = <> ≡
+(∀a, b : nat) <> = <> ≡
+(∀a, b : nat) true ≡
+true
+
+Veamos ahora el caso inductivo. Suponiendo que vale P(s), quiero ver que
+(∀k : α) P(k ∙ s), es decir:
+
+(∀a, b : nat) rotar(a, rotar(b, k ∙ s)) = rotar(a + b, k ∙ s)
+
+Vamos a hacerlo por inducción sobre los naturales. El esquema de inducción para
+los naturales es
+
+Q(0) ∧ (∀k : nat) Q(k) ⟹ Q(suc(k))
+
+donde
+
+Q(a) ≡ (∀b : nat) rotar(a, rotar(b, k ∙ s)) = rotar(a + b, k ∙ s)
+
+Veamos el caso base:
+
+rotar(0, rotar(b, k ∙ s)) = rotar(0 + b, k ∙ s) ≡
+if 0 = 0 then rotar(b, k ∙ s) else rotar(0 - 1, fin(rotar(b, k ∙ s)) ∘ prim(rotar(b, k ∙ s))) = rotar(b, k ∙ s) ≡
+rotar(b, k ∙ s) = rotar(b, k ∙ s) ≡
+true
+
+Ahora veamos el caso inductivo sabiendo que
+rotar(a, rotar(b, s)) = rotar(a + b, s) y
+(∀b : nat) rotar(a, rotar(b, s)) = rotar(a + b, s)
+
+rotar(suc(a), rotar(b, k ∙ s)) = rotar(suc(a) + b, k ∙ s) ≡ por HI
+rotar(a, fin(rotar(b, k ∙ s)) ∘ prim(rotar(b, k ∙ s))) = rotar(suc(a) + b, k ∙ s) ≡
+
+rotar(suc(a) + b, k ∙ s) = rotar(suc(a) + b, k ∙ s) ≡
+true
+
+3)
+
+a) El invariante de representación es que:
+
+1) Todos los sensores de "alarmas" se corresponden con un sensor en "sensores"
+2) Todas las alarmas de "sensores" se corresponden con una alarma en "alarmas"
+3) Todas las alarmas en "alarmas" tienen al menos un "sensor" cuya medicion
+es mayor al umbral
+4) el umbral mayor a 0
+
+Rep: ^estr → boolean
+Rep(e) ≡ true ⟺
+    (∀a : alarma)
+        a ∈ claves(e.alarmas) ⟹ₗ
+            obtener(a, e.alarmas) ⊆ claves(e.sensores) ∧ₗ
+            (∀s ∈ obtener(a, e.alarmas))
+                a ∈ obtener(s, e.sensores).alarmas ∧
+                obtener(s, e.sensores).umbral ≤ obtener(s, e.sensores).medicion
+    ∧ₗ (∀s : sensor)
+            s ∈ claves(e.sensores) ⟹ₗ
+                obtener(s, e.sensores).umbral > 0
+                obtener(s, e.sensores).alarmas ⊆ claves(e.alarmas)
+
+b)
+
+Abs: ^estr → planta
+(∀e : ^estr) Abs(e) =obs p : planta /
+    (∀a : alarma) esAlarma(p, a) =obs a ∈ claves(e.alarmas) ∧ₗ
+    (∀a : alarma) a ∈ claves(e.alarmas) ⟹ₗ
+        sensoresAlarma(p, a) =obs obtener(a, e.alarmas) ∧
+    (∀s : sensor) esSensor(p, s) =obs s ∈ claves(e.sensores) ∧ₗ
+    (∀s : sensor) s ∈ claves(e.sensores) ⟹ₗ
+        umbral(p, s) =obs obtener(s, e.sensores).umbral ∧
+        medicion(p, s) =obs obtener(s, e.sensores).medicion
