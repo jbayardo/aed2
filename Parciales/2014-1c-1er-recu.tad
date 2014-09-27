@@ -1,0 +1,34 @@
+1)
+
+TAD id ES nat
+TAD avion ES ⟨string, nat⟩
+
+TAD Ruta
+    generos ruta
+    igualdad observacional
+    observadores
+        ciudades: ruta → secu(ciudad)
+        aviones: ruta × ciudad → nat
+        containers: ruta × ciudad → dicc(ciudad, nat)
+    generadores
+        nuevo: secu(ciudad) → ruta
+            {secu no tiene que tener repetidos}
+        agContainer: ruta × ciudad × ciudad → ruta
+            {la ciudad de destino no es igual a la de salida}
+        agAvion: ruta × ciudad × nat → ruta
+        mover: ruta × ciudad → ruta
+    axiomas
+        ciudades(nuevo(s)) ≡ s
+        ciudades(agContainer(r, c, c')) ≡ ciudades(r)
+        ciudades(agAvion(r, c, n)) ≡ ciudades(r)
+        ciudades(mover(r, n, c)) ≡ ciudades(r)
+
+        aviones(nuevo(s), p) ≡ vacio
+        aviones(agContainer(r, c, c'), p) ≡ aviones(r, p)
+        aviones(agAvion(r, c, n), p) ≡
+            if c = p then
+                definir()
+            else
+            fi
+
+Fin TAD

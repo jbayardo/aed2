@@ -67,11 +67,9 @@ El predicado unario es
 Veamos el caso base:
 
 P(nil) ≡
-(∀w : secu(α)) (inorder(nil) & w ≡ recorrido(nil, w)) ≡ por r₁ y i₁
-(∀w : secu(α)) (<> & w ≡ w) ≡
-(∀w : secu(α)) (w ≡ w) ≡ por reflexividad
-(∀w : secu(α)) (true) ≡
-true
+(∀w : secu(α)) (inorder(nil) & w ≡ recorrido(nil, w)) por r₁ y i₁
+(∀w : secu(α)) (<> & w ≡ w)
+(∀w : secu(α)) (w ≡ w) por reflexividad
 
 c) Queremos ver que (∀a, b : bin(α)) P(a) ∧ P(b) ⟹ (∀k : α) P(bin(a, k, b)).
 Observemos que si P(a) ∧ P(b) ≡ false, el predicado es verdadero. Por lo que
@@ -83,10 +81,10 @@ Luego, hace falta demostrar:
 
 donde a y b son arboles para los que sabemos que vale P.
 
-inorder(bin(a, k, b)) & w         ≡ recorrido(bin(a, k, b), w) ≡
+inorder(bin(a, k, b)) & w         ≡ recorrido(bin(a, k, b), w)
 inorder(a) & (k ∙ inorder(b)) & w ≡ recorrido(a, k ∙ recorrido(b, w))
 
-Pero, por el lema 1, s & (m ∙ s') ≡ s ∘ m & s', luego
+Pero, por el lema 1, s & (m ∙ s') ≡ (s ∘ m) & s', luego
 
 (inorder(a) ∘ k) & inorder(b) & w ≡ recorrido(a, k ∙ recorrido(b, w))
 
