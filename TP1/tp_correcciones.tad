@@ -116,13 +116,11 @@ TAD Ciudad
   igualdad observacional
   (∀ c₁, c₂: Ciudad) (c₁ =obs c₂ ↔
     mapeo(c₁) =obs mapeo(c₂) ∧ robots(c₁) =obs robots(c₂)
-    ∧ₗ ((∀ r₁, r₂ : robot) r₁ ∈ robots(c₁) ∧ r₂ ∈ robots(c₁)
-                              ∧ r₁ = r₂
-                              ∧ₗ (infracciones(c₁, π₁(r₁)) = infracciones(c₂, π₁(r₂))
-                                  ∧ posicion(c₁, π₁(r₁)) = posicion(c₂, π₁(r₂))) 
+    ∧ₗ ((∀ r: robot) r ∈ robots(c₁) 
+                              ∧ₗ (infracciones(c₁, π₁(r)) = infracciones(c₂, π₁(r))
+                                  ∧ posicion(c₁, π₁(r)) = posicion(c₂, π₁(r))) 
           )
   )
-
 
   observadores basicos
     mapeo: ciudad → mapa
@@ -140,7 +138,7 @@ TAD Ciudad
     inspeccion: ciudad c × estacion e → ciudad {e ∈ estaciones(mapeo(c))}
 
   otras operaciones
-    id: ciudad c → rur {¬(robots(c) =obs ϕ)}
+    id: ciudad c → rur {¬(ϕ?(robots(c))}
 
     masInfracciones: ciudad c × estacion e → conj(robot) {e ∈ estaciones(mapeo(c))}
     
@@ -154,6 +152,7 @@ TAD Ciudad
     maxCarInfractora: conj(caracteristica) cc x caracteristica car x dicc(caracteristica, nat) d -> caracteristica
 
     infraccionesXCaracteristica: ciudad c x conj(robot) r -> dicc(caracteristica, nat)
+                                  {r ⊆ robots(c)}
 
     agregarCarInfDicc: conj(caracteristica) cc x nat i x dicc(caracteristica, nat) d-> dicc(caracteristica, nat)
 
@@ -164,7 +163,7 @@ TAD Ciudad
 
     hayInfractor?: ciudad c -> bool
 
-    infractores: conj(robots) r x ciudad c -> conj(robots)
+    hayInfractor?': conj(robots) r x ciudad c -> bool
                 {r ⊆ robots(c)}
 
     robotsEnEstacion: ciudad c x conj(robot) r x estacion e -> conj(robot)
@@ -303,15 +302,15 @@ TODO: inspecciones deberia ser observador???????
 
     prevVal(k, d) ≡ if (def?(k, d)) then obtener(k, d) else 0 fi
 
-    hayInfractor?(c) ≡ #infractores(robots(c), c) > 0
+    hayInfractor?(c) ≡ hayInfractor?'(robots(c), c)
 
-    infractores(r, c) ≡ if ϕ?(r) then
-                          ϕ
+    hayInfractor?'(r, c) ≡ if ϕ?(r) then
+                          False
                         else
                           if(infracciones(c, π₁(dameUno(r))) > 0) then 
-                            Ag(dameUno(r), infractores(sinUno(r), c))
+                            True
                           else
-                            infractores(sinUno(r), c)
+                            hayInfractor?'(sinUno(r), c)
                           fi
                         fi
 
