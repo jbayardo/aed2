@@ -4,8 +4,8 @@ TAD Restriccion
   generos restriccion
   exporta AND, OR, NOT, VAR, cumple, FALSE, TRUE
   igualdad observacional
-    (∀ r₁, r₂ : restriccion) (r₁ =obs r₂ ↔
-      (∀ c : conj(caracteristica)) (cumple(c, r₁) =obs cumple(c, r₂)))
+    (∀r₁, r₂ : restriccion) (r₁ =obs r₂ ⟺
+      (∀c : conj(caracteristica)) (cumple(c, r₁) =obs cumple(c, r₂)))
   observadores basicos
     cumple: conj(caracteristica) × restriccion → bool
   generadores
@@ -16,9 +16,9 @@ TAD Restriccion
   otras operaciones
     TRUE: → restriccion
     FALSE: → restriccion
-  axiomas
+  axiomas (∀cs : conj(caracteristica)) (∀c1, c2 : restriccion) (∀c : caracteristica)
     cumple(cs, VAR(c)) ≡ c ∈ cs
-    cumple(cs, NOT(c)) ≡ ¬(cumple(cs, c))
+    cumple(cs, NOT(c1)) ≡ ¬(cumple(cs, c1))
     cumple(cs, AND(c1, c2)) ≡ cumple(cs, c1) ∧ cumple(cs, c2)
     cumple(cs, OR(c1, c2)) ≡ cumple(cs, c1) ∨ cumple(cs, c2)
 
@@ -36,15 +36,15 @@ TAD Mapa
   exporta estaciones, conexiones, nuevo, crearEst, conectar,
           esBloqueante, conectadas, camino
   igualdad observacional
-    (∀ m₁, m₂ : mapa) (m₁ =obs m₂ ↔
+    (∀m₁, m₂ : mapa) (m₁ =obs m₂ ⟺
       estaciones(m₁) =obs estaciones(m₂) ∧ₗ
-      (∀ e ∈ estaciones(m₁)) (conexiones(m₁, e) =obs conexiones(m₂, e)))
+      (∀e ∈ estaciones(m₁)) (conexiones(m₁, e) =obs conexiones(m₂, e)))
   observadores basicos
     estaciones : mapa → conj(estacion)
     conexiones : mapa m × estacion e → conj(conexion) {e ∈ estaciones(m)}
   generadores
     nuevo    : → mapa
-    crearEst : mapa m × estacion a → mapa {a ∉ estaciones(m)}
+    crearEst : mapa m × estacion a → mapa {¬(a ∈ estaciones(m))}
     conectar : mapa m × estacion a × estacion b × restriccion → mapa
                {a, b ∈ estaciones(m) ∧ₗ ¬conectadas(m, a, b)}
   otras operaciones
@@ -57,13 +57,13 @@ TAD Mapa
     camino        : mapa m × estacion a × estacion b → restriccion
                     {a, b ∈ estaciones(m) ∧ conectadas(m, a, b)}
     camino'       : estacion × conj(conexion) → restriccion
-  axiomas
+  axiomas (∀m : mapa) (∀e, a, b : estacion) (∀r : restriccion) (∀cs : conj(caracteristica)) (∀xs : conj(conexion))
     conexiones(crearEst(m, e), k) ≡ ϕ
     conexiones(conectar(m, a, b, r), e) ≡
-      (if e ≡ a then
+      (if e =obs a then
         ⟨b, r⟩
       else
-        if e ≡ b then
+        if e =obs b then
           ⟨a, r⟩
         else
           ϕ
@@ -74,36 +74,36 @@ TAD Mapa
     estaciones(crearEst(m, e)) ≡ { e } ∪ estaciones(m)
     estaciones(conectar(m, a, b)) ≡ estaciones(m)
 
-    esBloqueante(m, r, e) ≡
+    esBloqueante(m, cs, e) ≡
       if ϕ?(conexiones(m, e)) then
         False
       else
-        esBloqueante'(conexiones(m, e), r)
+        esBloqueante'(conexiones(m, e), cs)
       fi
 
-    esBloqueante'(c, r) ≡
-      if ϕ?(c) then
+    esBloqueante'(xs, cs) ≡
+      if ϕ?(xs) then
         True
       else
-        ¬(cumple(r, π₂(dameUno(c)))) ∧ₗ esBloqueante'(sinUno(c), r)
+        ¬(cumple(r, π₂(dameUno(xs)))) ∧ₗ esBloqueante'(sinUno(xs), cs)
       fi
 
     conectadas(m, a, b) ≡ conectadas'(b, conexiones(m, a))
 
-    conectadas'(a, c) ≡
-      if ϕ?(c) then
+    conectadas'(a, xs) ≡
+      if ϕ?(xs) then
         False
       else
-        π₁(dameUno(c)) ≡ a) ∨ₗ conectadas'(a, sinUno(c))
+        (π₁(dameUno(xs)) =obs a) ∨ₗ conectadas'(a, sinUno(xs))
       fi
 
     camino(m, a, b) ≡ camino'(b, conexiones(m, a))
 
-    camino'(a, c) ≡
-      if π₁(dameUno(c)) ≡ a then
-          π₂(dameUno(c))
+    camino'(a, xs) ≡
+      if π₁(dameUno(xs)) =obs a then
+          π₂(dameUno(xs))
       else
-          caminos'(a, sinUno(c))
+          caminos'(a, sinUno(xs))
       fi
 Fin TAD
 
@@ -114,62 +114,40 @@ TAD Ciudad
   generos ciudad
   exporta
   igualdad observacional
-  (∀ c₁, c₂: Ciudad) (c₁ =obs c₂ ↔
-    mapeo(c₁) =obs mapeo(c₂) ∧ robots(c₁) =obs robots(c₂)
-    ∧ₗ ((∀ r: robot) r ∈ robots(c₁) 
-                              ∧ₗ (infracciones(c₁, π₁(r)) = infracciones(c₂, π₁(r))
-                                  ∧ posicion(c₁, π₁(r)) = posicion(c₂, π₁(r))) 
-          )
-  )
-
+  (∀c₁, c₂: ciudad) (c₁ =obs c₂ ⟺
+    mapeo(c₁) =obs mapeo(c₂) ∧ robots(c₁) =obs robots(c₂) ∧ₗ
+    ((∀e ∈ estaciones(mapeo(c))) (#inspecciones(c₁) =obs #inspecciones(c₂))) ∧ₗ
+    ((∀r ∈ robots(c₁)) (
+      infracciones(c₁, π₁(r)) =obs infracciones(c₂, π₁(r)) ∧
+      posicion(c₁, π₁(r)) =obs posicion(c₂, π₁(r))))
   observadores basicos
     mapeo: ciudad → mapa
-    robots: ciudad → conj(robot)    
+    robots: ciudad → conj(robot)
     posicion: ciudad c × rur i → estacion {(∃r ∈ robots(c)) π₁(r) =obs i}
     infracciones: ciudad c × rur i → nat {(∃r ∈ robots(c)) π₁(r) =obs i}
-
+    #inspecciones: ciudad c × estacion e → nat {e ∈ estaciones(mapeo(c))}
   generadores
     nueva: mapa → ciudad
     agregar: ciudad c × conj(caracteristica) cs × estacion e → ciudad
-      {¬(cs =obs ϕ) ∧ₗ e ∈ estaciones(mapeo(c)) ∧ₗ ¬esBloqueante(mapeo(c), cs, e)}
+      {¬(cs =obs ϕ) ∧ e ∈ estaciones(mapeo(c)) ∧ₗ ¬esBloqueante(mapeo(c), cs, e)}
     mover: ciudad c × rur i × estacion e → ciudad
-      {e ∈ estaciones(mapeo(c)) ∧ (∃r ∈ robots(c)) π₁(r) =obs i ∧ 
+      {e ∈ estaciones(mapeo(c)) ∧ (∃r ∈ robots(c)) π₁(r) =obs i ∧ₗ
       conectadas(mapeo(c), posicion(c, i), e)}
     inspeccion: ciudad c × estacion e → ciudad {e ∈ estaciones(mapeo(c))}
-
   otras operaciones
     id: ciudad c → rur {¬(ϕ?(robots(c))}
-
     masInfracciones: ciudad c × estacion e → conj(robot) {e ∈ estaciones(mapeo(c))}
-    
-    huboInspeccion: ciudad → bool
 
-    inspecciones: ciudad c × estacion e → nat {e ∈ estaciones(mapeo(c))}
-
-    caracteristicaMasInfractora: ciudad c -> caracteristica
-                                {hayInfractor?(c)}
-
+    caracteristicaMasInfractora: ciudad c -> caracteristica {hayInfractor?(c)}
     maxCarInfractora: conj(caracteristica) cc x caracteristica car x dicc(caracteristica, nat) d -> caracteristica
-
-    infraccionesXCaracteristica: ciudad c x conj(robot) r -> dicc(caracteristica, nat)
-                                  {r ⊆ robots(c)}
-
+    infraccionesXCaracteristica: ciudad c x conj(robot) r -> dicc(caracteristica, nat) {r ⊆ robots(c)}
     agregarCarInfDicc: conj(caracteristica) cc x nat i x dicc(caracteristica, nat) d-> dicc(caracteristica, nat)
-
-    maxInfractor: ciudad c x conj(robot) cr x robot r -> robot r
-                  {r ⊆ robots(c)}
-
+    maxInfractor: ciudad c x conj(robot) cr x robot r -> robot r {r ⊆ robots(c)}
     prevVal: caracteristica k x dicc(caracteristica, nat) d -> nat
-
     hayInfractor?: ciudad c -> bool
-
-    hayInfractor?': conj(robots) r x ciudad c -> bool
-                {r ⊆ robots(c)}
-
-    robotsEnEstacion: ciudad c x conj(robot) r x estacion e -> conj(robot)
-                 {r ⊆ robots(c)}
-
-  axiomas
+    hayInfractor?': conj(robots) r x ciudad c -> bool {r ⊆ robots(c)}
+    robotsEnEstacion: ciudad c x conj(robot) r x estacion e -> conj(robot) {r ⊆ robots(c)}
+  axiomas (∀m : mapa) (∀c : ciudad) (∀cs : conj(caracteristicas)) (∀e, e' : estacion) (∀i : rur)
   TODO: Mete todos los paratodos esos de los axiomas
     mapeo(nueva(m)) ≡ m
     mapeo(agregar(c, cs, e)) ≡ mapeo(c)
@@ -181,48 +159,47 @@ TAD Ciudad
     robots(mover(c, r, e)) ≡ robots(c)
     robots(inspeccion(c, e)) ≡ robots(c) - masInfracciones(c, e)
 
-    infracciones(agregar(c, cs, e), r) ≡
-      if id(c) + 1 ≡ r then
-        0
-      else
-        infracciones(c)
+    posicion(agregar(c, cs, e), r) ≡
+      if id(c) + 1 =obs r then e
+      else posicion(c, r) fi
+    posicion(mover(c, i, e), r) ≡
+      if i =obs r then e
+      else posicion(c, r) fi
+    posicion(inspeccion(c, e), r) ≡ posicion(c, r)
 
-    infracciones(mover(c, i, e), r) ≡
-      if r ≡ i then
-        if cumple(camino(mapeo(c), posicion(c, r), e)) then
-          infracciones(c, r)
-        else
-          1 + infracciones(c, r)
-      else
-        infracciones(c, r)
+    infracciones(agregar(c, cs, e), r) ≡
+      if id(c) + 1 =obs r then 0
+      else infracciones(c) fi
 
     infracciones(inspeccion(c, e), r) ≡ infracciones(c, r)
 
-    posicion(agregar(c, cs, e), r) ≡
-      if id(c) + 1 ≡ r then
-        e
-      else
-        posicion(c, r)
+    infracciones(mover(c, i, e), r) ≡
+      if r =obs i then
+        if cumple(camino(mapeo(c), posicion(c, r), e)) then infracciones(c, r)
+        else 1 + infracciones(c, r) fi
+      else infracciones(c, r) fi
 
-    posicion(mover(c, i, e), r) ≡
-      if i ≡ r then
-        e
-      else
-        posicion(c, r)
+    -- Ver si estuvo bien poner esto como observador
+    -- El argumento es que no hay otra forma de contar la cantidad de inspecciones
+    -- que no sea haciendo pattern matching, por lo que no ponerlo como obs
+    -- haría que la operación pudiera ver más que los observadores.
+    #inspecciones(nueva, e) ≡ 0
+    #inspecciones(agregar(c, cs, e'), e) ≡ #inspecciones(c)
+    #inspecciones(mover(c, i, e'), e) ≡ #inspecciones(c)
+    #inspecciones(inspeccion(c, e'), e) ≡ β(e' = e) + #inspecciones(c, e)
 
-    posicion(inspeccion(c, e), r) ≡ posicion(c, r)
-
+    -- Ver si esto no debería ser observador
+    -- El argumento es que no hay otra forma de contar los robots agregados que
+    -- no sea hacer pattern matching.
     id(nueva) ≡ 0
     id(agregar(c, cs, e)) ≡ 1 + id(c)
     id(mover(c, i, e)) ≡ id(c)
     id(inspeccion(c, e)) ≡ id(c)
 
     masInfracciones(c, e) ≡
-      if(ϕ?(robotsEnEstacion(c, robots(c), e))) then
-        ϕ
+      if(ϕ?(robotsEnEstacion(c, robots(c), e))) then ϕ
       else
-        if ϕ?(robotsEnEstacion(c, robots(c), e)) then 
-          ϕ
+        if ϕ?(robotsEnEstacion(c, robots(c), e)) then ϕ
         else
           if(infracciones(c, π₁(maxInfractor(c,
                           sinUno(robotsEnEstacion(c, robots(c), e)),
@@ -230,68 +207,46 @@ TAD Ciudad
                           ) > 0) then
           Ag(maxInfractor(c, sinUno(robotsEnEstacion(c, robots(c), e)),
                           dameUno(robotsEnEstacion(c, robots(c), e))), ϕ)
-          else ϕ
+          else ϕ fi
         fi
       fi
 
     maxInfractor(c, cr, r) ≡
-      if (ϕ?(cr)) then
-        r
+      if (ϕ?(cr)) then r
       else
         if(infracciones(c, π₁(dameUno(cr))) > infracciones(c, π₁(r))) then
           maxInfractor(c, sinUno(cr), dameUno(cr))
-        else
-          maxInfractor(c, sinUno(cr), r)
-        fi
+        else maxInfractor(c, sinUno(cr), r) fi
       fi
-
 
     robotsEnEstacion(c, r, e) ≡
-      if (ϕ?(r)) then
-        ϕ
+      if (ϕ?(r)) then ϕ
       else
-          if(posicion(c, (π₁(dameUno(r))) = e) then
+          if posicion(c, (π₁(dameUno(r)))) =obs e then
             Ag(dameUno(r), robotsEnEstacion(c, sinUno(r), e))
-          else
-            robotsEnEstacion(c, sinUno(r), e)
-          fi
+          else robotsEnEstacion(c, sinUno(r), e) fi
       fi
-
-    huboInspeccion(nueva) ≡ false
-    huboInspeccion(agregar(c, cs, e)) ≡ huboInspeccion(c)
-    huboInspeccion(mover(c, i, e)) ≡ huboInspeccion(c)
-    huboInspeccion(inspeccion(c, e)) ≡ true
-
-TODO: inspecciones deberia ser observador???????
-      Preguntar a Pachi o Pablo, y hacer que firmen un papel con su opinion
-      
-    inspecciones(nueva, e) ≡ 0
-    inspecciones(agregar(c, cs, e'), e) ≡ inspecciones(c)
-    inspecciones(mover(c, i, e'), e) ≡ inspecciones(c)
-    inspecciones(inspeccion(c, e'), e) ≡ β(e' = e) + inspecciones(c, e)
 
     caracteristicaMasInfractora(c) ≡ maxCarInfractora(
                       sinUno(claves(infraccionesXCaracteristica(c, robots(c)))),
                       dameUno(claves(infraccionesXCaracteristica(c, robots(c)))),
                       infraccionesXCaracteristica(c, robots(c))
                     )
-                
 
-    maxCarInfractora(cc, car, d) ≡ if (ϕ?(cc)) then car 
-                     else 
+
+    maxCarInfractora(cc, car, d) ≡ if (ϕ?(cc)) then car
+                     else
                         if(obtener(dameUno(cc), d) > obtener(car, d)) then
                           maxCarInfractora(sinUno(cc), dameUno(cc), d)
-                        else 
+                        else
                           maxCarInfractora(sinUno(cc), car, d)
                         fi
                       fi
 
-
-
     infraccionesXCaracteristica(c,r) ≡ if (ϕ?(r)) then vacio
                       else agregarCarInfDicc(
-                          π₂(dameUno(r)), 
-                          infracciones(c, π₁(dameUno(r))), 
+                          π₂(dameUno(r)),
+                          infracciones(c, π₁(dameUno(r))),
                           infraccionesXCaracteristica(c, sinUno(r)
                       ) fi
 
@@ -307,13 +262,10 @@ TODO: inspecciones deberia ser observador???????
     hayInfractor?'(r, c) ≡ if ϕ?(r) then
                           False
                         else
-                          if(infracciones(c, π₁(dameUno(r))) > 0) then 
+                          if(infracciones(c, π₁(dameUno(r))) > 0) then
                             True
                           else
                             hayInfractor?'(sinUno(r), c)
                           fi
                         fi
-
-
-
 Fin TAD
