@@ -132,14 +132,10 @@ TAD Ciudad
     caracteristicaMasInfractora: ciudad c → caracteristica
       {(∃r ∈ robots(c)) infracciones(π₁(r)) > 0 }
 
-    maxCarInfractora: conj(caracteristica) x caracteristica x dicc(caracteristica, nat) -> caracteristica
-
-    infraccionesXCaracteristica: ciudad c x conj(robot) cr-> dicc(caracteristica, nat)
-                                  {cr ⊆ robots(c)}
-
-    agregarCarInfDicc: conj(caracteristica) x nat x dicc(caracteristica, nat) -> dicc(caracteristica, nat)
-
-    prevVal: caracteristica k x dicc(caracteristica, nat) d -> nat
+    infractoras: ciudad c × conj(robot) cr → multiconj(caracteristica) {cr ⊆ robots(c)}
+    aMulti: conj(caracteristica) → multiconj(caracteristica)
+    maximizar: multiconj(caracteristica) mc → caracteristica {¬ϕ?(mc)}
+    agregarN: nat i x conj(caracteristica) -> multiconj(caracteristica)
 
   axiomas (∀m : mapa) (∀c : ciudad) (∀cs : conj(caracteristicas)) (∀e, e' : estacion) (∀i : rur)
   TODO: SEGUI COMPLETANDO LOS ∀
@@ -207,36 +203,30 @@ TAD Ciudad
           Ag(dameUno(cr), robotsEnEstacion(c, sinUno(cr), e))
         else robotsEnEstacion(c, sinUno(cr), e) fi
       fi
-TODO: Fijate 
-    caracteristicaMasInfractora(c) ≡ maxCarInfractora(
-                      sinUno(claves(infraccionesXCaracteristica(c, robots(c)))),
-                      dameUno(claves(infraccionesXCaracteristica(c, robots(c)))),
-                      infraccionesXCaracteristica(c, robots(c))
-                    )
 
+    caracteristicaMasInfractora ≡ maximizar(infractoras(c, robots(c)))
 
-    maxCarInfractora(cc, car, d) ≡ if (ϕ?(cc)) then car
-                     else
-                        if(obtener(dameUno(cc), d) > obtener(car, d)) then
-                          maxCarInfractora(sinUno(cc), dameUno(cc), d)
-                        else
-                          maxCarInfractora(sinUno(cc), car, d)
-                        fi
-                      fi
+    infractoras(c, cr) ≡
+      if ϕ?(cr) then ϕ
+      else
+        infractoras(c, sinUno(cr)) ∪
+        if #infracciones(c, dameUno(cr)) > 0 then 
+            agregarN(#infracciones(c, dameUno(cr)), π₂(dameUno(cr)))
+        else 
+            ϕ 
+        fi
+      fi
 
-    infraccionesXCaracteristica(c,r) ≡ if (ϕ?(r)) then vacio
-                      else agregarCarInfDicc(
-                          π₂(dameUno(r)),
-                          infracciones(c, π₁(dameUno(r))),
-                          infraccionesXCaracteristica(c, sinUno(r)
-                      ) fi
+    aMulti(cs) ≡ if ϕ?(cs) then ϕ else Ag(dameUno(cs), aMulti(sinUno(cs))) fi
 
-    agregarCarInfDicc(cc, i, d) ≡ if (ϕ?(cc)) then d
-                    else definir(dameUno(cc), i + prevVal(dameUno(cc), d),
-                        agregarCarInfDicc(sinUno(cc), i, d))
-                    fi
-
-    prevVal(k, d) ≡ if (def?(k, d)) then obtener(k, d) else 0 fi
+    agregarN(i, cs) ≡ if i = 0 then ϕ else aMulti(cs) U agregarN(i-1, cs) fi
+     
+    maximizar(mc) ≡
+      if ϕ?(sinUno(mc)) ∨ₗ #(dameUno(mc), mc) > #(maximizar(sinUno(mc)), mc) then 
+        dameUno(mc)
+      else 
+        maximizar(sinUno(mc)) 
+      fi
 
 
 Fin TAD
