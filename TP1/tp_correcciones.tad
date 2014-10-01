@@ -110,13 +110,13 @@ TAD Ciudad
   generadores
     nueva: mapa → ciudad
     agregar: ciudad c × conj(caracteristica) cs × estacion e → ciudad
-      {¬(cs =obs ϕ) ∧ e ∈ estaciones(mapeo(c)) ∧ₗ ¬esBloqueante(mapeo(c), cs, e)}
+      {¬ϕ?(cs) ∧ e ∈ estaciones(mapeo(c)) ∧ₗ ¬esBloqueante(mapeo(c), cs, e)}
     mover: ciudad c × rur i × estacion e → ciudad
       {e ∈ estaciones(mapeo(c)) ∧ (∃r ∈ robots(c)) π₁(r) =obs i ∧ₗ
       conectadas(mapeo(c), posicion(c, i), e)}
     inspeccion: ciudad c × estacion e → ciudad {e ∈ estaciones(mapeo(c))}
   otras operaciones
-    id: ciudad c → rur {¬(ϕ?(robots(c))}
+    id: ciudad c → rur {¬ϕ?(robots(c)}
 
     masInfracciones: ciudad c × estacion e → conj(robot) {e ∈ estaciones(mapeo(c))}
     robotsEnEstacion: ciudad c × conj(robot) cr × estacion → conj(robot) {cr ⊆ robots(c)}
