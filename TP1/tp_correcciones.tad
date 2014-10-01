@@ -119,7 +119,7 @@ TAD Ciudad
     id: ciudad c → rur {¬(ϕ?(robots(c))}
 
     masInfracciones: ciudad c × estacion e → conj(robot) {e ∈ estaciones(mapeo(c))}
-    robotsEnEstacion: ciudad c × conj(robot) cr × estacion e → conj(robot) {cr ⊆ robots(c)}
+    robotsEnEstacion: ciudad c × conj(robot) cr × estacion → conj(robot) {cr ⊆ robots(c)}
     maxInfractor: ciudad c x conj(robot) cr x robot r -> robot r {r ⊆ robots(c)}
 
     caracteristicaMasInfractora: ciudad c → caracteristica
@@ -201,9 +201,9 @@ TAD Ciudad
     robotsEnEstacion(c, cr, e) ≡
       if ϕ?(cr) then ϕ
       else
-          if posicion(c, π₁(dameUno(cr))) =obs e then
-            Ag(dameUno(cr), robotsEnEstacion(c, sinUno(cr), e))
-          else robotsEnEstacion(c, sinUno(cr), e) fi
+        if posicion(c, π₁(dameUno(cr))) =obs e then
+          Ag(dameUno(cr), robotsEnEstacion(c, sinUno(cr), e))
+        else robotsEnEstacion(c, sinUno(cr), e) fi
       fi
 
     caracteristicaMasInfractora ≡ maximizar(infractoras(c, robots(c)))
@@ -219,9 +219,6 @@ TAD Ciudad
     aMulti(cs) ≡ if ϕ?(cs) then ϕ else Ag(dameUno(cs), aMulti(sinUno(cs))) fi
 
     maximizar(mc) ≡
-      if ϕ?(sinUno(mc)) then dameUno(mc)
-      else
-        if #(dameUno(mc), mc) > #(maximizar(sinUno(mc)), mc) then dameUno(mc)
-        else maximizar(sinUno(mc)) fi
-      fi
+      if ϕ?(sinUno(mc)) ∨ₗ #(dameUno(mc), mc) > #(maximizar(sinUno(mc)), mc) then dameUno(mc)
+      else maximizar(sinUno(mc)) fi
 Fin TAD
