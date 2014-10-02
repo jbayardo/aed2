@@ -98,12 +98,12 @@ TAD Ciudad
           mover, inspeccion, caracteristicaMasInfractora
 
   igualdad observacional
-  (∀c₁, c₂: ciudad) (c₁ =obs c₂ ⟺
+  (∀c₁, c₂ : ciudad) (c₁ =obs c₂ ⟺
     mapeo(c₁) =obs mapeo(c₂) ∧ robots(c₁) =obs robots(c₂) ∧ₗ
-    ((∀e ∈ estaciones(mapeo(c))) (#inspecciones(c₁, e) =obs #inspecciones(c₂, e))) ∧ₗ
+    ((∀e ∈ estaciones(mapeo(c))) (#inspecciones(c₁, e) =obs #inspecciones(c₂, e))) ∧
     ((∀r ∈ robots(c₁)) (
       #infracciones(c₁, π₁(r)) =obs #infracciones(c₂, π₁(r)) ∧
-      posicion(c₁, π₁(r)) =obs posicion(c₂, π₁(r))))
+      posicion(c₁, π₁(r)) =obs posicion(c₂, π₁(r)))))
 
   observadores basicos
     mapeo: ciudad → mapa
@@ -119,7 +119,7 @@ TAD Ciudad
       ¬esBloqueante(mapeo(c), cs, e)}
 
     mover: ciudad c × rur i × estacion e → ciudad
-      {e ∈ estaciones(mapeo(c)) ∧ (∃r ∈ robots(c)) π₁(r) =obs i ∧ₗ
+      {e ∈ estaciones(mapeo(c)) ∧ ((∃r ∈ robots(c)) π₁(r) =obs i) ∧ₗ
       conectadas(mapeo(c), posicion(c, i), e)}
 
     inspeccion: ciudad c × estacion e → ciudad {e ∈ estaciones(mapeo(c))}
@@ -131,7 +131,7 @@ TAD Ciudad
       {r ∈ robots(c) ∧ cr ⊆ robots(c) ∧ ¬ϕ?(cr)}
 
     caracteristicaMasInfractora: ciudad c → caracteristica
-      {(∃r ∈ robots(c)) #infracciones(π₁(r)) > 0 }
+      {(∃r ∈ robots(c)) (#infracciones(π₁(r)) > 0)}
     infractoras: ciudad c × conj(robot) cr → multiconj(caracteristica) {cr ⊆ robots(c)}
     aMulti: conj(caracteristica) → multiconj(caracteristica)
     maximizar: multiconj(caracteristica) mc → caracteristica {¬ϕ?(mc)}
@@ -205,7 +205,7 @@ TAD Ciudad
 
     aMulti(cs) ≡ if ϕ?(cs) then ϕ else Ag(dameUno(cs), aMulti(sinUno(cs))) fi
 
-    agregarN(i, cs) ≡ if i = 0 then ϕ else aMulti(cs) U agregarN(i-1, cs) fi
+    agregarN(i, cs) ≡ if i =obs 0 then ϕ else aMulti(cs) ∪ agregarN(i-1, cs) fi
 
     maximizar(mc) ≡
       if ϕ?(sinUno(mc)) ∨ₗ #(dameUno(mc), mc) > #(maximizar(sinUno(mc)), mc) then

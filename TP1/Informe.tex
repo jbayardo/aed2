@@ -39,7 +39,7 @@ Grupo 6}
 
 Asumimos que las estaciones, junto con las sendas y las restricciones entre ellas no son mutables: una instancia del TAD Ciudad comienza con un mapa definido y no puede ser cambiado. Suponemos también que las estaciones pueden tener sendas que las conecten a sí mismas, mas sólo una senda que la conecte a otra estación definida. Aparte, consideramos que pueden haber estaciones no conexas, y en cuyo caso no son consideradas bloqueantes (aunque los robots en ellas no podrían moverse hacia ningún lado).
 
-Los RUR se asignan desde el 1 de forma incremental, y nunca se repiten: si un robot es borrado por medio de una inspección, ningún otro robot va a tener el mismo RUR asignado. No puede existir un robot que no tenga ninguna característica.
+Los RUR se suponen asignados al momento de agregar un robot, la unica restricción al respecto es que el RUR efectivamente sea único. No puede existir un robot que no tenga ninguna característica.
 
 Dos restricciones son equivalentes cuando su tabla de verdad es la misma para todo posible conjunto de características.
 
