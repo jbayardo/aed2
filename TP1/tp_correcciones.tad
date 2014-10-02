@@ -54,9 +54,10 @@ TAD Mapa
     conectadas'   : estacion × conj(conexion) → bool
     camino        : mapa m × estacion a × estacion b → restriccion
       {a, b ∈ estaciones(m) ∧ conectadas(m, a, b)}
-    camino'       : estacion e × conj(conexion) xs → restriccion
-      {(∃x ∈ xs) π₁(x) =obs e}
-  axiomas (∀m : mapa) (∀e, a, b : estacion) (∀r : restriccion) (∀cs : conj(caracteristica)) (∀xs : conj(conexion))
+    camino'       : estacion e × conj(conexion) cc → restriccion
+      {(∃x ∈ cc) π₁(x) =obs e}
+  axiomas (∀m : mapa) (∀e, a, b : estacion) (∀r : restriccion) (∀cs : conj(caracteristica))
+          (∀cc : conj(conexion))
     conexiones(crearEst(m, e), k) ≡ ϕ
     conexiones(conectar(m, a, b, r), e) ≡
       (if e =obs a then ⟨b, r⟩
@@ -71,21 +72,21 @@ TAD Mapa
       if ϕ?(conexiones(m, e)) then False
       else esBloqueante'(conexiones(m, e), cs) fi
 
-    esBloqueante'(xs, cs) ≡
-      if ϕ?(xs) then True
-      else ¬(cumple(r, π₂(dameUno(xs)))) ∧ₗ esBloqueante'(sinUno(xs), cs) fi
+    esBloqueante'(cc, cs) ≡
+      if ϕ?(cc) then True
+      else ¬(cumple(r, π₂(dameUno(cc)))) ∧ₗ esBloqueante'(sinUno(cc), cs) fi
 
     conectadas(m, a, b) ≡ conectadas'(b, conexiones(m, a))
 
-    conectadas'(a, xs) ≡
-      if ϕ?(xs) then False
-      else (π₁(dameUno(xs)) =obs a) ∨ₗ conectadas'(a, sinUno(xs)) fi
+    conectadas'(a, cc) ≡
+      if ϕ?(cc) then False
+      else (π₁(dameUno(cc)) =obs a) ∨ₗ conectadas'(a, sinUno(cc)) fi
 
     camino(m, a, b) ≡ camino'(b, conexiones(m, a))
 
-    camino'(a, xs) ≡
-      if π₁(dameUno(xs)) =obs a then π₂(dameUno(xs))
-      else caminos'(a, sinUno(xs)) fi
+    camino'(a, cc) ≡
+      if π₁(dameUno(cc)) =obs a then π₂(dameUno(cc))
+      else caminos'(a, sinUno(cc)) fi
 Fin TAD
 
 TAD rur ES nat
@@ -93,60 +94,58 @@ TAD robot ES ⟨rur, conj(caracteristica)⟩
 
 TAD Ciudad
   generos ciudad
-  exporta TODO: COMPLETAME!!!!!
+  exporta mapeo, robots, posicion, #infracciones, #inspecciones, nueva, agregar,
+          mover, inspeccion, caracteristicaMasInfractora
 
   igualdad observacional
   (∀c₁, c₂: ciudad) (c₁ =obs c₂ ⟺
     mapeo(c₁) =obs mapeo(c₂) ∧ robots(c₁) =obs robots(c₂) ∧ₗ
     ((∀e ∈ estaciones(mapeo(c))) (#inspecciones(c₁, e) =obs #inspecciones(c₂, e))) ∧ₗ
     ((∀r ∈ robots(c₁)) (
-      infracciones(c₁, π₁(r)) =obs infracciones(c₂, π₁(r)) ∧
+      #infracciones(c₁, π₁(r)) =obs #infracciones(c₂, π₁(r)) ∧
       posicion(c₁, π₁(r)) =obs posicion(c₂, π₁(r))))
 
   observadores basicos
     mapeo: ciudad → mapa
     robots: ciudad → conj(robot)
     posicion: ciudad c × rur i → estacion {(∃r ∈ robots(c)) π₁(r) =obs i}
-    infracciones: ciudad c × rur i → nat {(∃r ∈ robots(c)) π₁(r) =obs i}
+    #infracciones: ciudad c × rur i → nat {(∃r ∈ robots(c)) π₁(r) =obs i}
     #inspecciones: ciudad c × estacion e → nat {e ∈ estaciones(mapeo(c))}
-
   generadores
     nueva: mapa → ciudad
 
     agregar: ciudad c x rur i × conj(caracteristica) cs × estacion e → ciudad
-      {¬ϕ?(cs) ∧ e ∈ estaciones(mapeo(c)) ∧ ¬((∃r ∈ robots(c)) π₁(r) = i) ∧ₗ ¬esBloqueante(mapeo(c), cs, e)}
+      {¬ϕ?(cs) ∧ ¬((∃r ∈ robots(c)) π₁(r) =obs i) ∧ e ∈ estaciones(mapeo(c)) ∧ₗ
+      ¬esBloqueante(mapeo(c), cs, e)}
 
     mover: ciudad c × rur i × estacion e → ciudad
       {e ∈ estaciones(mapeo(c)) ∧ (∃r ∈ robots(c)) π₁(r) =obs i ∧ₗ
       conectadas(mapeo(c), posicion(c, i), e)}
 
     inspeccion: ciudad c × estacion e → ciudad {e ∈ estaciones(mapeo(c))}
-
   otras operaciones
 
     masInfracciones: ciudad c × estacion e → conj(robot) {e ∈ estaciones(mapeo(c))}
     robotsEnEstacion: ciudad c × conj(robot) cr × estacion → conj(robot) {cr ⊆ robots(c)}
-    maxInfractor: ciudad c x conj(robot) cr x robot r -> robot 
-                {r ∈ robots(c) ∧ cr ⊆ robots(c)}
+    maxInfractor: ciudad c × conj(robot) cr × robot r → robot
+      {r ∈ robots(c) ∧ cr ⊆ robots(c) ∧ ¬ϕ?(cr)}
 
     caracteristicaMasInfractora: ciudad c → caracteristica
-      {(∃r ∈ robots(c)) infracciones(π₁(r)) > 0 }
-
+      {(∃r ∈ robots(c)) #infracciones(π₁(r)) > 0 }
     infractoras: ciudad c × conj(robot) cr → multiconj(caracteristica) {cr ⊆ robots(c)}
     aMulti: conj(caracteristica) → multiconj(caracteristica)
     maximizar: multiconj(caracteristica) mc → caracteristica {¬ϕ?(mc)}
-    agregarN: nat i x conj(caracteristica) -> multiconj(caracteristica)
-
-  axiomas (∀m : mapa) (∀c : ciudad) (∀cs : conj(caracteristicas)) (∀e, e' : estacion) (∀i : rur)
-  TODO: SEGUI COMPLETANDO LOS ∀
+    agregarN: nat × conj(caracteristica) → multiconj(caracteristica)
+  axiomas (∀m : mapa) (∀c : ciudad) (∀i : rur) (∀cc : conj(caracteristicas))
+          (∀e, e' : estacion) (∀cr : conj(robot)) (∀mc : multiconj(caracteristica))
     mapeo(nueva(m)) ≡ m
     mapeo(agregar(c, i, cc, e)) ≡ mapeo(c)
-    mapeo(mover(c, r, e)) ≡ mapeo(c)
+    mapeo(mover(c, i, e)) ≡ mapeo(c)
     mapeo(inspeccion(c, e)) ≡ mapeo(c)
 
     robots(nueva) ≡ ϕ
     robots(agregar(c, i, cc, e)) ≡ Ag(⟨i, cc⟩, robots(c))
-    robots(mover(c, r, e)) ≡ robots(c)
+    robots(mover(c, i, e)) ≡ robots(c)
     robots(inspeccion(c, e)) ≡ robots(c) - masInfracciones(c, e)
 
     posicion(agregar(c, i, cc, e), r) ≡
@@ -157,16 +156,16 @@ TAD Ciudad
       else posicion(c, r) fi
     posicion(inspeccion(c, e), r) ≡ posicion(c, r)
 
-    infracciones(agregar(c, i, cc, e), r) ≡
+    #infracciones(agregar(c, i, cc, e), r) ≡
       if i =obs r then 0
-      else infracciones(c) fi
+      else #infracciones(c) fi
 
-    infracciones(inspeccion(c, e), r) ≡ infracciones(c, r)
+    #infracciones(inspeccion(c, e), r) ≡ #infracciones(c, r)
 
-    infracciones(mover(c, i, e), r) ≡
+    #infracciones(mover(c, i, e), r) ≡
       if r =obs i then
-        infracciones(c, r) + β(¬cumple(camino(mapeo(c), posicion(c, r), e)))
-      else infracciones(c, r) fi
+        #infracciones(c, r) + β(¬cumple(camino(mapeo(c), posicion(c, r), e)))
+      else #infracciones(c, r) fi
 
     #inspecciones(nueva, e) ≡ 0
     #inspecciones(agregar(c, i, cc, e'), e) ≡ #inspecciones(c)
@@ -174,27 +173,16 @@ TAD Ciudad
     #inspecciones(inspeccion(c, e'), e) ≡ β(e' =obs e) + #inspecciones(c, e)
 
     masInfracciones(c, e) ≡
-      if(ϕ?(robotsEnEstacion(c, robots(c), e))) then ϕ
-      else
-        if ϕ?(robotsEnEstacion(c, robots(c), e)) then ϕ
-        else
-          if(infracciones(c, π₁(maxInfractor(c,
-                          sinUno(robotsEnEstacion(c, robots(c), e)),
-                          dameUno(robotsEnEstacion(c, robots(c), e))))
-                          ) > 0) then
-          Ag(maxInfractor(c, sinUno(robotsEnEstacion(c, robots(c), e)),
-                          dameUno(robotsEnEstacion(c, robots(c), e))), ϕ)
-          else ϕ fi
-        fi
-      fi
+      if ¬ϕ?(robotsEnEstacion(c, robots(c), e)) ∧ₗ
+        #infracciones(c, π₁(maxInfractor(c, robotsEnEstacion(c, robots(c), e)))) > 0
+      then Ag(maxInfractor(c, robotsEnEstacion(c, robots(c), e)), ϕ)
+      else ϕ fi
 
-    maxInfractor(c, cr, r) ≡
-      if (ϕ?(cr)) then r
-      else
-        if(infracciones(c, π₁(dameUno(cr))) > infracciones(c, π₁(r))) then
-          maxInfractor(c, sinUno(cr), dameUno(cr))
-        else maxInfractor(c, sinUno(cr), r) fi
-      fi
+    maxInfractor(c, cr) ≡
+      if ϕ?(sinUno(cr)) ∨ₗ #infracciones(c, π₁(dameUno(cr))) >
+                            #infracciones(c, π₁(maxInfractor(c, sinUno(cr))))
+      then dameUno(cr)
+      else maxInfractor(c, sinUno(cr)) fi
 
     robotsEnEstacion(c, cr, e) ≡
       if ϕ?(cr) then ϕ
@@ -210,23 +198,17 @@ TAD Ciudad
       if ϕ?(cr) then ϕ
       else
         infractoras(c, sinUno(cr)) ∪
-        if #infracciones(c, dameUno(cr)) > 0 then 
+        if #infracciones(c, dameUno(cr)) > 0 then
             agregarN(#infracciones(c, dameUno(cr)), π₂(dameUno(cr)))
-        else 
-            ϕ 
-        fi
+        else ϕ fi
       fi
 
     aMulti(cs) ≡ if ϕ?(cs) then ϕ else Ag(dameUno(cs), aMulti(sinUno(cs))) fi
 
     agregarN(i, cs) ≡ if i = 0 then ϕ else aMulti(cs) U agregarN(i-1, cs) fi
-     
+
     maximizar(mc) ≡
-      if ϕ?(sinUno(mc)) ∨ₗ #(dameUno(mc), mc) > #(maximizar(sinUno(mc)), mc) then 
+      if ϕ?(sinUno(mc)) ∨ₗ #(dameUno(mc), mc) > #(maximizar(sinUno(mc)), mc) then
         dameUno(mc)
-      else 
-        maximizar(sinUno(mc)) 
-      fi
-
-
+      else maximizar(sinUno(mc)) fi
 Fin TAD
