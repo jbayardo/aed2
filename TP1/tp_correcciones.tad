@@ -185,11 +185,14 @@ TAD Ciudad
       else maxInfractor(c, sinUno(cr)) fi
 
     robotsEnEstacion(c, cr, e) ≡
-      if ϕ?(cr) then ϕ
+      if ϕ?(cr) then 
+        ϕ
       else
         if posicion(c, π₁(dameUno(cr))) =obs e then
-          Ag(dameUno(cr), robotsEnEstacion(c, sinUno(cr), e))
-        else robotsEnEstacion(c, sinUno(cr), e) fi
+          Ag(dameUno(cr), ϕ)
+        else 
+          ϕ 
+        fi U robotsEnEstacion(c, sinUno(cr), e)
       fi
 
     caracteristicaMasInfractora ≡ maximizar(infractoras(c, robots(c)))
