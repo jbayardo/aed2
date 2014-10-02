@@ -56,6 +56,7 @@ TAD Mapa
       {a, b ∈ estaciones(m) ∧ conectadas(m, a, b)}
     camino'       : estacion e × conj(conexion) cc → restriccion
       {(∃x ∈ cc) (π₁(x) =obs e)}
+      
   axiomas (∀m : mapa) (∀e, a, b : estacion) (∀r : restriccion) (∀cs : conj(caracteristica))
           (∀cc : conj(conexion))
     conexiones(crearEst(m, e), k) ≡ ϕ
