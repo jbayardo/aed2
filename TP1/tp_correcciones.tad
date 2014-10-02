@@ -127,8 +127,8 @@ TAD Ciudad
 
     masInfracciones: ciudad c × estacion e → conj(robot) {e ∈ estaciones(mapeo(c))}
     robotsEnEstacion: ciudad c × conj(robot) cr × estacion → conj(robot) {cr ⊆ robots(c)}
-    maxInfractor: ciudad c × conj(robot) cr × robot r → robot
-      {r ∈ robots(c) ∧ cr ⊆ robots(c) ∧ ¬ϕ?(cr)}
+    maxInfractor: ciudad c × conj(robot) cr→ robot
+      { cr ⊆ robots(c) ∧ ¬ϕ?(cr)}
 
     caracteristicaMasInfractora: ciudad c → caracteristica
       {(∃r ∈ robots(c)) (#infracciones(π₁(r)) > 0)}
