@@ -1,0 +1,27 @@
+mapa:
+	diccionario(string, nat) -> trie
+	matriz de adyacencia -> vect<vect<Restriccion>>
+
+Robot:
+	#inf -> nat
+	tags -> conjlineal(string)
+	estacion -> string
+	posicion -> puntero al heap (bastante seguro, confirmar)
+
+Ciudad:
+	mapa m;
+	Robots -> Vect<Robot>
+	Estaciones -> Array<tupla< conj(Robot), colaprioridadM(Robot)>>
+
+
+Aclaraciones
+
+Conj(Robot) es un conj implementado sobre un AVL para tener todo en log(n)
+colaprioridadM es un heap implementado sobre un arbol y q ademas cada robot tiene un puntero a su posicion dentro del heap.
+
+Dudas:
+
+Meter un string a la tupla en estaciones con el nombre de la estacion para iterar en O(1)?
+O magia sobre el trie?
+Estaciones es fija o puede variar?
+Verificar lo de puntero en el Robot
