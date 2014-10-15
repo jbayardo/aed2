@@ -1,0 +1,96 @@
+INTERFAZ
+se explica con : Matriz Infinita de Booleanos
+géneros        : matrizBool
+
+Crear() → res : matrizBool
+Pre ≡ {true}
+Post ≡ {res =obs crear()}
+Complejidad: Θ(1)
+Descripción: genera una matriz de n*m inicializada toda en falso.
+
+****************************************** Re-ver esta complejidad
+Asignar(in/out m : matrizBool, in i : nat, in j : nat, in b : bool)
+Pre ≡ {m₀ =obs m}
+Post ≡ {m =obs asignar(m₀, i, j, b)}
+Complejidad: O(1) en el mejor caso, O(i + j + ...) en el peor caso
+Descripción: asigna un valor b a la matriz m en las coordenadas i, j
+
+Ver(in m : matrizBool, in i : nat, in j : nat) → res : bool
+Pre ≡ {true}
+Post ≡ {res =obs ver(m, i, j)}
+Complejidad: Θ(1)
+Descripción: devuelve el valor de la matriz m en las coordenadas i, j
+
+Complementar(in/out m : matrizBool)
+Pre ≡ {m₀ = m}
+Post ≡ {m =obs complementar(m₀)}
+Complejidad: Θ(1)
+Descripción: cambia todos los valores de la matriz m para que sean los mismos que antes pero negados.
+
+Intersecar(in m : matrizBool, in n : matrizBool) → res : matrizBool
+Pre ≡ {true}
+Post ≡ {res =obs m ∩ n}
+Complejidad: O(min(longitud(m.vals), longitud(n.vals))^2)
+Descripción: Devuelve una nueva matriz que tiene true sii m y n tienen true.
+
+REPRESENTACION
+
+matrizBool se representa con estr
+    donde estr es tupla(vals: vector(vector(bool)), complemento: bool)
+
+Rep : ^estr → boolean
+Rep(e) ≡ true
+
+Abs : ^estr → MatrizInfinitaDeBool
+(∀e : ^estr) Abs(e) =obs m /
+    (∀i, j : nat) (i < long(π₁(e)) ∧ₗ j < long(π₁(e)[i])) ⟹ₗ
+        ver(m, i, j) =obs (π₂(e) ⊕ π₁(e)[i][j])
+
+∙[∙]: secu(α) s × nat n → α {n < long(s)}
+xs[n] ≡
+    if n =0? then prim(xs)
+    else fin(xs)[n-1]
+
+ALGORITMOS
+
+iCrear() → res : matrizBool
+    res ← ⟨Vacia(), false⟩
+
+iAsignar(in/out m : matrizBool, in i : nat, in j : nat, in b : bool)
+    while i > longitud(m.vals) do
+        AgregarAtras(m.vals, Vacia())
+    end while
+
+    while j > longitud(m.vals[i]) do
+        AgregarAtras(m.vals[i], false)
+    end while
+
+    Agregar(m.vals[i][j], b)
+end function
+
+iVer(in m : matrizBool, in i : nat, in j : nat) → res : bool
+    if i > longitud(m.vals) ∨ₗ j > longitud(m.vals[i]) then
+        res ← m.complemento
+    else
+        res ← m.complemento ⊕ m.vals[i][j]
+    end if
+end function
+
+iComplementar(in/out m : matrizBool)
+    m.complemento ← ¬m.complemento
+end function
+
+iIntersecar(in m : matrizBool, in n : matrizBool) → res : matrizBool
+    res : matrizBool ← Crear()
+    i : int ← 0
+    while i < min(longitud(m.vals), longitud(n.vals)) do
+        j : int ← 0
+
+        while j < min(longitud(m.vals[i]), longitud(n.vals[i])) do
+            Asignar(res, i, j, Ver(m, i, j) ∧ Ver(n, i, j))
+            j ← j + 1
+        end while
+
+        i ← i + 1
+    end while
+end function
