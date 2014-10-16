@@ -14,6 +14,9 @@ Ciudad:
 	Estaciones -> Array<tupla< conj(Robot), colaprioridadM(Robot)>>
 
 
+Conjunto de caracteristicas de un robot esta implementado sobre un trie.
+Como las caracteristicas tienen longitud acotada, la comparacion es O(1)
+
 Aclaraciones
 
 Conj(Robot) es un conj implementado sobre un AVL para tener todo en log(n)
