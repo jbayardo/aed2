@@ -1,0 +1,55 @@
+Modulo iMapa
+
+INTERFAZ DEL iMAPA
+
+Se explica con: Mapa
+
+Crear() → res: iMapa
+Pre ≡ {true}
+Post ≡ {res =obs vacío}
+Complejidad: O(1)
+Descripcion: Crea un mapa vacío
+
+agregar(in/out m: iMapa, in e: estacion)
+Pre ≡ {e ∉ estaciones(m)}
+Post ≡ {e ∈ estaciones(m)}
+Complejidad: O(#estaciones(m) + |e|)
+Descripcion: Agrega una estación al mapa
+
+conectar(in/out m: iMapa, in e1: estacion, in e2: estacion, in r: restriccion)
+Pre ≡ {(e1 ∈ estaciones(m) ∧ e2 ∈ estaciones(m)) ∧ₗ ¬conectadas?(m, e1, e2)}
+Post ≡ {conectadas?(m, e1, e2) ≡ true}
+Complejidad: O(max(|e1|,|e2|) + S)
+Descripcion: conecta 2 estaciones del mapa entre con una restriccion para ese vinculo.
+
+
+estaciones(in m: iMapa) → res: ConjString
+Pre ≡ {true}
+Post ≡ {res =obs ???}
+Complejidad: O(1)
+Descripcion: Devuelve el conjunto de las estaciones del mapa.
+
+conectadas?(in m: iMapa, in e1: estacion, in e2: estacion) → res: Boolean
+Pre ≡ {e1 ∈ estaciones(m) ∧ e2 ∈ estaciones(m)}
+Post ≡ {???}
+Complejidad: O(max(|e1|,|e2|))
+Descripcion: Indica si 2 estaciones estan conectadas.
+
+restriccion(in m: iMapa, in e1: estacion, in e2: estacion) → res: restriccion
+Pre ≡ {(e1 ∈ estaciones(m) ∧ e2 ∈ estaciones(m)) ∧ₗ conectadas?(m, e1, e2)}
+Post ≡ {res =obs restriccion(e1,e2,m)}
+Complejidad: O(max(|e1|,|e2|))
+Descripcion: Devuelve la restriccion entre 2 estaciones conectadas.
+
+Sendas(in m: iMapa) → res: Conj(restriccion)
+Pre ≡ {true}
+Post ≡ {res ???}
+Complejidad: O(1)
+Descripcion: Devuelve un conjunto de todas las sendas del mapa.
+
+
+
+
+
+
+
