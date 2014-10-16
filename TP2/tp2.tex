@@ -35,7 +35,7 @@
   \textbf{Pre} $\equiv$ \{#4\}\\%
   \textbf{Post} $\equiv$ \{#5\}%
   \ifx#6\empty\else\\\textbf{Complejidad:} #6\fi%
-  \ifx#7\empty\else\\\textbf{Descripci�n:} #7\fi%
+  \ifx#7\empty\else\\\textbf{Descripción:} #7\fi%
   \ifx#8\empty\else\\\textbf{Aliasing:} #8\fi%
   \ifx#9\empty\else\\\textbf{Requiere:} #9\fi%
 }
@@ -48,13 +48,13 @@
 
 \newenvironment{Representacion}{%
   \vspace*{2ex}%
-  \noindent\textbf{\Large Representaci�n}%
+  \noindent\textbf{\Large Representación}%
   \vspace*{2ex}%
 }{}
 
 \newenvironment{Algoritmos}{%
   \vspace*{2ex}%
-  \noindent\textbf{\Large Algoritmos}%
+  \noindent\textbf{\Large Algorítmos}%
   \vspace*{2ex}%
 }{}
 
@@ -155,6 +155,49 @@
 \section{Módulo Conjunto AVL($\alpha$)}
 
 \begin{Interfaz}
+
+  \textbf{parámetros formales}\hangindent=2\parindent\\
+  \parbox{1.7cm}{\textbf{géneros}} $\alpha$\\
+  \parbox[t]{1.7cm}{\textbf{función}}\parbox[t]{\textwidth-2\parindent-1.7cm}{%
+    \InterfazFuncion{Copiar}{\In{a}{$\alpha$}}{$\alpha$}
+    {$res \igobs a$}
+    [$\Theta(copy(a))$]
+    [función de copia de $\alpha$'s]
+  }
+
+  \textbf{se explica con}: \tadNombre{Secuencia$(\alpha)$}, \tadNombre{Iterador Bidireccional($\alpha$)}.
+
+  \textbf{géneros}: \TipoVariable{lista$(\alpha)$}, \TipoVariable{itLista($\alpha$)}.
+
+  \Titulo{Operaciones básicas de lista}
+
+  \InterfazFuncion{Vacía}{}{lista$(\alpha)$}%
+  {$res \igobs \secuencia{}$}%
+  [$\Theta(1)$]
+  [genera una lista vacía.]
+
+  \InterfazFuncion{AgregarAdelante}{\Inout{l}{lista($\alpha$)}, \In{a}{$\alpha$}}{itLista($\alpha$}
+  [$l \igobs l_0$]
+  {$l \igobs \secuencia{a}[l_0]$ $\land$ $res$ $=$ CrearItBi(\secuencia{}, $l$) $\land$ alias(SecuSuby($res$) $=$ $l$)}
+  [$\Theta(copy(a))$]
+  [agrega el elemento $a$ como primer elemento de la lista.  Retorna un iterador a $l$, de forma tal que Siguiente devuelva $a$.]
+  [el elemento $a$ agrega por copia. El iterador se invalida si y sólo si se elimina el elemento siguiente del iterador sin utilizar la función \NombreFuncion{EliminarSiguiente}.]
+
+ 
+  \Titulo{Operaciones del iterador}
+
+  \InterfazFuncion{CrearIt}{\In{l}{lista($\alpha$)}}{itLista($\alpha$)}
+  {$res$ $\igobs$ crearItBi(\secuencia{}, $l$) $\land$ alias(SecuSuby($it$) $=$ $l$)}
+  [$\Theta(1)$]
+  [crea un iterador bidireccional de la lista, de forma tal que al pedir \NombreFuncion{Siguiente} se obtenga el primer elemento de $l$.]
+  [el iterador se invalida si y sólo si se elimina el elemento siguiente del iterador sin utilizar la función \NombreFuncion{EliminarSiguiente}.]
+
+  \InterfazFuncion{CrearItUlt}{\In{l}{lista($\alpha$)}}{itLista($\alpha$)}
+  {$res$ $\igobs$ crearItBi($l$, \secuencia{}) $\land$ alias(SecuSuby($it$) $=$ $l$)}
+  [$\Theta(1)$]
+  [crea un iterador bidireccional de la lista, de forma tal que al pedir \NombreFuncion{Anterior} se obtenga el último elemento de $l$.]  
+  [el iterador se invalida si y sólo si se elimina el elemento siguiente del iterador sin utilizar la función \NombreFuncion{EliminarSiguiente}.]
+
 \end{Interfaz}
 
 \begin{Representacion}
