@@ -1,0 +1,63 @@
+MODULO ConjuntoLG(α)
+ConjuntoLG(Robot, ≤1) rur
+ConjuntoLG(Robot, ≤2) infracciones y rur
+INTERFAZ DEL CONJUNTO
+
+Parametros formales
+	generos α
+	funcion ∙ ≤ ∙ (in a1 : α, a2 : α) → res : bool
+		Pre ≡ {true}
+		Post ≡ {res =obs (a1 ≤ a2)}
+		Complejidad: O(equal(a1, a2))
+		Descripcion: funcion de igualdad de αs
+	
+Se explica con: conjConMax(α)
+Generos: ConjuntoLG(α)
+
+Crear() → res : ConjuntoLG(α)
+Pre ≡ {true}
+Post ≡ {res =obs ϕ}
+Complejidad: O(1)
+Descripcion: Crea un conjunto vacio
+
+Insertar(in/out t : ConjuntoLG(α), in e : α)
+Pre ≡ {true}
+Post ≡ {e ∈ t}
+Complejidad: O(log(#t))
+Descripcion: Inserta un elemento
+
+Borrar(in/out t: ConjuntoLG(α), in e : α)
+Pre ≡ {t =obs t₀}
+Post ≡ {t =obs t₀ - {e}}
+Complejidad: O(log(#t))
+Descripcion: Borra un elemento
+
+Pertenece(in t: ConjuntoLG(α), in e: α) → res : bool
+Pre ≡ {true}
+Post ≡ {res =obs e ∈ t}
+Complejidad: O(log(#t))
+Descripcion: Se fija si el elemento pertenece al conjunto
+
+Maximo(in t: ConjuntoLG(α)) → res : α
+Pre ≡ {¬ϕ?(t)}
+Post ≡ {res =obs maximo(t)}
+Complejidad: O(1)
+Descripcion: Devuelve el maximo en el conjunto
+
+TAD conjConMax(α)
+	extiende conj(α)
+	otras operaciones (exportadas)
+		maximo : conj(α) c → α {¬ϕ?(c)}
+	axiomas (∀cs : conj(α))
+		maximo(cs) ≡
+			if ϕ?(sinUno(cs)) then dameUno(cs)
+			else
+				if dameUno(cs) > maximo(sinUno(cs)) then dameUno(cs)
+				else maximo(sinUno(cs)) fi
+			fi 
+Fin TAD
+
+REPRESENTACION DEL CONJUNTO
+
+
+INTERFAZ DE ITERADOR DEL CONJUNTO

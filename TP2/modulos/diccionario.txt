@@ -1,0 +1,52 @@
+MODULO DiccString(α)
+
+INTERFAZ
+
+Parametros formales
+	generos α
+	funcion ∙ = ∙ (in a1 : α, a2 : α) → res : bool
+		Pre ≡ {true}
+		Post ≡ {res =obs (a1 = a2)}
+		Complejidad: O(equal(a1, a2))
+		Descripcion: funcion de igualdad de αs
+
+Se explica con: dicc(string, α)
+Generos: DiccString(α)
+
+Crear() → res : DiccString(α)
+Pre ≡ {true}
+Post ≡ {res =obs vacio}
+Complejidad: O(1)
+Descripcion: Crea un diccionario vacio.
+
+Insertar(in/out d : DiccString(α), in k : string, in v : α)
+Pre ≡ {d =obs d₀}
+Post ≡ {d =obs definir(k, v, d₀)}
+Complejidad: O(|k|)
+Descripcion: Inserta una clave en el diccionario.
+
+Borrar(in/out d : DiccString(α), in k : string)
+Pre ≡ {def?(k, d) ∧ d =obs d₀}
+Post ≡ {d =obs borrar(k, d₀)}
+Complejidad: O(|k|)
+Descripcion: Borra una clave del diccionario.
+
+Definido?(in d : DiccString(α), in k : string) → res : bool
+Pre ≡ {true}
+Post ≡ {res =obs def?(k, d)}
+Complejidad: O(|k|)
+Descripcion: Dice si una clave esta definido.
+
+Obtener(in d : DiccString(α), in k : string) → res : α
+Pre ≡ {def?(k, d)}
+Post ≡ {res =obs obtener(k, d)}
+Complejidad: O(|k|)
+Descripcion: Obtiene el significado de la clave en el diccionario
+
+#Claves(in d : DiccString(α)) → res : nat
+Pre ≡ {true}
+Post ≡ {res =obs #claves(d)}
+Complejidad: O(1)
+Descripcion: Devuelve la cantidad de claves definidas en el diccionario.
+
+REPRESENTACION
