@@ -1,4 +1,4 @@
-MODULO DiccString(α)
+﻿MODULO DiccString(α)
 
 INTERFAZ
 
@@ -50,3 +50,49 @@ Complejidad: O(1)
 Descripcion: Devuelve la cantidad de claves definidas en el diccionario.
 
 REPRESENTACION
+
+dicc(string; nat) se representa con trie
+	donde trie es tupla(secu(tupla(char, puntero(trie)),nat, bool)
+Rep : trie t -> bool
+	Rep(t) ≡  !π₃(t) ɅL ((Vp1, p2 puntero є {aplanar(π₁(t))}) if p1 != p2 then *p1 != *p2 fi Ʌ *p1 != &t)
+
+aplanar: Secu(tupla(pchar, puntero(trie))) -> secu(puntero(trie))
+	aplanar(a) ≡ 
+		if !vacio?(a) then
+			( π₂(prim(a)) ● aplanar(fin(a)) ) & aplanar(*π₂(prim(a)))
+		else
+			<>
+		fi
+
+Abs : trie t -> dicc(string; nat) {Rep(t)}
+	Abs(t) ≡ RecorridoH(π₁(t), <>)
+	recorridoH(sec, s) ≡
+		if !vacio?(π₁(t)) then
+			unirD(RecorridoV(*prim(sec), s) , RecorridoH(fin(sec), s))
+		else
+			vacio
+		fi
+
+	RecorridoV(t,s) ≡  
+		if π₃(t) then
+			if !vacio?(π₁(t)) then	
+				unirD(definir(s, π₂(t), RecorridoV(*π₂(prim(π₁(t))),s ○ π₂(prim(π₁(t))))) , RecorridoH(π₂(fin((π₁(t))), s))
+										//o es reccoridoV???? como deberiamos recorrer el arbol?
+			else
+				definir(s, π₂(t), vacio))
+			fi
+		else
+			if !vacio?(π₁(t)) then
+				unirD( RecorridoV(*π₂(prim(π₁(t))),s ○ π₂(prim(π₁(t)))) , RecorridoH(π₂(fin((π₁(t))), s))
+			else
+				vacio
+			fi
+		fi
+
+
+	unirD(d, d') ≡
+		if(Ø?(claves(d'))) then
+			d
+		else
+			definir(dameuno(claves(d')), obtener(dameuno(claves(d'))), unirD(d, borrar(dameuno(claves(d')), d')))
+		fi
