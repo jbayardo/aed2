@@ -1,0 +1,76 @@
+MODULO COLA DE PRIORIDAD
+
+INTERFAZ DE LA COLA
+
+Parametros Formales
+	géneros α
+	función ∙ < ∙ (in a1 : α, a2 : α) → res : bool
+		Pre ≡ {true}
+		Post ≡ {res =obs (a1 < a2)}
+		Complejidad: O(lower(a1, a2))
+		Descripción: funcion de comparación de αs
+
+Se explica con: ColaDePrioridadExtendida(α)
+Generos: ColaPrioridad(α)
+
+Crear() → res : ColaPrioridad(α)
+Pre ≡ {true}
+Post ≡ {res =obs vacia}
+Complejidad: O(1)
+Descripción: Crea un conjunto vacio.
+
+Encolar(in/out t : ColaPrioridad(α), in e : α)
+Pre ≡ {t₀ =obs t}
+Post ≡ {t =obs encolar(e, t₀)}
+Complejidad: O(log(#t))
+Descripción: Inserta un elemento.
+
+Desencolar(in/out t : ColaPrioridad(α)) → res : α
+Pre ≡ {¬vacia?(t) ∧ t =obs t₀}
+Post ≡ {t =obs desencolar(t₀) ∧ res =obs proximo(t₀)}
+Complejidad: O(log(#t))
+Descripción: Desencola el elemento con mayor prioridad.
+
+Tamaño(in t : ColaPrioridad(α)) → res : nat
+Pre ≡ {true}
+Post ≡ {res =obs #t}
+Complejidad: O(1)
+Descripción:
+
+Borrar(in/out t : ColaPrioridad(α), in e : α)
+Pre ≡ {e ∈ t ∧ t₀ =obs t}
+Post ≡ {t = borrar(e, t₀)}
+Complejidad: O(log(#t))
+Descripción:
+
+TAD ColaDePrioridadExtendida(α)
+	extiende colaPrior(α)
+	otras operaciones (exportadas)
+		#∙ : colaPrior(α) → nat
+		∙ ∈ ∙ : α × colaPrior(α) → bool
+		borrar : α e × colaPrior(α) c → colaPrior(α) {e ∈ c}
+	axiomas
+		#c ≡ if vacia?(c) then 0 else 1 + #desencolar(c) fi
+		x ∈ c ≡ ¬vacia?(c) ∧ₗ (x =obs proximo(c) ∨ₗ x ∈ desencolar(c))
+		borrar(e, c) ≡
+			if e =obs proximo(c) then
+				if e ∈ desencolar(c) then borrar(e, desencolar(c))
+				else desencolar(c) fi
+			else encolar(proximo(c), borrar(e, desencolar(c))) fi
+Fin TAD
+
+REPRESENTACION DE LA COLA
+
+ColaPrioridad(α) se representa con estr
+	donde estr es tupla(cabeza: puntero(nodo), ultimo: puntero(nodo), elementos: nat)
+	donde nodo es tupla(arr: puntero(nodo), izq: puntero(nodo), der: puntero(nodo), dato: α)
+
+Rep: ^(estr) → boolean
+Rep(e) ≡ true ⟺
+	SE CUMPLE EL INVARIANTE DE REPRESENTACION SOBRE LOS DATOS (ES UN MAX HEAP)
+	EL ARBOL ESTA BALANCEADO A IZQUIERDA
+
+Abs:
+
+INTERFAZ DE ITERADOR DEL CONJUNTO
+
