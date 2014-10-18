@@ -10,6 +10,18 @@ Parametros Formales
 		Complejidad: O(lower(a1, a2))
 		Descripción: funcion de comparación de αs
 
+	función ∙ > ∙ (in a1 : α, a2 : α) → res : bool
+		Pre ≡ {true}
+		Post ≡ {res =obs (a1 > a2)}
+		Complejidad: O(higher(a1, a2))
+		Descripción: funcion de comparación de αs
+
+	función ∙ = ∙ (in a1 : α, a2 : α) → res : bool
+		Pre ≡ {true}
+		Post ≡ {res =obs (a1 = a2)}
+		Complejidad: O(equal(a1, a2))
+		Descripción: funcion de comparación de αs
+
 Se explica con: ColaDePrioridadExtendida(α)
 Generos: ColaPrioridad(α)
 
@@ -17,13 +29,13 @@ Crear() → res : ColaPrioridad(α)
 Pre ≡ {true}
 Post ≡ {res =obs vacia}
 Complejidad: O(1)
-Descripción: Crea un conjunto vacio.
+Descripción: Crea una cola vacia.
 
-Encolar(in/out t : ColaPrioridad(α), in e : α)
-Pre ≡ {t₀ =obs t}
-Post ≡ {t =obs encolar(e, t₀)}
+Encolar(in/out t : ColaPrioridad(α), in e : α) → res : itCola(α)
+Pre ≡ {¬(e ∈ t) ∧ t₀ =obs t}
+Post ≡ {t =obs encolar(e, t₀) ∧ Actual(res) =obs e}
 Complejidad: O(log(#t))
-Descripción: Inserta un elemento.
+Descripción: Inserta un elemento en la cola y devuelve un iterador posicionado en el elemento agregado.
 
 Desencolar(in/out t : ColaPrioridad(α)) → res : α
 Pre ≡ {¬vacia?(t) ∧ t =obs t₀}
@@ -35,13 +47,13 @@ Tamaño(in t : ColaPrioridad(α)) → res : nat
 Pre ≡ {true}
 Post ≡ {res =obs #t}
 Complejidad: O(1)
-Descripción:
+Descripción: Devuelve la cantidad de elementos en la cola.
 
 Borrar(in/out t : ColaPrioridad(α), in e : α)
 Pre ≡ {e ∈ t ∧ t₀ =obs t}
 Post ≡ {t = borrar(e, t₀)}
-Complejidad: O(log(#t))
-Descripción:
+Complejidad: O(#t * log(#t))
+Descripción: Busca y elimina el elemento pasado por parámetro.
 
 TAD ColaDePrioridadExtendida(α)
 	extiende colaPrior(α)
@@ -66,11 +78,92 @@ ColaPrioridad(α) se representa con estr
 	donde nodo es tupla(arr: puntero(nodo), izq: puntero(nodo), der: puntero(nodo), dato: α)
 
 Rep: ^(estr) → boolean
-Rep(e) ≡ true ⟺
-	SE CUMPLE EL INVARIANTE DE REPRESENTACION SOBRE LOS DATOS (ES UN MAX HEAP)
-	EL ARBOL ESTA BALANCEADO A IZQUIERDA
+Rep(e) ≡ true ⟺ MaxHeap(e.cabeza) ∧ Completo(e.cabeza) ∧ ELEMENTOS SE CONDICE
 
-Abs:
+MaxHeap: puntero(nodo) → bool
+MaxHeap(p) ≡
+	if p =obs NULL then true
+	else
+		(¬(p→izq =obs NULL) ⟹ₗ p→izq→dato < p→dato) ∧
+		(¬(p→der =obs NULL) ⟹ₗ p→der→dato < p→dato) ∧
+		MaxHeap(p→izq) ∧
+		MaxHeap(p→der)
+	fi
 
-INTERFAZ DE ITERADOR DEL CONJUNTO
+Completo: puntero(nodo) → bool
+Completo(p) ≡ ????????????????????????????????????????
 
+
+Abs: ^(estr) → ColaDePrioridadExtendida(α)
+(∀e : ^(estr)) Abs(e) =obs t /
+	vacia?(t) =obs (e.elementos =obs 0) ∧
+	¬vacia?(t) ⟹ₗ
+		proximo(t) =obs e.cabeza→dato ∧
+		desencolar(t) =obs ....?
+
+Crear() → res : ColaPrioridad(α)
+	res ← ⟨cabeza: NULL, ultimo: NULL, elementos: 0⟩
+
+Tamaño(in t : ColaPrioridad(α)) → res : nat
+	res = t.elementos
+
+Encolar(in/out t : ColaPrioridad(α), in e : α) → res : itCola(α)
+	var tmp : puntero(nodo) ← NULL
+
+	tmp = ??????????????????? MEMORY ALLOCATIONNNN
+	tmp→dato ← e
+	tmp→izq ← NULL
+	tmp→der ← NULL
+
+	if t.ultimo == NULL then
+		tmp→cabeza ← NULL
+		t.cabeza ← tmp
+	else
+		if t.ultimo→arr→izq == t.ultimo then
+			tmp→arr ← t.ultimo→arr
+			t.ultimo→arr→der ← tmp
+		else
+			var cur : puntero(nodo) ← t.ultimo
+
+			ESTE ES EL CASO EN EL QUE ESTAMOS A LA DERECHA Y HAY QUE
+			ENCONTRAR ALGO ARRIBA DE TODO
+			TERMINARRRRRRRRRRRRr----------------------------------------------
+		end if
+	end if
+
+	t.ultimo = tmp
+	t.elementos++
+
+	Subir(t.ultimo)
+	res ← crearIter(t, p)
+
+Borrar(in/out t : ColaPrioridad(α), in e : α)
+	IMPLEMENTARRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+
+// PRE: p != NULL
+// REVISAR EL TEMA ESTE DE QUE SEA DE TIPO α SIN QUE ESTE CLARO QUE VERGA ES α
+Subir(p : puntero(nodo))
+	while p→arr != NULL ∧ p→arr→dato < p→dato do
+		var tmp : α ← p→arr→dato
+		p→arr→dato ← p→dato
+		p→dato ← tmp
+		p ← p→arr
+	end while
+
+// PRE: p != NULL
+// REVISAR EL TEMA ESTE DE QUE SEA DE TIPO α SIN QUE ESTE CLARO QUE VERGA ES α
+Bajar(p : puntero(nodo))
+	while	(p→izq != NULL ∧ p→izq→dato > p→dato) ∨
+			(p→der != NULL ∧ p→der→dato < p→dato) do
+		if p→izq != NULL then
+			var tmp : α ← p→izq→dato
+			p→izq→dato ← p→dato
+			p→dato ← tmp
+		else
+			if p→der != NULL then
+				var tmp : α ← p→der→dato
+				p→der→dato ← p→dato
+				p→dato ← p→der→dato
+			end if
+		end if
+	end while

@@ -1,0 +1,8 @@
+TP2 Changelog - Lista de cambios
+*********************************
+
++ 08/10/14 - v1.0
++ 13/10/14 - v1.1
+  - Se modifica el orden de entrar, cambiando |e| por |e_m| donde |e_m| es la longitud más larga entre todas las estaciones.
+  - Se permite que siguiente del iterador de robots no sea O(1)
+  - Se aclara que los tags están compuestos por a lo sumo 64 caracteres, mientras que las estaciones pueden ser de cualquier longitud.
