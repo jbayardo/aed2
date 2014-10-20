@@ -65,6 +65,10 @@ Rep(e) ≡ true ⟺ ( claves(e.conexiones) ⊂ e.estaciones ∧ₗ
 				((∀ e1, e2: string) e1 ∈ claves(e.conexiones) ∧ₗ e2 ∈ claves(obtener(e1, e.conexiones)) →
 				 obtener(e2, obtener(e1, e.conexiones)) < longitud(e.sendas)))
 
+Abs: ^(estr) → iMapa
+(∀e : ^(estr)) Abs(e) =obs m: mapa / (e.estaciones =obs estaciones(m)) ∧ 
+					((∀ e1, e2: string) (definido?(e.conexiones, e1) ∧ₗ definido?(obtener(e.conexiones, e1), e2)) =obs conectadas?(e1, e2, m))
+					∧ ((∀ e1, e2: string) (definido?(e.conexiones, e1) ∧ₗ definido?(obtener(e.conexiones, e1), e2)) → e.sendas[i] =obs restriccion(e1, e2, m))
 
 Algoritmos
 
@@ -79,23 +83,23 @@ conectar(in/out m: iMapa, in e1: estacion, in e2: estacion, in r: restriccion)
 	AgregarAtras(m.sendas, r)
 	if ¬definido?(m.conexiones, e1) then 
 		definir(m.conexiones, e1, Vacio())
-	fi
+	end if
 	if ¬definido?(m.conexiones, e2) then 
 		definir(m.conexiones, e2, Vacio())
-	fi
+	end if
 
 	definir(obtener(m.conexiones, e1), e2, i)
 	definir(obtener(m.conexiones, e2), e1, i)
 
 
 estaciones(in m: iMapa) → res: itConj(string)
-	CrearIt(m.estaciones)
+	res ← CrearIt(m.estaciones)
 
 conectadas?(in m: iMapa, in e1: estacion, in e2: estacion) → res: Boolean
-	definido?(m.conexiones, e1) ∧ₗ definido?(obtener(m.conexiones, e1), e2)
+	res ← definido?(m.conexiones, e1) ∧ₗ definido?(obtener(m.conexiones, e1), e2)
 
 idSenda(in e1: estacion, in e2: estacion) → res: Int
-	obtener(obtener(m.conexiones, e1), e2)
+	res ← obtener(obtener(m.conexiones, e1), e2)
 
 sendas(in m: iMapa) → res: const ?Vector(Restriccion)
 	iterador solo lectura?
