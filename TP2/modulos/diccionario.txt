@@ -1,93 +1,142 @@
-﻿MODULO DiccString(α)
+﻿PREGUNTAR:
+	Se necesita borrar y #Claves? claramente no peroooo hay que algoritmearlo igual porque es un dicc?
+
+MODULO DiccString(α)
 
 INTERFAZ
 
-Parametros formales
-	generos α
-	funcion ∙ = ∙ (in a1 : α, a2 : α) → res : bool
-		Pre ≡ {true}
-		Post ≡ {res =obs (a1 = a2)}
-		Complejidad: O(equal(a1, a2))
-		Descripcion: funcion de igualdad de αs
+	Parametros formales
+		generos α
+		funcion ∙ = ∙ (in a1 : α, a2 : α) → res : bool
+			Pre ≡ {true}
+			Post ≡ {res =obs (a1 = a2)}
+			Complejidad: O(equal(a1, a2))
+			Descripcion: funcion de igualdad de αs
 
-Se explica con: dicc(string, α)
-Generos: DiccString(α)
+	Se explica con: dicc(string, α)
+	Generos: DiccString(α)
 
-Crear() → res : DiccString(α)
-Pre ≡ {true}
-Post ≡ {res =obs vacio}
-Complejidad: O(1)
-Descripcion: Crea un diccionario vacio.
+	Crear() → res : DiccString(α)
+	Pre ≡ {true}
+	Post ≡ {res =obs vacio}
+	Complejidad: O(1)
+	Descripcion: Crea un diccionario vacio.
 
-Insertar(in/out d : DiccString(α), in k : string, in v : α)
-Pre ≡ {d =obs d₀}
-Post ≡ {d =obs definir(k, v, d₀)}
-Complejidad: O(|k|)
-Descripcion: Inserta una clave en el diccionario.
+	Insertar(in/out d : DiccString(α), in k : string, in v : α)
+	Pre ≡ {d =obs d₀}
+	Post ≡ {d =obs definir(k, v, d₀)}
+	Complejidad: O(|k|)
+	Descripcion: Inserta una clave en el diccionario.
 
-Borrar(in/out d : DiccString(α), in k : string)
-Pre ≡ {def?(k, d) ∧ d =obs d₀}
-Post ≡ {d =obs borrar(k, d₀)}
-Complejidad: O(|k|)
-Descripcion: Borra una clave del diccionario.
+	NO	#Borrar(in/out d : DiccString(α), in k : string)
+	VA	#Pre ≡ {def?(k, d) ∧ d =obs d₀}
+		#Post ≡ {d =obs borrar(k, d₀)}
+		#Complejidad: O(|k|)
+		#Descripcion: Borra una clave del diccionario.
 
-Definido?(in d : DiccString(α), in k : string) → res : bool
-Pre ≡ {true}
-Post ≡ {res =obs def?(k, d)}
-Complejidad: O(|k|)
-Descripcion: Dice si una clave esta definido.
+	Definido?(in d : DiccString(α), in k : string) → res : bool
+	Pre ≡ {true}
+	Post ≡ {res =obs def?(k, d)}
+	Complejidad: O(|k|)
+	Descripcion: Dice si una clave esta definido.
 
-Obtener(in d : DiccString(α), in k : string) → res : α
-Pre ≡ {def?(k, d)}
-Post ≡ {res =obs obtener(k, d)}
-Complejidad: O(|k|)
-Descripcion: Obtiene el significado de la clave en el diccionario
+	Obtener(in d : DiccString(α), in k : string) → res : α
+	Pre ≡ {def?(k, d)}
+	Post ≡ {res =obs obtener(k, d)}
+	Complejidad: O(|k|)
+	Descripcion: Obtiene el significado de la clave en el diccionario
 
-#Claves(in d : DiccString(α)) → res : nat
-Pre ≡ {true}
-Post ≡ {res =obs #claves(d)}
-Complejidad: O(1)
-Descripcion: Devuelve la cantidad de claves definidas en el diccionario.
+	NO	##Claves(in d : DiccString(α)) → res : nat
+	VA	#Pre ≡ {true}
+		#Post ≡ {res =obs #claves(d)}
+		#Complejidad: O(1)
+		#Descripcion: Devuelve la cantidad de claves definidas en el diccionario.
 
 REPRESENTACION
 
-dicc(string; nat) se representa con trie
-	donde trie es tupla(array_estatico[256] de puntero(trie), nat, bool)
-Rep : trie t -> bool
-	Rep(t) ≡  !π₃(t) ɅL ((Vp1, p2 puntero є {aplanar(π₁(t),0)}) if p1 != p2 then *p1 != *p2 fi Ʌ *p1 != t)
+	DiccString(α) se representa con trie, donde trie es:
+		tupla(
+				continuacion: array_estatico[256] de puntero(trie),
+				significado: α,
+				definido: bool
+				)
+			
+	Rep : trie t -> bool
+		Rep(t) ≡  !π₃(t) ɅL ((Vp1, p2 puntero є {aplanar(π₁(t),0)}) if p1 != p2 then *p1 != *p2 fi Ʌ *p1 != t) 
 
-aplanar: array_estatico[256] de puntero(trie) -> secu(puntero(trie))
-	aplanar(a,n) ≡ 
-		if n < 255 then
-			if a[n] = null then 
-				aplanar(a,n+1)
-			else
-				aplanar(*a[n], 0) & aplanar(a,n+1)
-		else
-			<>
-		fi
-
-Abs : trie t -> dicc(string; nat) {Rep(t)}
-	Abs(t) ≡ Abs'(t, 0, <>)
-	
-	Abs'(t,n,s) ≡
-		if n < 256 then
-			if π₁(t)[n] != NULL then
-				if π₃( *( π₁(t)[n] ) ) then 
-					unirD( definir(s, π₂( *(π₁(t)[n]) ), abs'(*(π₁(t)[n]), 0, s ○ n)), abs'(t, n+1, s))
+	aplanar: array_estatico[256] de puntero(trie) -> secu(puntero(trie))
+		aplanar(a,n) ≡ 
+			if n < 255 then
+				if a[n] = null then 
+					aplanar(a,n+1)
 				else
-					unirD( abs'(*(π₁(t)[n]), 0, s ○ n), abs'(t, n+1, s))
+					aplanar(*a[n], 0) & aplanar(a,n+1)
+			else
+				<>
+			fi
+
+	Abs : trie t -> dicc(string; nat) {Rep(t)}
+		Abs(t) ≡ Abs'(t, 0, <>)
+		
+		Abs'(t,n,s) ≡
+			if n < 256 then
+				if π₁(t)[n] != NULL then
+					if π₃( *( π₁(t)[n] ) ) then 
+						unirD( definir(s, π₂( *(π₁(t)[n]) ), abs'(*(π₁(t)[n]), 0, s ○ n)), abs'(t, n+1, s))
+					else
+						unirD( abs'(*(π₁(t)[n]), 0, s ○ n), abs'(t, n+1, s))
+					fi
+				else
+					abs'(t, n+1, s)
 				fi
 			else
-				abs'(t, n+1, s)
+				vacio
 			fi
+		
+		unirD(d, d') ≡
+			if(Ø?(claves(d'))) then
+				d
+			else
+				definir(dameuno(claves(d')), obtener(dameuno(claves(d'))), unirD(d, borrar(dameuno(claves(d')), d')))
+			fi
+	
+ALGORITMOS
+		DiccString(α) se representa con trie, donde trie es:
+		tupla(
+				continuacion: array_estatico[256] de puntero(trie),
+				significado: α,
+				definido: bool
+				)
+			
+	Crear() → res : DiccString(α)
+		res <- (continuacion: CREARARREGLO(256), definido: False) 
+		
+	Insertar(in/out d : DiccString(α), in k : string, in v : α)
+		if vacia?(k) then 
+			d.definido = True
+			d.significado = v
 		else
-			vacio
+			if d.continuacion[prim(k)] == NULL
+				d.continuacion[prim(k)] = *Crear()
+			fi
+			Insertar(d.continuacion[prim(k)], fin(k), v)
 		fi
 	
-	unirD(d, d') ≡
-		if(Ø?(claves(d'))) then
-			d
+	Definido?(in d : DiccString(α), in k : string) → res : bool
+		if vacia?(k) then
+			if d.definido then
+				TRUE
+			else
+				FALSE
+			fi
 		else
-			definir(dameuno(claves(d')), obtener(dameuno(claves(d'))), unirD(d, borrar(dameuno(claves(d')), d')))
+			definido?(d.continuacion[prim(k)], fin(k))
 		fi
+		
+	Obtener(in d : DiccString(α), in k : string) → res : α
+		if vacia?(k) then
+			d.significado
+		else
+			obtener(d.continuacion[prim(k)], fin(k))
+		fi
+	
