@@ -19,11 +19,10 @@ Descripcion: Agrega una estación al mapa
 conectar(in/out m: iMapa, in e1: estacion, in e2: estacion, in r: restriccion)
 Pre ≡ {(e1 ∈ estaciones(m) ∧ e2 ∈ estaciones(m)) ∧ₗ ¬conectadas?(m, e1, e2)}
 Post ≡ {conectadas?(m, e1, e2) ≡ true}
-Complejidad: O(max(|e1|,|e2|) + S)
+Complejidad: O(|e1| + |e2| + S)
 Descripcion: conecta 2 estaciones del mapa entre con una restriccion para ese vinculo.
 
-
-estaciones(in m: iMapa) → res: ConjString
+estaciones(in m: iMapa) → res: itConj(string)
 Pre ≡ {true}
 Post ≡ {res =obs ???}
 Complejidad: O(1)
@@ -31,25 +30,29 @@ Descripcion: Devuelve el conjunto de las estaciones del mapa.
 
 conectadas?(in m: iMapa, in e1: estacion, in e2: estacion) → res: Boolean
 Pre ≡ {e1 ∈ estaciones(m) ∧ e2 ∈ estaciones(m)}
-Post ≡ {???}
-Complejidad: O(max(|e1|,|e2|))
+Post ≡ {res =obs conectadas?(m, e1, e2)}
+Complejidad: O|e1| + |e2|)
 Descripcion: Indica si 2 estaciones estan conectadas.
 
-restriccion(in m: iMapa, in e1: estacion, in e2: estacion) → res: restriccion
+idSenda(in e1: estacion, in e2: estacion) → res: Int
 Pre ≡ {(e1 ∈ estaciones(m) ∧ e2 ∈ estaciones(m)) ∧ₗ conectadas?(m, e1, e2)}
-Post ≡ {res =obs restriccion(e1,e2,m)}
-Complejidad: O(max(|e1|,|e2|))
-Descripcion: Devuelve la restriccion entre 2 estaciones conectadas.
-
-Sendas(in m: iMapa) → res: Conj(restriccion)
-Pre ≡ {true}
-Post ≡ {res ???}
-Complejidad: O(1)
-Descripcion: Devuelve un conjunto de todas las sendas del mapa.
+Post ≡ {???}
+Complejidad: O|e1| + |e2|)
+Descripcion: Devuelve el id de la senda entre e1 y e2.
 
 
 
+iMapa se representa con estr, donde estr es:
 
+tupla(
+	   sendas: Vector(Restriccion),
+	   conexiones: DiccString(DiccString(Int)),
+	   estaciones: conj(string)
+	   )
 
+Rep: ^(estr) → boolean
 
-
+Rep(e) ≡ true ⟺ ( claves(e.conexiones) ⊂ e.estaciones ∧ₗ 
+				((∀e1:string) e1 ∈ claves(e.conexiones) ∧ₗ claves(obtener(e1, e.conexiones)) ⊂ e.estaciones ) ∧ₗ
+				((∀ e1, e2: string) e1 ∈ claves(e.conexiones) ∧ₗ e2 ∈ claves(obtener(e1, e.conexiones)) ⟺  e2 ∈ claves(e.conexiones) ∧ₗ e1 ∈ claves(obtener(e1, e.conexiones))) ) ∧
+				((∀ e1, e2: string) e1 ∈ claves(e.conexiones) ∧ₗ e2 ∈ claves(obtener(e1, e.conexiones)) → obtener(e2, obtener(e1, e.conexiones)) < longitud(e.sendas))
