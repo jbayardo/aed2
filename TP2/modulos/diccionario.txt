@@ -110,34 +110,14 @@ ABS CARACTERIZADO
 						true
 					else
 						def?(fin(c), *t.continuacion[prim(c)])
+					fi
 				fi
 		∧ 
-		claves(d) =obs	recorrerVertical(t, <>)
-				
-	recorrerVertical t:trie X s:string -> conj(string)
-		if (t == NULL) then
-			vacio
-		else
-			if (t.definido) then
-				s
-			else
-				vacio
-			fi U recorridoHorizontal(t, s, 0)
-		fi
-	
-	
-	
-	recorrerHorizontal t:trie X s:string X n:Nat -> conj(string)
-		if (n >= 256) then
-			vacio
-		else
-			if (t.continuacion[n] == NULL)
-				vacio
-			else
-				recorridoVertical(*t.continuacion[n], s ○ n) U recorrerHorizontal(t, s, n+1)
-			fi
-		fi
-		
+		obtener(c, d) =obs 	if (t.definido ∧ vacio?(c)) then
+						t.significado
+					else
+						obtener(fin(c), *t.continuacion[prim(c)])
+					fi
 	
 ALGORITMOS
 		DiccString(α) se representa con trie, donde trie es:
