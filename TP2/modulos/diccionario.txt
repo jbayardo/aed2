@@ -100,13 +100,52 @@ REPRESENTACION
 				definir(dameuno(claves(d')), obtener(dameuno(claves(d'))), unirD(d, borrar(dameuno(claves(d')), d')))
 			fi
 	
+ABS CARACTERIZADO
+	Abs : trie t -> dicc(string; nat) {Rep(t)}
+	(∀t : trie) Abs(t) =obs d:dicc(c, s) /
+		Def?(c, d) =obs if (t = null) then
+					false
+				else
+					if (t.definido  ∧ vacio?(c)) then
+						true
+					else
+						def?(fin(c), *t.continuacion[prim(c)])
+				fi
+		∧ 
+		claves(d) =obs	recorrerVertical(t, <>)
+				
+	recorrerVertical t:trie X s:string -> conj(string)
+		if (t == NULL) then
+			vacio
+		else
+			if (t.definido) then
+				s
+			else
+				vacio
+			fi U recorridoHorizontal(t, s, 0)
+		fi
+	
+	
+	
+	recorrerHorizontal t:trie X s:string X n:Nat -> conj(string)
+		if (n >= 256) then
+			vacio
+		else
+			if (t.continuacion[n] == NULL)
+				vacio
+			else
+				recorridoVertical(*t.continuacion[n], s ○ n) U recorrerHorizontal(t, s, n+1)
+			fi
+		fi
+		
+	
 ALGORITMOS
 		DiccString(α) se representa con trie, donde trie es:
 		tupla(
-				continuacion: array_estatico[256] de puntero(trie),
-				significado: α,
-				definido: bool
-				)
+			continuacion: array_estatico[256] de puntero(trie),
+			significado: α,
+			definido: bool
+		)
 			
 	Crear() → res : DiccString(α)
 		res <- (continuacion: CREARARREGLO(256), definido: False) 
