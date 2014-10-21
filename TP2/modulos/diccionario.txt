@@ -106,8 +106,11 @@ ABS CARACTERIZADO
 		Def?(c, d) =obs if (t = null) then
 					false
 				else
-					if (t.definido  ∧ vacio?(c)) then
-						true
+					if (vacio?(c)) then
+						if (t.definido)
+							true
+						else
+							false
 					else
 						def?(fin(c), *t.continuacion[prim(c)])
 					fi
