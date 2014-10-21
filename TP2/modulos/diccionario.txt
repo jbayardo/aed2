@@ -131,7 +131,7 @@ ALGORITMOS
 		)
 			
 	Crear() → res : DiccString(α)
-		res <- (continuacion: CREARARREGLO(256), definido: False) 
+		res <- (continuacion: CREARARREGLO(256), definido: False) // y significado???
 		
 	Insertar(in/out d : DiccString(α), in k : string, in v : α)
 		if vacia?(k) then 
