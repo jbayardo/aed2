@@ -146,18 +146,14 @@ ALGORITMOS
 	
 	Definido?(in d : DiccString(α), in k : string) → res : bool
 		if vacia?(k) then
-			if d.definido then
-				TRUE
-			else
-				FALSE
-			fi
+			res ← d.definido
 		else
 			definido?(d.continuacion[prim(k)], fin(k))
 		fi
 		
 	Obtener(in d : DiccString(α), in k : string) → res : α
 		if vacia?(k) then
-			d.significado
+			res ← d.significado
 		else
 			obtener(d.continuacion[prim(k)], fin(k))
 		fi
