@@ -1,0 +1,83 @@
+Modulo restriccion
+
+INTERFAZ DE LA RESTRICCION
+
+Se explica con: Restriccion
+
+Var(in s: string) → res: restriccion
+Pre ≡ {true}
+Post ≡ {???}
+Complejidad: O(1)
+Descripcion: Crea una nueva restriccion
+
+And(in r1: restriccion, in r2: restriccion) → res: restriccion
+Pre ≡ {true}
+Post ≡ {???}
+Complejidad: O(1)
+Descripcion: Crea una nueva restriccion que tiene que cumplir con r1 y r2
+
+Or(in r1: restriccion, in r2: restriccion) → res: restriccion
+Pre ≡ {true}
+Post ≡ {???}
+Complejidad: O(1)
+Descripcion: Crea una nueva restriccion que tiene que cumplir con r1 o r2
+
+Not(in r: restriccion) → res: restriccion
+Pre ≡ {true}
+Post ≡ {???}
+Complejidad: O(1)
+Descripcion: Crea una nueva restriccion que no tiene que cumplir con r
+
+verificar(in tags: conj(string), in r: restriccion) → res: bool
+Pre ≡ {true}
+Post ≡ {res =obs verificar?(tags, r)}
+Complejidad: O(R) // cantidad de nodos del arbol?
+Descripcion: Evalua si todos los strings en tags verifican la restriccion r
+
+
+
+restriccion se representa con estr, donde estr es:
+
+tupla(
+	tipo: Enumerado(VAR, AND, OR, NOT), //??? Consultar!!
+	op1: Puntero(restriccion),
+	op2: Puntero(restriccion),
+	valor: string
+)
+
+rep
+
+abs
+
+
+Var(in s: string) → res: restriccion
+	res ← (tipo: VAR, op1: NULL, op2: NULL, valor: s)
+
+And(in r1: restriccion, in r2: restriccion) → res: restriccion
+	res ← (tipo: AND, op1: r1, op2: r2, valor: "")
+
+Or(in r1: restriccion, in r2: restriccion) → res: restriccion
+	res ← (tipo: OR, op1: r1, op2: r2, valor: "")
+
+Not(in r: restriccion) → res: restriccion
+	res ← (tipo: NOT, op1: r, op2: NULL, valor: "")
+
+verificar(in tags: conj(string), in r: restriccion) → res: bool
+	if (tipo = VAR)
+		res ← pertenece?(tags, r.valor)
+	endif
+
+	if (tipo = AND)
+		res ← verificar(tags, r.op1) ∧ verificar(tags, r.op2)
+	endif
+
+	if (tipo = OR)
+		res ← verificar(tags, r.op1) ∨ verificar(tags, r.op2)
+	endif
+
+	if (tipo = NOT)
+		res ← ¬verificar(tags, r.op1)
+	endif
+
+
+
