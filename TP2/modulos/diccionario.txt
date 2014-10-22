@@ -1,5 +1,6 @@
-﻿PREGUNTAR:
-	Se necesita borrar y #Claves? claramente no peroooo hay que algoritmearlo igual porque es un dicc?
+﻿	Hacer tad pelado Dicc
+PREGUNTAR:
+	En iCrear() que hacer con significado, usar punteros?
 
 MODULO DiccString(α)
 
@@ -130,28 +131,28 @@ ALGORITMOS
 			definido: bool
 		)
 			
-	Crear() → res : DiccString(α)
+	iCrear() → res : DiccString(α)
 		res <- (continuacion: CREARARREGLO(256), definido: False) // y significado???
 		
-	Insertar(in/out d : DiccString(α), in k : string, in v : α)
+	iInsertar(in/out d : DiccString(α), in k : string, in v : α)
 		if vacia?(k) then 
-			d.definido = True
-			d.significado = v
+			d.definido <- True
+			d.significado <- v
 		else
 			if d.continuacion[prim(k)] == NULL
-				d.continuacion[prim(k)] = *Crear()
+				d.continuacion[prim(k)] = &Crear()
 			fi
 			Insertar(d.continuacion[prim(k)], fin(k), v)
 		fi
 	
-	Definido?(in d : DiccString(α), in k : string) → res : bool
+	iDefinido?(in d : DiccString(α), in k : string) → res : bool
 		if vacia?(k) then
 			res ← d.definido
 		else
 			definido?(d.continuacion[prim(k)], fin(k))
 		fi
 		
-	Obtener(in d : DiccString(α), in k : string) → res : α
+	iObtener(in d : DiccString(α), in k : string) → res : α
 		if vacia?(k) then
 			res ← d.significado
 		else
