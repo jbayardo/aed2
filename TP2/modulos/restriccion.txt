@@ -6,25 +6,25 @@ Se explica con: Restriccion
 
 Var(in s: string) → res: restriccion
 Pre ≡ {true}
-Post ≡ {???} poner cosas tads
+Post ≡ {res =obs <s>} poner cosas tads
 Complejidad: O(1)
 Descripcion: Crea una nueva restriccion
 
 And(in r1: restriccion, in r2: restriccion) → res: restriccion
 Pre ≡ {true}
-Post ≡ {???}
+Post ≡ {res =obs r1 AND r2}
 Complejidad: O(1)
 Descripcion: Crea una nueva restriccion que tiene que cumplir con r1 y r2
 
 Or(in r1: restriccion, in r2: restriccion) → res: restriccion
 Pre ≡ {true}
-Post ≡ {???}
+Post ≡ {res =obs r1 OR r2}
 Complejidad: O(1)
 Descripcion: Crea una nueva restriccion que tiene que cumplir con r1 o r2
 
 Not(in r: restriccion) → res: restriccion
 Pre ≡ {true}
-Post ≡ {???}
+Post ≡ {res =obs NOT r}
 Complejidad: O(1)
 Descripcion: Crea una nueva restriccion que no tiene que cumplir con r
 
