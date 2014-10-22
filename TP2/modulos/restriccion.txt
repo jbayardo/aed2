@@ -6,7 +6,7 @@ Se explica con: Restriccion
 
 Var(in s: string) → res: restriccion
 Pre ≡ {true}
-Post ≡ {???}
+Post ≡ {???} poner cosas tads
 Complejidad: O(1)
 Descripcion: Crea una nueva restriccion
 
@@ -31,15 +31,16 @@ Descripcion: Crea una nueva restriccion que no tiene que cumplir con r
 verificar(in tags: conj(string), in r: restriccion) → res: bool
 Pre ≡ {true}
 Post ≡ {res =obs verificar?(tags, r)}
-Complejidad: O(R) // cantidad de nodos del arbol?
+Complejidad: O(R)
 Descripcion: Evalua si todos los strings en tags verifican la restriccion r
 
 
+tipos_res es Enumerado(VAR, AND, OR, NOT)
 
-restriccion se representa con estr, donde estr es:
+restriccion se representa con rest, donde rest es:
 
 tupla(
-	tipo: Enumerado(VAR, AND, OR, NOT), //??? Consultar!!
+	tipo: tipos_res,
 	op1: Puntero(restriccion),
 	op2: Puntero(restriccion),
 	valor: string
@@ -50,33 +51,33 @@ rep
 abs
 
 
-Var(in s: string) → res: restriccion
+iVar(in s: string) → res: rest
 	res ← (tipo: VAR, op1: NULL, op2: NULL, valor: s)
 
-And(in r1: restriccion, in r2: restriccion) → res: restriccion
-	res ← (tipo: AND, op1: r1, op2: r2, valor: "")
+iAnd(in r1: rest, in r2: rest) → res: rest
+	res ← (tipo: AND, op1: &r1, op2: &r2, valor: "")
 
-Or(in r1: restriccion, in r2: restriccion) → res: restriccion
-	res ← (tipo: OR, op1: r1, op2: r2, valor: "")
+iOr(in r1: rest, in r2: rest) → res: rest
+	res ← (tipo: OR, op1: &r1, op2: &r2, valor: "")
 
-Not(in r: restriccion) → res: restriccion
-	res ← (tipo: NOT, op1: r, op2: NULL, valor: "")
+iNot(in r: rest) → res: rest
+	res ← (tipo: NOT, op1: &r, op2: NULL, valor: "")
 
-verificar(in tags: conj(string), in r: restriccion) → res: bool
+iverificar(in tags: conj(string), in r: rest) → res: bool
 	if (tipo = VAR)
 		res ← pertenece?(tags, r.valor)
 	endif
 
 	if (tipo = AND)
-		res ← verificar(tags, r.op1) ∧ verificar(tags, r.op2)
+		res ← verificar(tags, *r.op1) ∧ verificar(tags, *r.op2)
 	endif
 
 	if (tipo = OR)
-		res ← verificar(tags, r.op1) ∨ verificar(tags, r.op2)
+		res ← verificar(tags, *r.op1) ∨ verificar(tags, *r.op2)
 	endif
 
 	if (tipo = NOT)
-		res ← ¬verificar(tags, r.op1)
+		res ← ¬verificar(tags, *r.op1)
 	endif
 
 
