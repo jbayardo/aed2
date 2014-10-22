@@ -1,0 +1,84 @@
+VectorPointer(α) es Vector(Puntero(α))
+
+Este iterador deberia estar en Vector
+
+itVectorPointer(α)
+Se explica con iterador unidireccional
+
+CrearIt(in it: VectorPointer(α)) → res: itVectorPointer(α)
+Pre ≡ {true}
+Post ≡ {uni}
+Complejidad: O(1)
+Descripcion: Crea un iterador unidireccional del VectorPointer(α).
+
+
+HaySiguiente(in it: itVectorPointer(α)) → res: bool
+Pre ≡ {true}
+Post ≡ {res =obs haySiguiente?(it)}
+Complejidad: O(n)
+Descripcion: Devuelve true si y solo si en el iterador quedan elementos para avanzar.
+
+
+Siguiente(in it: itVectorPointer(α)) → res: α
+Pre ≡ {HaySiguiente(it)}
+Post ≡ {alias(res =obs Siguiente(it))}
+Complejidad: O(n)
+Descripcion: Devuelve el elemento siguiente a la posicion del iterador.
+Aliasing: res no es modificable.
+
+
+Avanzar(in/out it: itVectorPointer(α))
+Pre ≡ {it = it₀ ∧ HaySiguiente?(it)}
+Post ≡ {it =obs Avanzar(it₀)}
+Complejidad: O(n)
+Descripcion: Avanza a la posicion siguiente del iterador.
+
+
+itVectorPointer(α) se representa con iter, donde iter es:
+
+tupla(
+	actual: nat,
+	len: nat,
+	vec: Puntero(VectorPointer(α))
+)
+
+
+iCrearIt(in it: iter) → res: itVectorPointer(α)
+	res ← (actual: 0, len: Longitud(it), vec: &it )
+
+iHaySiguiente(in it: iter) → res: bool
+	next: nat
+	next ← it.actual + 1
+	
+	while(next < len ∧ (*it.vec)[next] == NULL)
+		next ← next + 1
+	endwhile
+
+	res ← ¬(next == len)
+
+iSiguiente(in it: iter) → res: α
+	next: nat
+	next ← it.actual + 1
+
+	while((*it.vec)[next] == NULL)
+		next ← next + 1
+	endwhile
+
+	res ← *(*it.vec)[next]
+
+
+iAvanzar(in/out it: iter)
+	next: nat
+	next ← it.actual + 1
+
+	while((*it.vec)[next] == NULL)
+		next ← next + 1
+	endwhile
+
+	it.actual ← next
+
+
+
+
+
+
