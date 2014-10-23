@@ -1,10 +1,4 @@
-MODULO COLA DE PRIORIDAD
-
 Interfaz
-
-TAD BorradorCola(α)
-
-Fin TAD
 
 Parametros Formales
 	géneros α
@@ -43,6 +37,13 @@ Post ≡ {res =obs #t}
 Complejidad: O(1)
 Descripción: Devuelve la cantidad de elementos en la cola.
 
+Borrar(in/out t : ColaPrioridad(α), in i : itCola(α))
+Pre ≡ {t₀ =obs t}
+Post ≡ {t =obs borrar(Actual(i), t₀)}
+Complejidad: O(log(#t))
+Descripción: Borra el elemento al que apunta el iterador.
+Aliasing: Invalida el iterador??
+
 TAD ColaDePrioridadExtendida(α)
 	extiende colaPrior(α)
 	otras operaciones (exportadas)
@@ -59,35 +60,31 @@ TAD ColaDePrioridadExtendida(α)
 			else encolar(proximo(c), borrar(e, desencolar(c))) fi
 Fin TAD
 
-**************************** Operaciones del Borrador **************************
-
-NECESITO HABLAR DE LA COLA QUE ESTA POR DEBAJO DEL ITERADOR PARA DECIR QUE LE BORRE
-EL ELEMENTO AL QUE APUNTABA EN EL MOMENTO, COMO HAGO?
-
-Borrar(in/out t : itCola(α))
-Pre ≡ {HayMas?(t) ∧ t₀ =obs t}
-Post ≡ {t =obs Eliminar(t₀) ∧ BORRE EL ELEMENTO DE LA COLA}
-Complejidad: O(1)
-Descripción: Elimina el elemento actual de la cola de prioridad.
-
-Representación
+*********************************** Representación *****************************
 
 ColaPrioridad(α) se representa con estr(α)
-	donde estr(α) es tupla(cabeza: puntero(nodo(α)), ultimo: puntero(nodo(α)), tamaño: nat)
-	donde nodo(α) es tupla(arr: puntero(nodo(α)), izq: puntero(nodo(α)), der: puntero(nodo(α)), dato: α)
+	donde estr(α) es tupla(
+						cabeza : puntero(nodo(α)),
+						ultimo : puntero(nodo(α)),
+						tamaño : nat)
+	donde nodo(α) es tupla(
+						arr  : puntero(nodo(α)),
+						izq  : puntero(nodo(α)),
+						der  : puntero(nodo(α)),
+						dato : α)
 
 Rep: ^(estr(α)) → boolean
 Rep(e) ≡ true ⟺
-	(e.cabeza =obs NULL ⟺ e.tamaño =obs 0 ⟺ e.ultimo =obs NULL) ∧
+	(e.cabeza =obs NULL ⟺ e.ultimo =obs NULL) ∧
+	e.tamaño = Tamaño(e.cabeza) ∧
 	InvPadres(e.cab) ∧
 	No hay ciclos en el arbol ∧ₗ
 	MaxHeap(e.cab) ∧
 	Balanceado(e.cab) ∧
-	El arbol es completo e izquierdista ∧ₗ
+	Izquierdista(e.cab) ∧ₗ
 	(¬(e.cabeza =obs NULL) ⟹ₗ
 		e.cabeza→arr =obs NULL ∧
-		e.tamaño = tamaño(e.cabeza) ∧
-		e.ultimo ES EFECTIVAMENTE EL ULTIMO)
+		e.ultimo ES EL ULTIMO AGREGADO)
 
 InvPadres: puntero(nodo(α)) → bool
 InvPadres(p) ≡
@@ -110,20 +107,29 @@ MaxHeap(p) ≡
 	fi
 
 Balanceado: puntero(nodo(α)) → bool
-Balanceado(p) ≡ if p =obs NULL then true else altura(p→izq) - altura(p→der) ≤ 1 fi
+Balanceado(p) ≡
+	(p =obs NULL) ∨ₗ (|Altura(p→izq) - Altura(p→der)| ≤ 1) ∧
+	Balanceado(p→izq) ∧ Balanceado(p→der)
 
-altura: puntero(nodo(α)) → nat
-altura(p) ≡ if p =obs NULL then 0 else 1 + max(altura(p→izq), altura(p→der)) fi
+Altura: puntero(nodo(α)) → nat
+Altura(p) ≡ if p =obs NULL then 0 else 1 + max(Altura(p→izq), Altura(p→der)) fi
 
-tamaño: puntero(nodo(α)) → nat
-tamaño(p) ≡ if p =obs NULL then 0 else 1 + tamaño(p→izq) + tamaño(p→der) fi
+Izquierdista: puntero(nodo(α)) → bool
+Izquierdista(p) ≡
+	(p =obs NULL) ∨ₗ (¬(p→der =obs NULL) ⟹ₗ ¬(p→izq =obs NULL)) ∧
+	Izquierdista(p→izq) ∧ Izquierdista(p→der)
+
+Tamaño: puntero(nodo(α)) → nat
+Tamaño(p) ≡ if p =obs NULL then 0 else 1 + Tamaño(p→izq) + Tamaño(p→der) fi
 
 Abs: ^(estr(α)) → ColaDePrioridadExtendida(α)
 (∀e : ^(estr(α))) Abs(e) =obs t /
 	vacia?(t) =obs (e.tam =obs 0) ∧
 	¬vacia?(t) ⟹ₗ
 		proximo(t) =obs e.cab→dato ∧
-		(∀e : α) ((e ∈ t) ∧ ¬(e =obs proximo(t)) ⟺ (e ∈ desencolar(t)))
+		(∀e : α) (((e ∈ t) ∧ ¬(e =obs proximo(t))) ⟺ (e ∈ desencolar(t)))
+
+************************************** Algoritmos ******************************
 
 iCrear() → res : estr(α)
 	res ← ⟨cabeza: NULL, ultimo: NULL, tamaño: 0⟩
