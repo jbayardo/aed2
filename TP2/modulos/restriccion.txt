@@ -1,88 +1,114 @@
-Modulo restriccion
+Interfaz
 
-INTERFAZ DE LA RESTRICCION
+Preguntar si no hay que definir una operacion que sea el tamaño del arbol sobre
+el TAD para expresar la complejidad de Verifica?.
 
-Se explica con: Restriccion
+El rep solo habla de la forma del arbol, debería decir algo más?
 
-Var(in s: string) → res: restriccion
+Fijarse si los algoritmos deberían usar iVerificar o verificar
+
+Deberiamos ver que onda las cuestiones de aliasing.
+
+Se explica con: Restricción
+Géneros: restricción
+
+******************************* Operaciones ************************************
+
+Var(in s: string) → res: restricción
 Pre ≡ {true}
-Post ≡ {res =obs <s>} poner cosas tads
+Post ≡ {res =obs ⟨s⟩}
 Complejidad: O(1)
-Descripcion: Crea una nueva restriccion
+Descripcion: Crea una nueva restricción
 
-And(in r1: restriccion, in r2: restriccion) → res: restriccion
+And(in r1: restricción, in r2: restricción) → res: restricción
 Pre ≡ {true}
 Post ≡ {res =obs r1 AND r2}
 Complejidad: O(1)
-Descripcion: Crea una nueva restriccion que tiene que cumplir con r1 y r2
+Descripcion: Crea una nueva restricción que tiene que cumplir con r1 y r2
 
-Or(in r1: restriccion, in r2: restriccion) → res: restriccion
+Or(in r1: restricción, in r2: restricción) → res: restricción
 Pre ≡ {true}
 Post ≡ {res =obs r1 OR r2}
 Complejidad: O(1)
-Descripcion: Crea una nueva restriccion que tiene que cumplir con r1 o r2
+Descripcion: Crea una nueva restricción que tiene que cumplir con r1 o r2
 
-Not(in r: restriccion) → res: restriccion
+Not(in r: restricción) → res: restricción
 Pre ≡ {true}
 Post ≡ {res =obs NOT r}
 Complejidad: O(1)
-Descripcion: Crea una nueva restriccion que no tiene que cumplir con r
+Descripcion: Crea una nueva restricción que no tiene que cumplir con r
 
-verificar(in tags: conj(string), in r: restriccion) → res: bool
+Verifica?(in tags: conj(string), in r: restricción) → res: bool
 Pre ≡ {true}
-Post ≡ {res =obs verificar?(tags, r)}
+Post ≡ {res =obs verifica?(tags, r)}
 Complejidad: O(R)
-Descripcion: Evalua si todos los strings en tags verifican la restriccion r
+Descripcion: Evalua si la restricción r evalua a verdadero asumiendo que las
+variables que figuran en tags son verdaderas.
 
+********************************** Representación ******************************
 
-tipos_res es Enumerado(VAR, AND, OR, NOT)
+restricción se representa con estr
+	donde estr es tupla(
+					tipo  : Enumerado(VAR, AND, OR, NOT),
+					op1   : puntero(estr),
+					op2   : puntero(estr),
+					valor : string)
 
-restriccion se representa con rest, donde rest es:
+Rep: ^(estr) → boolean
+Rep(e) ≡ true ⟺
+	No hay ciclos en el arbol ∧ₗ
+	Ningún nodo de más abajo en el arbol tiene punteros a un padre ∧ₗ
+	(e.tipo =obs VAR ⟺ (e.op1 =obs NULL ∧ e.op2 =obs NULL)) ∧
+	(e.tipo =obs NOT ⟺ (¬(e.op1 =obs NULL) ∧ e.op2 =obs NULL)) ∧
+	((e.tipo =obs AND ∨ e.tipo =obs OR) ⟺ (¬(e.op1 =obs NULL) ∧ ¬(e.op2 =obs NULL))) ∧
+	(¬(e.op1 =obs NULL) ⟹ₗ Rep(*e.op1)) ∧
+	(¬(e.op2 =obs NULL) ⟹ₗ Rep(*e.op2))
 
-tupla(
-	tipo: tipos_res,
-	op1: Puntero(restriccion),
-	op2: Puntero(restriccion),
-	valor: string
-)
+Abs: ^(estr) → Restricción
+Abs(e) ≡
+	if e.tipo =obs VAR then
+		⟨e.valor⟩
+	else if e.tipo =obs AND then
+		Abs(*e.op1) AND Abs(*e.op2)
+	else if e.tipo =obs OR then
+		Abs(*e.op1) OR Abs(*e.op2)
+	else
+		NOT Abs(*e.op1)
+	fi fi fi
 
-rep
+************************************** Algoritmos ******************************
 
-abs
+iVar(in s: string) → res: estr
+	res ← ⟨tipo: VAR, op1: NULL, op2: NULL, valor: s⟩
+end function
 
+iAnd(in r1: estr, in r2: estr) → res: estr
+	res ← ⟨tipo: AND, op1: &r1, op2: &r2, valor: ""⟩
+end function
 
-iVar(in s: string) → res: rest
-	res ← (tipo: VAR, op1: NULL, op2: NULL, valor: s)
+iOr(in r1: estr, in r2: estr) → res: estr
+	res ← ⟨tipo: OR, op1: &r1, op2: &r2, valor: ""⟩
+end function
 
-iAnd(in r1: rest, in r2: rest) → res: rest
-	res ← (tipo: AND, op1: &r1, op2: &r2, valor: "")
+iNot(in r: estr) → res: estr
+	res ← ⟨tipo: NOT, op1: &r, op2: NULL, valor: ""⟩
+end function
 
-iOr(in r1: rest, in r2: rest) → res: rest
-	res ← (tipo: OR, op1: &r1, op2: &r2, valor: "")
+iVerifica?(in tags: conj(string), in r: estr) → res: bool
+	case
+		[] tipo == AND
+			res ← Verifica?(tags, *r.op1) ∧ Verifica?(tags, *r.op2)
+		[] tipo == OR
+			res ← Verifica?(tags, *r.op1) ∨ Verifica?(tags, *r.op2)
+		[] tipo == NOT
+			res ← ¬Verifica?(tags, *r.op1)
+		[] tipo == VAR
+			res ← pertenece?(tags, r.valor)
+	end case
+end function
 
-iNot(in r: rest) → res: rest
-	res ← (tipo: NOT, op1: &r, op2: NULL, valor: "")
-
-iverificar(in tags: conj(string), in r: rest) → res: bool
-	if (tipo == VAR)
-		res ← pertenece?(tags, r.valor)
-	endif
-
-	if (tipo == AND)
-		res ← verificar(tags, *r.op1) ∧ verificar(tags, *r.op2)
-	endif
-
-	if (tipo == OR)
-		res ← verificar(tags, *r.op1) ∨ verificar(tags, *r.op2)
-	endif
-
-	if (tipo == NOT)
-		res ← ¬verificar(tags, *r.op1)
-	endif
 /*
 La complejidad de iVerificar es O(R), siendo R la cantidad de restricciones anidadas.
 Esto se debe a que para verificar una restriccion vale para un conj(string), si esta no es un Var, debe verificar que valga para sus restricciones anidadas en op1 y/o op2 (depende si la restriccion es de tipo NOT o no), recursivamente, hasta llegar a un Var.
 Luego, cada restriccion devuelve el resultado anidado, por lo que se pasaria por cada nodo 2 veces, ergo, O(2R), y por algebra de ordenes, esto es equivalente a O(R)
 */
-
-

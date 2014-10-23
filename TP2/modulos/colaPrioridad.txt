@@ -1,5 +1,3 @@
-MODULO COLA DE PRIORIDAD
-
 Interfaz
 
 Parametros Formales
@@ -8,12 +6,6 @@ Parametros Formales
 		Pre ≡ {true}
 		Post ≡ {res =obs (a1 < a2)}
 		Complejidad: O(lower(a1, a2))
-		Descripción: funcion de comparación de αs
-
-	función ∙ > ∙ (in a1 : α, a2 : α) → res : bool
-		Pre ≡ {true}
-		Post ≡ {res =obs (a1 > a2)}
-		Complejidad: O(higher(a1, a2))
 		Descripción: funcion de comparación de αs
 
 Se explica con: ColaDePrioridadExtendida(α), IteradorUnidireccionalModificable(α)
@@ -45,6 +37,13 @@ Post ≡ {res =obs #t}
 Complejidad: O(1)
 Descripción: Devuelve la cantidad de elementos en la cola.
 
+Borrar(in/out t : ColaPrioridad(α), in i : itCola(α))
+Pre ≡ {t₀ =obs t}
+Post ≡ {t =obs borrar(Actual(i), t₀)}
+Complejidad: O(log(#t))
+Descripción: Borra el elemento al que apunta el iterador.
+Aliasing: Invalida el iterador??
+
 TAD ColaDePrioridadExtendida(α)
 	extiende colaPrior(α)
 	otras operaciones (exportadas)
@@ -61,60 +60,31 @@ TAD ColaDePrioridadExtendida(α)
 			else encolar(proximo(c), borrar(e, desencolar(c))) fi
 Fin TAD
 
-**************************** Operaciones del Iterador **************************
-
-CrearIt(in t : ColaPrioridad(α)) → res : itCola(α)
-Pre ≡ {true}
-Post ≡ {res =obs }
-Complejidad: O(1)
-Descripción: Crea un iterador unidireccional modificable de la cola, de forma
-tal que al pedir Siguiente se obtenga el proximo elemento a desencolar.
-Aliasing: ????????????????????
-
-HaySiguiente(in t : itCola(α)) → res : bool
-Pre ≡ {true}
-Post ≡ {res =obs HayMas?(t)}
-Complejidad: O(1)
-Descripción: Se fija si hay más elementos para recorrer.
-
-Siguiente(in/out t : itCola(α))
-Pre ≡ {HayMas?(t) ∧ t₀ =obs t}
-Post ≡ {t =obs Avanzar(t₀)}
-Complejidad: O(1)
-Descripción: Avanza el iterador en una posición.
-
-Actual(in t : itCola(α)) → res : α
-Pre ≡ {HayMas?(t)}
-Post ≡ {res =obs Actual(t)}
-Complejidad: O(1)
-Descripción: Devuelve el elemento al que apunta el iterador en el momento.
-
-NECESITO HABLAR DE LA COLA QUE ESTA POR DEBAJO DEL ITERADOR PARA DECIR QUE LE BORRE
-EL ELEMENTO AL QUE APUNTABA EN EL MOMENTO, COMO HAGO?
-
-Borrar(in/out t : itCola(α))
-Pre ≡ {HayMas?(t) ∧ t₀ =obs t}
-Post ≡ {t =obs Eliminar(t₀)}
-Complejidad: O(1)
-Descripción: Elimina el elemento actual de la cola de prioridad.
-
-Representación
+*********************************** Representación *****************************
 
 ColaPrioridad(α) se representa con estr(α)
-	donde estr(α) es tupla(cabeza: puntero(nodo(α)), ultimo: puntero(nodo(α)), tamaño: nat)
-	donde nodo(α) es tupla(arr: puntero(nodo(α)), izq: puntero(nodo(α)), der: puntero(nodo(α)), dato: α)
+	donde estr(α) es tupla(
+						cabeza : puntero(nodo(α)),
+						ultimo : puntero(nodo(α)),
+						tamaño : nat)
+	donde nodo(α) es tupla(
+						arr  : puntero(nodo(α)),
+						izq  : puntero(nodo(α)),
+						der  : puntero(nodo(α)),
+						dato : α)
 
 Rep: ^(estr(α)) → boolean
 Rep(e) ≡ true ⟺
-	(e.cabeza =obs NULL ⟺ e.tamaño =obs 0 ⟺ e.ultimo =obs NULL) ∧
+	(e.cabeza =obs NULL ⟺ e.ultimo =obs NULL) ∧
+	e.tamaño = Tamaño(e.cabeza) ∧
 	InvPadres(e.cab) ∧
 	No hay ciclos en el arbol ∧ₗ
 	MaxHeap(e.cab) ∧
-	El arbol es completo e izquierdista ∧ₗ
+	Balanceado(e.cab) ∧
+	Izquierdista(e.cab) ∧ₗ
 	(¬(e.cabeza =obs NULL) ⟹ₗ
 		e.cabeza→arr =obs NULL ∧
-		e.tamaño = tamaño(e.cabeza) ∧
-		e.ultimo ES VALIDO)
+		e.ultimo ES EL ULTIMO AGREGADO)
 
 InvPadres: puntero(nodo(α)) → bool
 InvPadres(p) ≡
@@ -136,34 +106,45 @@ MaxHeap(p) ≡
 		MaxHeap(p→der)
 	fi
 
-tamaño: puntero(nodo(α)) → nat
-tamaño(p) ≡ if p =obs NULL then 0 else 1 + tamaño(p→izq) + tamaño(p→der) fi
+Balanceado: puntero(nodo(α)) → bool
+Balanceado(p) ≡
+	(p =obs NULL) ∨ₗ (|Altura(p→izq) - Altura(p→der)| ≤ 1) ∧
+	Balanceado(p→izq) ∧ Balanceado(p→der)
 
-//////////////////////////// VER BIEN EL TEMA DEL ABS  /////////////////////////
+Altura: puntero(nodo(α)) → nat
+Altura(p) ≡ if p =obs NULL then 0 else 1 + max(Altura(p→izq), Altura(p→der)) fi
+
+Izquierdista: puntero(nodo(α)) → bool
+Izquierdista(p) ≡
+	(p =obs NULL) ∨ₗ (¬(p→der =obs NULL) ⟹ₗ ¬(p→izq =obs NULL)) ∧
+	Izquierdista(p→izq) ∧ Izquierdista(p→der)
+
+Tamaño: puntero(nodo(α)) → nat
+Tamaño(p) ≡ if p =obs NULL then 0 else 1 + Tamaño(p→izq) + Tamaño(p→der) fi
 
 Abs: ^(estr(α)) → ColaDePrioridadExtendida(α)
 (∀e : ^(estr(α))) Abs(e) =obs t /
 	vacia?(t) =obs (e.tam =obs 0) ∧
 	¬vacia?(t) ⟹ₗ
 		proximo(t) =obs e.cab→dato ∧
-		desencolar(t) =obs ....?
+		(∀e : α) (((e ∈ t) ∧ ¬(e =obs proximo(t))) ⟺ (e ∈ desencolar(t)))
 
-////////////////////// REVISAR SI CREAR ESTA BIEN
-Crear() → res : ColaPrioridad(α)
+************************************** Algoritmos ******************************
+
+iCrear() → res : estr(α)
 	res ← ⟨cabeza: NULL, ultimo: NULL, tamaño: 0⟩
 end function
 
-Tamaño(in t : ColaPrioridad(α)) → res : nat
+iTamaño(in t : estr(α)) → res : nat
 	res ← t.tamaño
 end function
 
-Encolar(in/out t : ColaPrioridad(α), in e : α) → res : itCola(α)
+/////////////////////////// VERIFICAR ENCOLAR Y DESENCOLAR
+
+iEncolar(in/out t : estr(α), in e : α) → res : itCola(α)
 	var tmp : puntero(nodo(α)) ← NULL
 
-	tmp = ??????????????????? MEMORY ALLOCATIONNNN
-	tmp→dato ← e
-	tmp→izq ← NULL
-	tmp→der ← NULL
+	tmp ← &⟨arr: NULL, izq: NULL, der: NULL, dato: e⟩
 
 	if Tamaño(t) == 0 then
 		tmp→arr ← NULL
@@ -178,9 +159,20 @@ Encolar(in/out t : ColaPrioridad(α), in e : α) → res : itCola(α)
 		else
 			var cur : puntero(nodo(α)) ← t.ultimo
 
-			ESTE ES EL CASO EN EL QUE ESTAMOS A LA DERECHA Y HAY QUE
-			ENCONTRAR ALGO ARRIBA DE TODO
-			TERMINARRRRRRRRRRRRr----------------------------------------------
+			while cur→arr != NULL ∧ cur→arr→izq != cur do
+				cur ← cur→arr
+			end while
+
+			if cur→arr != NULL then
+				cur ← cur→arr→der
+			fi
+
+			while cur→izq != NULL do
+				cur ← cur→izq
+			end while
+
+			tmp→arr ← cur
+			cur→izq ← tmp
 		end if
 	end if
 
@@ -188,28 +180,39 @@ Encolar(in/out t : ColaPrioridad(α), in e : α) → res : itCola(α)
 	t.tamaño++
 
 	Subir(t.ultimo)
-	res ← crearIter(t, p)
+	res ← crearIter(t, p) ------------------- esta funcion tiene que estar
 end function
 
-Desencolar(in/out t : ColaPrioridad(α)) → res : α
+iDesencolar(in/out t : estr(α)) → res : α
 	res ← t.cabeza→dato
 
 	if Tamaño(t) == 1 then
-		free(t.cabeza)
 		t.ultimo ← NULL
 		t.cabeza ← NULL
 	else
-		var proximo : puntero(nodo(α)) ← ProximoUltimo(t)
 		t.cabeza→dato ← t.ultimo→dato
 
 		if t.ultimo→arr→izq == t.ultimo then
+			var cur : puntero(nodo(α)) = t.ultimo
+
+			while cur→arr != NULL ∧ cur→arr→der != cur do
+				cur ← cur→arr
+			end while
+
+			if cur→arr != NULL then
+				cur ← cur→arr→izq
+			fi
+
+			while cur→der != NULL do
+				cur ← cur→der
+			end while
+
 			t.ultimo→arr→izq ← NULL
 		else
+			t.ultimo ← t.ultimo→arr→izq
 			t.ultimo→arr→der ← NULL
 		end if
 
-		free(t.ultimo) ????????????????????????????????????????????????????????
-		t.ultimo ← proximo
 		Bajar(t.cabeza)
 	end if
 
@@ -218,14 +221,10 @@ end function
 
 ////////////////////////////// A ESTAS 3 ULTIMAS LES FALTA LAS PRE Y POS ///////
 
-ProximoUltimo(in t : ColaPrioridad(α)) → res : puntero(nodo(α))
-	IMPLEMENTAR LA FUNCION DE BUSQUEDA DEL PROXIMO ULTIMO
-end function
-
 // PRE: p != NULL
 // POST: se restablecio el rep
 // REVISAR EL TEMA ESTE DE QUE SEA DE TIPO α SIN QUE ESTE CLARO QUE VERGA ES α
-Subir(in/out p : puntero(nodo(α)))
+iSubir(in/out p : puntero(nodo(α)))
 	while p→arr != NULL ∧ p→arr→dato < p→dato do
 		var tmp : α ← p→arr→dato
 		p→arr→dato ← p→dato
@@ -237,8 +236,8 @@ end function
 // PRE: p != NULL
 // Post: se restablecio el rep
 // REVISAR EL TEMA ESTE DE QUE SEA DE TIPO α SIN QUE ESTE CLARO QUE VERGA ES α
-Bajar(in/out p : puntero(nodo(α)))
-	while	(p→izq != NULL ∧ p→izq→dato > p→dato) ∨
+iBajar(in/out p : puntero(nodo(α)))
+	while	(p→izq != NULL ∧ p→dato < p→izq→dato) ∨
 			(p→der != NULL ∧ p→der→dato < p→dato) do
 		if p→izq != NULL then
 			var tmp : α ← p→izq→dato
