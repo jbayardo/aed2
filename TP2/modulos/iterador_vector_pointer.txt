@@ -5,9 +5,9 @@ Este iterador deberia estar en Vector
 itVectorPointer(α)
 Se explica con iterador unidireccional
 
-CrearIt(in it: VectorPointer(α)) → res: itVectorPointer(α)
+CrearIt(in vec: VectorPointer(α)) → res: itVectorPointer(α)
 Pre ≡ {true}
-Post ≡ {uni}
+Post ≡ {res =obs CrearItUni(in)}
 Complejidad: O(1)
 Descripcion: Crea un iterador unidireccional del VectorPointer(α).
 
