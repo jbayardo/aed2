@@ -5,6 +5,8 @@ Este iterador deberia estar en Vector
 itVectorPointer(α)
 Se explica con iterador unidireccional
 
+Se considera n igual a longitud(vec)
+
 CrearIt(in vec: VectorPointer(α)) → res: itVectorPointer(α)
 Pre ≡ {true}
 Post ≡ {res =obs CrearItUni(in)}
@@ -62,7 +64,7 @@ iHaySiguiente(in it: iter) → res: bool
 		next ← next + 1
 	endwhile
 
-	res ← ¬(next == len)
+	res ← (next != len)
 
 iSiguiente(in it: iter) → res: α
 	next: nat
