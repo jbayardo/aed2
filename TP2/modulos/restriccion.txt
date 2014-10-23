@@ -64,21 +64,25 @@ iNot(in r: rest) → res: rest
 	res ← (tipo: NOT, op1: &r, op2: NULL, valor: "")
 
 iverificar(in tags: conj(string), in r: rest) → res: bool
-	if (tipo = VAR)
+	if (tipo == VAR)
 		res ← pertenece?(tags, r.valor)
 	endif
 
-	if (tipo = AND)
+	if (tipo == AND)
 		res ← verificar(tags, *r.op1) ∧ verificar(tags, *r.op2)
 	endif
 
-	if (tipo = OR)
+	if (tipo == OR)
 		res ← verificar(tags, *r.op1) ∨ verificar(tags, *r.op2)
 	endif
 
-	if (tipo = NOT)
+	if (tipo == NOT)
 		res ← ¬verificar(tags, *r.op1)
 	endif
-
+/*
+La complejidad de iVerificar es O(R), siendo R la cantidad de restricciones anidadas.
+Esto se debe a que para verificar una restriccion vale para un conj(string), si esta no es un Var, debe verificar que valga para sus restricciones anidadas en op1 y/o op2 (depende si la restriccion es de tipo NOT o no), recursivamente, hasta llegar a un Var.
+Luego, cada restriccion devuelve el resultado anidado, por lo que se pasaria por cada nodo 2 veces, ergo, O(2R), y por algebra de ordenes, esto es equivalente a O(R)
+*/
 
 
