@@ -42,6 +42,14 @@ tupla(
 	vec: Puntero(VectorPointer(α))
 )
 
+Rep: ^(iter) → boolean
+(∀e : ^(iter)) Rep(e) ≡ true ⟺  (e.actual < e.len) ∧ ( e.vec != NULL ∧ₗ e.len = Longitud(*e.vec))
+
+
+Abs: ^(iter) → Iterador Unidireccional(α)
+(∀e : ^(iter)) Abs(e) =obs m: Iterador Unidireccional(α)/ Longitud(Siguientes(m)) =obs (e.len - e.actual) ∧	
+					  ((∀i: nat)( i < e.len ∧ₗ *e.vec[i] =obs Siguientes(m)[i]))
+
 
 iCrearIt(in it: iter) → res: itVectorPointer(α)
 	res ← (actual: 0, len: Longitud(it), vec: &it )
