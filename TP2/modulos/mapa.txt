@@ -1,105 +1,111 @@
-Modulo iMapa
-
-INTERFAZ DEL iMAPA
+Interfaz
 
 Se explica con: Mapa
+Géneros: Mapa
 
-Crear() → res: iMapa
+************************************** Operaciones *****************************
+
+Crear() → res: Mapa
 Pre ≡ {true}
 Post ≡ {res =obs vacío}
 Complejidad: O(1)
 Descripcion: Crea un mapa vacío
 
-agregar(in/out m: iMapa, in e: estacion)
-Pre ≡ {e ∉ estaciones(m)}
-Post ≡ {e ∈ estaciones(m)}
+Agregar(in/out m : Mapa, in e : estacion)
+Pre ≡ {e ∉ estaciones(m) ∧ m₀ =obs m}
+Post ≡ {m =obs agregar(e, m₀)}
 Complejidad: O(#estaciones(m) + |e|)
 Descripcion: Agrega una estación al mapa
 
-conectar(in/out m: iMapa, in e1: estacion, in e2: estacion, in r: restriccion)
-Pre ≡ {(e1 ∈ estaciones(m) ∧ e2 ∈ estaciones(m)) ∧ₗ ¬conectadas?(m, e1, e2)}
-Post ≡ {conectadas?(m, e1, e2) ≡ true}
+Conectar(in/out m : Mapa, in e1 : estacion, in e2 : estacion, in r : restriccion)
+Pre ≡ {e1, e2 ∈ estaciones(m) ∧ₗ ¬conectadas?(m, e1, e2) ∧ m₀ =obs m}
+Post ≡ {m =obs conectar(e1, e2, r, m)}
 Complejidad: O(|e1| + |e2| + S)
-Descripcion: conecta 2 estaciones del mapa entre con una restriccion para ese vinculo.
+Descripcion: Conecta 2 estaciones del mapa entre con una restriccion para ese vinculo.
 
-estaciones(in m: iMapa) → res: itConj(string)
+Estaciones(in m : Mapa) → res : itConj(string)
 Pre ≡ {true}
-Post ≡ {res =obs ???}
+Post ≡ {res =obs estaciones(m											VERIFICAR
 Complejidad: O(1)
-Descripcion: Devuelve el conjunto de las estaciones del mapa.
+Descripcion: Devuelve un iterador al conjunto de las estaciones del mapa.
 
-conectadas?(in m: iMapa, in e1: estacion, in e2: estacion) → res: Boolean
-Pre ≡ {e1 ∈ estaciones(m) ∧ e2 ∈ estaciones(m)}
+Conectadas?(in m : Mapa, in e1 : estacion, in e2 : estacion) → res : bool
+Pre ≡ {e1, e2 ∈ estaciones(m)}
 Post ≡ {res =obs conectadas?(m, e1, e2)}
 Complejidad: O|e1| + |e2|)
 Descripcion: Indica si 2 estaciones estan conectadas.
 
-idSenda(in e1: estacion, in e2: estacion) → res: Int
-Pre ≡ {(e1 ∈ estaciones(m) ∧ e2 ∈ estaciones(m)) ∧ₗ conectadas?(m, e1, e2)}
-Post ≡ {???}
+idSenda(in e1 : estacion, in e2 : estacion) → res : nat
+Pre ≡ {e1, e2 ∈ estaciones(m) ∧ₗ conectadas?(m, e1, e2)}
+Post ≡ {???}															VERIFICAR
 Complejidad: O|e1| + |e2|)
 Descripcion: Devuelve el id de la senda entre e1 y e2.
 
-sendas(in m: iMapa) → res: const ?Vector(Restriccion)
+Sendas(in m : Mapa) → res : const ?Vector(Restriccion)
 Pre ≡ {true}
-Post ≡ {res =obs m.sendas}
+Post ≡ {res =obs m.sendas}												VERIFICAR
 Complejidad: O(1)
 Descripcion: Devuelve las restricciones de las sendas del mapa
 
+********************************** Representacion ******************************
 
-
-
-iMapa se representa con estr, donde estr es:
-
-tupla(
-	   sendas: Vector(Restriccion),
-	   conexiones: DiccString(DiccString(Int)),
-	   estaciones: conj(string)
-	   )
+Mapa se representa con estr,
+	donde estr es: tupla(
+						sendas: Vector(Restriccion),
+						conexiones: DiccString(DiccString(Int)),
+						estaciones: conj(string))
 
 Rep: ^(estr) → boolean
+Rep(e) ≡ true ⟺
+	(claves(e.conexiones) ⊂ e.estaciones) ∧ₗ
+	((∀e1:string) e1 ∈ claves(e.conexiones) ∧ₗ claves(obtener(e1, e.conexiones)) ⊂ e.estaciones) ∧ₗ
+	((∀ e1, e2: string) e1 ∈ claves(e.conexiones) ∧ₗ e2 ∈ claves(obtener(e1, e.conexiones)) ⟺  e2 ∈ claves(e.conexiones) ∧ₗ e1 ∈ claves(obtener(e1, e.conexiones)))  ∧
+	((∀ e1, e2: string) e1 ∈ claves(e.conexiones) ∧ₗ e2 ∈ claves(obtener(e1, e.conexiones)) → obtener(e2, obtener(e1, e.conexiones)) < longitud(e.sendas)))
 
-Rep(e) ≡ true ⟺ ( claves(e.conexiones) ⊂ e.estaciones ∧ₗ 
-				((∀e1:string) e1 ∈ claves(e.conexiones) ∧ₗ claves(obtener(e1, e.conexiones)) ⊂ e.estaciones ) ∧ₗ
-				((∀ e1, e2: string) e1 ∈ claves(e.conexiones) ∧ₗ e2 ∈ claves(obtener(e1, e.conexiones)) ⟺  e2 ∈ claves(e.conexiones) ∧ₗ e1 ∈ claves(obtener(e1, e.conexiones)))  ∧
-				((∀ e1, e2: string) e1 ∈ claves(e.conexiones) ∧ₗ e2 ∈ claves(obtener(e1, e.conexiones)) →
-				 obtener(e2, obtener(e1, e.conexiones)) < longitud(e.sendas)))
+Abs: ^(estr) → Mapa
+(∀e : ^(estr)) Abs(e) =obs m /
+	(e.estaciones =obs estaciones(m)) ∧
+	((∀ e1, e2: string) (definido?(e.conexiones, e1) ∧ₗ definido?(obtener(e.conexiones, e1), e2)) =obs conectadas?(e1, e2, m)) ∧
+	((∀ e1, e2: string) (definido?(e.conexiones, e1) ∧ₗ definido?(obtener(e.conexiones, e1), e2)) → e.sendas[i] =obs restriccion(e1, e2, m))
 
-Abs: ^(estr) → iMapa
-(∀e : ^(estr)) Abs(e) =obs m: mapa / (e.estaciones =obs estaciones(m)) ∧ 
-					((∀ e1, e2: string) (definido?(e.conexiones, e1) ∧ₗ definido?(obtener(e.conexiones, e1), e2)) =obs conectadas?(e1, e2, m))
-					∧ ((∀ e1, e2: string) (definido?(e.conexiones, e1) ∧ₗ definido?(obtener(e.conexiones, e1), e2)) → e.sendas[i] =obs restriccion(e1, e2, m))
+*******************************Algoritmos **************************************
 
-Algoritmos
+iCrear() → res : Mapa
+	res ← ⟨sendas: Vacia(), conexiones: Vacio(), estaciones: Vacio()⟩
+end function
 
-Crear() → res: iMapa
-	res ← (sendas: Vacia(), conexiones: Vacio(), estaciones: Vacio())
-
-agregar(in/out m: iMapa, in e: estacion)
+iAgregar(in/out m : Mapa, in : estacion)
 	Agregar(m.estaciones, e)
+end function
 
-conectar(in/out m: iMapa, in e1: estacion, in e2: estacion, in r: restriccion)
-	var i: nat ← Longitud(m.sendas)
+iConectar(in/out m : Mapa, in e1 : estacion, in e2 : estacion, in r : restriccion)
+	var i : nat ← Longitud(m.sendas)
 	AgregarAtras(m.sendas, r)
-	if ¬definido?(m.conexiones, e1) then 
-		definir(m.conexiones, e1, Vacio())
-	end if
-	if ¬definido?(m.conexiones, e2) then 
-		definir(m.conexiones, e2, Vacio())
+
+	if ¬Definido?(m.conexiones, e1) then
+		Definir(m.conexiones, e1, Vacio())
 	end if
 
-	definir(obtener(m.conexiones, e1), e2, i)
-	definir(obtener(m.conexiones, e2), e1, i)
+	if ¬Definido?(m.conexiones, e2) then
+		Definir(m.conexiones, e2, Vacio())
+	end if
 
+	Definir(Obtener(m.conexiones, e1), e2, i)
+	Definir(Obtener(m.conexiones, e2), e1, i)
+end function
 
-estaciones(in m: iMapa) → res: itConj(string)
+iEstaciones(in m : Mapa) → res : itConj(string)
 	res ← CrearIt(m.estaciones)
+end function
 
-conectadas?(in m: iMapa, in e1: estacion, in e2: estacion) → res: Boolean
-	res ← definido?(m.conexiones, e1) ∧ₗ definido?(obtener(m.conexiones, e1), e2)
+iConectadas?(in m : Mapa, in e1 : estacion, in e2 : estacion) → res : bool
+	res ← Definido?(m.conexiones, e1) ∧ₗ Definido?(obtener(m.conexiones, e1), e2)
+end function
 
-idSenda(in e1: estacion, in e2: estacion) → res: Int
-	res ← obtener(obtener(m.conexiones, e1), e2)
+iidSenda(in e1 : estacion, in e2 : estacion) → res : nat
+	res ← Obtener(Obtener(m.conexiones, e1), e2)
+end function
 
-sendas(in m: iMapa) → res: const ?Vector(Restriccion)
+iSendas(in m : Mapa) → res: const ?Vector(Restriccion)
 	iterador solo lectura?
+end function
