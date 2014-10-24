@@ -227,11 +227,17 @@ iDesencolar(in/out t : estr(α)) → res : α
 	t.tamaño--
 end function
 
+iBorrar(in/out t : ColaPrioridad(α), in i : itCola(α))
+	Obtener el puntero subyacente al iterador
+	Swappearlo por el ultimo
+	Borrar el ultimo
+	Reestablecer el invariante
+end function
+
 ////////////////////////////// A ESTAS 3 ULTIMAS LES FALTA LAS PRE Y POS ///////
 
 // PRE: p != NULL
 // POST: se restablecio el rep
-// REVISAR EL TEMA ESTE DE QUE SEA DE TIPO α SIN QUE ESTE CLARO QUE VERGA ES α
 iSubir(in/out p : puntero(nodo(α)))
 	while p→arr != NULL ∧ p→arr→dato < p→dato do
 		var tmp : α ← p→arr→dato
@@ -243,7 +249,6 @@ end function
 
 // PRE: p != NULL
 // Post: se restablecio el rep
-// REVISAR EL TEMA ESTE DE QUE SEA DE TIPO α SIN QUE ESTE CLARO QUE VERGA ES α
 iBajar(in/out p : puntero(nodo(α)))
 	while	(p→izq != NULL ∧ p→dato < p→izq→dato) ∨
 			(p→der != NULL ∧ p→der→dato < p→dato) do
@@ -261,7 +266,9 @@ iBajar(in/out p : puntero(nodo(α)))
 	end while
 end function
 
+********************************************************************************
 ***********					Operaciones del iterador 				************
+********************************************************************************
 
 Actual(in i : itCola(α)) → res : α
 Pre ≡ {HayMas?(i)}
@@ -269,7 +276,9 @@ Post ≡ {res =obs Actual(i)}
 Complejidad: O(1)
 Descripción: Devuelve el elemento guardado por el iterador de cola.
 
+********************************************************************************
 ***********				   Representación del iterador 				************
+********************************************************************************
 
 itCola(α) se representa con it(α)
 	donde it(α) es puntero(nodo)
@@ -280,7 +289,9 @@ Rep(e) ≡ true ⟺ ¬(e =obs NULL)
 Abs: ^(it(α)) → IteradorUnidireccional(α)
 (∀e : ^(it(α))) Abs(e) =obs i / Siguientes(i) =obs <*e>
 
+********************************************************************************
 *********** 				Algorítmos del Iterador 				************
+********************************************************************************
 
 iActual(i : it(α)) → res : α
 	res ← *i

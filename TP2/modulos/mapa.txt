@@ -57,9 +57,9 @@ Descripcion: Devuelve las restricciones de las sendas del mapa
 
 Mapa se representa con estr,
 	donde estr es: tupla(
-						sendas: Vector(Restriccion),
-						conexiones: DiccString(DiccString(Int)),
-						estaciones: conj(string))
+						sendas     : Vector(Restriccion),
+						conexiones : DiccString(DiccString(Int)),
+						estaciones : conj(string))
 
 Rep: ^(estr) → boolean
 Rep(e) ≡ true ⟺

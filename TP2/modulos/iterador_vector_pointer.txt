@@ -51,7 +51,8 @@ itVectorPointer(α) se representa con iter,
 						vec: Puntero(VectorPointer(α)))
 
 Rep: ^(iter) → boolean
-(∀e : ^(iter)) Rep(e) ≡ true ⟺  (e.actual < e.len) ∧ ( e.vec != NULL ∧ₗ e.len = Longitud(*e.vec))
+(∀e : ^(iter)) Rep(e) ≡ true ⟺
+	(e.actual < e.len) ∧ ( e.vec != NULL ∧ₗ e.len = Longitud(*e.vec))
 
 
 Abs: ^(iter) → Iterador Unidireccional(α)
@@ -62,39 +63,36 @@ Abs: ^(iter) → Iterador Unidireccional(α)
 ************					  Algoritmos						************
 ********************************************************************************
 
-iCrearIt(in it: iter) → res: itVectorPointer(α)
-	res ← (actual: 0, len: Longitud(it), vec: &it )
+iCrearIt(in it : iter) → res: itVectorPointer(α)
+	res ← ⟨actual: 0, len: Longitud(it), vec: &it⟩
 end function
 
-iHaySiguiente(in it: iter) → res: bool
-	next: nat
-	next ← it.actual + 1
+iHaySiguiente(in it : iter) → res: bool
+	var next : nat ← it.actual + 1
 
-	while(next < len ∧ (*it.vec)[next] == NULL)
+	while next < len ∧ (*it.vec)[next] == NULL do
 		next ← next + 1
-	endwhile
+	end while
 
-	res ← (next != len)
+	res ← next != len
 end function
 
-iSiguiente(in it: iter) → res: α
-	next: nat
-	next ← it.actual + 1
+iSiguiente(in it : iter) → res: α
+	var next : nat ← it.actual + 1
 
-	while((*it.vec)[next] == NULL)
+	while (*it.vec)[next] == NULL do
 		next ← next + 1
-	endwhile
+	end while
 
 	res ← *(*it.vec)[next]
 end function
 
 iAvanzar(in/out it: iter)
-	next: nat
-	next ← it.actual + 1
+	var next : nat ← it.actual + 1
 
-	while((*it.vec)[next] == NULL)
+	while (*it.vec)[next] == NULL do
 		next ← next + 1
-	endwhile
+	end while
 
 	it.actual ← next
 end function
