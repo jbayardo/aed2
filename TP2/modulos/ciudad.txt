@@ -1,0 +1,100 @@
+********************************************************************************
+************						 Interfaz 						************
+********************************************************************************
+
+Se explica con: Ciudad
+Géneros: Ciudad
+
+********************************************************************************
+************					   Operaciones 						************
+********************************************************************************
+
+Crear(in m: iMapa) → res: Ciudad
+Pre ≡ {true}
+Post ≡ {res =obs Crear(m)}
+Complejidad: O(1)
+Descripcion: Crea una nueva ciudad a partir de un mapa.
+
+Entrar(in ts: conj(tags), in e: estacion, in/out c: Ciudad)
+Pre ≡ {e ∈ estaciones(c.mapa)}
+Post ≡ {c.robots[ProximoRUR-1].tags =obs ts }
+Complejidad: O(|e| + S*R + Nₜₒₜₐₗ)
+Descripcion: Agrega un conjunto de caracteristicas nuevo a la ciudad, creando un nuevo robot.
+
+Mover(in rur: nat, in e: estacion, in/out c: Ciudad)
+Pre ≡ {u ∈ robots(c) ∧ e ∈ estaciones(c) ∧ₗ conectadas?(estacion(u, c), e, mapa(c))}
+Post ≡ {estacion(u,c) =obs e}
+Complejidad: O(|e| + |estacion(u,c)| + Log(Nₑ) + Log)  //Ver bien! :D
+Descripcion: Mueve a un robot de una estacion a otra.
+
+Inspeccion(in e: estacion, in/out c: Ciudad)
+Pre ≡ { e ∈ estaciones(c)}
+Post ≡ {???}
+Complejidad: O(|e| + Log(Nₑ))
+Descripcion: Remueve al robot mas infractor en la estacion e de la ciudad.
+
+ProximoRUR(in c: ciudad) → res: nat
+Pre ≡ {true}
+Post ≡ {res =obs ProximoRUR(c)}
+Complejidad: O(1)
+Descripcion: Devuelve el proximo rur disponible.
+
+Mapa(in c: ciudad) → res: Mapa
+Pre ≡ {true}
+Post ≡ {res =obs Mapa(c)}
+Complejidad: O(1)
+Descripcion: Devuelve el mapa de la ciudad.
+
+Robots(in c: ciudad) → res: ItVectorPointer(???)
+Pre ≡ {true}
+Post ≡ {res =obs Iterador Unidireccional(Puntero(???))}
+Complejidad: O(1)
+Descripcion: Devuelve un iterador de los robots que hay en la ciudad.
+
+Estacion(in c: ciudad, in u: nat) → res: estacion
+Pre ≡ { u ∈ robots(c)}
+Post ≡ {res =obs Estacion(u, c)}
+Complejidad: O(1)
+Descripcion: Devuelve la estacion donde esta el robot con rur u.
+
+tags(in c: ciudad, in u: nat) → res: conj(tags)
+Pre ≡ { u ∈ robots(c)}
+Post ≡ {res =obs tags(u, c)}
+Complejidad: O(1)
+Descripcion: Devuelve los tags del robot con rur u.
+
+#infracciones(in c: ciudad, in u: nat) → res: nat
+Pre ≡ { u ∈ robots(c)}
+Post ≡ {res =obs #infracciones(u, c)}
+Complejidad: O(1)
+Descripcion: Devuelve la cantidad de infracciones del robot con rur u.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+********************************************************************************
+************					 Representación						************
+********************************************************************************
+
+
+********************************************************************************
+************					  Algoritmos						************
+********************************************************************************
+
+
