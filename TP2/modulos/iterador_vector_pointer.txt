@@ -1,3 +1,7 @@
+********************************************************************************
+************						 Interfaz 						************
+********************************************************************************
+
 VectorPointer(α) es Vector(Puntero(α))
 
 Este iterador deberia estar en Vector
@@ -7,19 +11,21 @@ Se explica con iterador unidireccional
 
 Se considera n igual a longitud(vec)
 
+********************************************************************************
+************					   Operaciones 						************
+********************************************************************************
+
 CrearIt(in vec: VectorPointer(α)) → res: itVectorPointer(α)
 Pre ≡ {true}
 Post ≡ {res =obs CrearItUni(in)}
 Complejidad: O(1)
 Descripcion: Crea un iterador unidireccional del VectorPointer(α).
 
-
 HaySiguiente(in it: itVectorPointer(α)) → res: bool
 Pre ≡ {true}
 Post ≡ {res =obs haySiguiente?(it)}
 Complejidad: O(n)
 Descripcion: Devuelve true si y solo si en el iterador quedan elementos para avanzar.
-
 
 Siguiente(in it: itVectorPointer(α)) → res: α
 Pre ≡ {HaySiguiente(it)}
@@ -28,67 +34,65 @@ Complejidad: O(n)
 Descripcion: Devuelve el elemento siguiente a la posicion del iterador.
 Aliasing: res no es modificable.
 
-
 Avanzar(in/out it: itVectorPointer(α))
 Pre ≡ {it = it₀ ∧ HaySiguiente?(it)}
 Post ≡ {it =obs Avanzar(it₀)}
 Complejidad: O(n)
 Descripcion: Avanza a la posicion siguiente del iterador.
 
+********************************************************************************
+************					 Representación						************
+********************************************************************************
 
-itVectorPointer(α) se representa con iter, donde iter es:
-
-tupla(
-	actual: nat,
-	len: nat,
-	vec: Puntero(VectorPointer(α))
-)
+itVectorPointer(α) se representa con iter,
+	donde iter es: tupla(
+						actual: nat,
+						len: nat,
+						vec: Puntero(VectorPointer(α)))
 
 Rep: ^(iter) → boolean
-(∀e : ^(iter)) Rep(e) ≡ true ⟺  (e.actual < e.len) ∧ ( e.vec != NULL ∧ₗ e.len = Longitud(*e.vec))
+(∀e : ^(iter)) Rep(e) ≡ true ⟺
+	(e.actual < e.len) ∧ ( e.vec != NULL ∧ₗ e.len = Longitud(*e.vec))
 
 
 Abs: ^(iter) → Iterador Unidireccional(α)
-(∀e : ^(iter)) Abs(e) =obs m: Iterador Unidireccional(α)/ Longitud(Siguientes(m)) =obs (e.len - e.actual) ∧	
+(∀e : ^(iter)) Abs(e) =obs m: Iterador Unidireccional(α)/ Longitud(Siguientes(m)) =obs (e.len - e.actual) ∧
 					  ((∀i: nat)( i < e.len ∧ₗ *e.vec[i] =obs Siguientes(m)[i]))
 
+********************************************************************************
+************					  Algoritmos						************
+********************************************************************************
 
-iCrearIt(in it: iter) → res: itVectorPointer(α)
-	res ← (actual: 0, len: Longitud(it), vec: &it )
+iCrearIt(in it : iter) → res: itVectorPointer(α)
+	res ← ⟨actual: 0, len: Longitud(it), vec: &it⟩
+end function
 
-iHaySiguiente(in it: iter) → res: bool
-	next: nat
-	next ← it.actual + 1
-	
-	while(next < len ∧ (*it.vec)[next] == NULL)
+iHaySiguiente(in it : iter) → res: bool
+	var next : nat ← it.actual + 1
+
+	while next < len ∧ (*it.vec)[next] == NULL do
 		next ← next + 1
-	endwhile
+	end while
 
-	res ← (next != len)
+	res ← next != len
+end function
 
-iSiguiente(in it: iter) → res: α
-	next: nat
-	next ← it.actual + 1
+iSiguiente(in it : iter) → res: α
+	var next : nat ← it.actual + 1
 
-	while((*it.vec)[next] == NULL)
+	while (*it.vec)[next] == NULL do
 		next ← next + 1
-	endwhile
+	end while
 
 	res ← *(*it.vec)[next]
-
+end function
 
 iAvanzar(in/out it: iter)
-	next: nat
-	next ← it.actual + 1
+	var next : nat ← it.actual + 1
 
-	while((*it.vec)[next] == NULL)
+	while (*it.vec)[next] == NULL do
 		next ← next + 1
-	endwhile
+	end while
 
 	it.actual ← next
-
-
-
-
-
-
+end function
