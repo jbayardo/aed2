@@ -69,28 +69,16 @@ Post ≡ {res =obs #infracciones(u, c)}
 Complejidad: O(1)
 Descripcion: Devuelve la cantidad de infracciones del robot con rur u.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ********************************************************************************
 ************					 Representación						************
 ********************************************************************************
+
+Ciudad se representa con city,
+	donde city es: tupla(
+						robots: VectorPointer(robot),
+						mapa: Mapa,
+						robotsEnEstacion: DiccString(colaPrioridad(??)),
+						)
 
 
 ********************************************************************************
