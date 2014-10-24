@@ -43,7 +43,7 @@ Descripcion: Devuelve el id de la senda entre e1 y e2.
 
 Sendas(in m : Mapa) → res : const ?Vector(Restriccion)
 Pre ≡ {true}
-Post ≡ {res =obs m.sendas}												VERIFICAR
+Post ≡ {res =obs m.sendas}												ESTA MAL
 Complejidad: O(1)
 Descripcion: Devuelve las restricciones de las sendas del mapa
 
@@ -58,17 +58,24 @@ Mapa se representa con estr,
 Rep: ^(estr) → boolean
 Rep(e) ≡ true ⟺
 	(claves(e.conexiones) ⊂ e.estaciones) ∧ₗ
-	((∀e1:string) e1 ∈ claves(e.conexiones) ∧ₗ claves(obtener(e1, e.conexiones)) ⊂ e.estaciones) ∧ₗ
-	((∀ e1, e2: string) e1 ∈ claves(e.conexiones) ∧ₗ e2 ∈ claves(obtener(e1, e.conexiones)) ⟺  e2 ∈ claves(e.conexiones) ∧ₗ e1 ∈ claves(obtener(e1, e.conexiones)))  ∧
-	((∀ e1, e2: string) e1 ∈ claves(e.conexiones) ∧ₗ e2 ∈ claves(obtener(e1, e.conexiones)) → obtener(e2, obtener(e1, e.conexiones)) < longitud(e.sendas)))
+	((∀e1 : string)
+		e1 ∈ claves(e.conexiones) ∧ₗ
+		claves(obtener(e1, e.conexiones)) ⊂ e.estaciones ∧ₗ
+		((∀e2 : string)
+			(e1 ∈ claves(e.conexiones) ∧ₗ e2 ∈ claves(obtener(e1, e.conexiones)) ⟺
+				e2 ∈ claves(e.conexiones) ∧ₗ e1 ∈ claves(obtener(e1, e.conexiones))) ∧ₗ
+			(e1 ∈ claves(e.conexiones) ∧ₗ e2 ∈ claves(obtener(e1, e.conexiones)) ⟹ₗ
+				obtener(e2, obtener(e1, e.conexiones)) < longitud(e.sendas))))
 
 Abs: ^(estr) → Mapa
 (∀e : ^(estr)) Abs(e) =obs m /
 	(e.estaciones =obs estaciones(m)) ∧
-	((∀ e1, e2: string) (definido?(e.conexiones, e1) ∧ₗ definido?(obtener(e.conexiones, e1), e2)) =obs conectadas?(e1, e2, m)) ∧
-	((∀ e1, e2: string) (definido?(e.conexiones, e1) ∧ₗ definido?(obtener(e.conexiones, e1), e2)) → e.sendas[i] =obs restriccion(e1, e2, m))
+	((∀ e1, e2: string)
+		definido?(e.conexiones, e1) ∧ₗ
+		(definido?(obtener(e.conexiones, e1), e2) =obs conectadas?(e1, e2, m)) ∧
+		(conectadas?(e1, e2, m) ⟹ e.sendas[i] =obs restriccion(e1, e2, m)))
 
-*******************************Algoritmos **************************************
+****************************** Algoritmos **************************************
 
 iCrear() → res : Mapa
 	res ← ⟨sendas: Vacia(), conexiones: Vacio(), estaciones: Vacio()⟩
