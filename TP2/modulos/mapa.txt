@@ -24,7 +24,7 @@ Descripcion: conecta 2 estaciones del mapa entre con una restriccion para ese vi
 
 estaciones(in m: iMapa) → res: itConj(string)
 Pre ≡ {true}
-Post ≡ {res =obs ???}
+Post ≡ {res =obs Iterador Unidireccional(string)}
 Complejidad: O(1)
 Descripcion: Devuelve el conjunto de las estaciones del mapa.
 
@@ -49,7 +49,7 @@ Descripcion: Devuelve las restricciones de las sendas del mapa
 
 
 
-iMapa se representa con estr, donde estr es:
+iMapa se representa con imap, donde imap es:
 
 tupla(
 	   sendas: Vector(Restriccion),
@@ -57,28 +57,28 @@ tupla(
 	   estaciones: conj(string)
 	   )
 
-Rep: ^(estr) → boolean
-
-Rep(e) ≡ true ⟺ ( claves(e.conexiones) ⊂ e.estaciones ∧ₗ 
+Rep: ^(imap) → boolean
+(∀e : ^(imap)) Rep(e) ≡ true ⟺ ( claves(e.conexiones) ⊂ e.estaciones ∧ₗ 
 				((∀e1:string) e1 ∈ claves(e.conexiones) ∧ₗ claves(obtener(e1, e.conexiones)) ⊂ e.estaciones ) ∧ₗ
 				((∀ e1, e2: string) e1 ∈ claves(e.conexiones) ∧ₗ e2 ∈ claves(obtener(e1, e.conexiones)) ⟺  e2 ∈ claves(e.conexiones) ∧ₗ e1 ∈ claves(obtener(e1, e.conexiones)))  ∧
 				((∀ e1, e2: string) e1 ∈ claves(e.conexiones) ∧ₗ e2 ∈ claves(obtener(e1, e.conexiones)) →
 				 obtener(e2, obtener(e1, e.conexiones)) < longitud(e.sendas)))
+				 
 
-Abs: ^(estr) → iMapa
-(∀e : ^(estr)) Abs(e) =obs m: mapa / (e.estaciones =obs estaciones(m)) ∧ 
+Abs: ^(imap) → Mapa
+(∀e : ^(imap)) Abs(e) =obs m: Mapa / (e.estaciones =obs estaciones(m)) ∧ 
 					((∀ e1, e2: string) (definido?(e.conexiones, e1) ∧ₗ definido?(obtener(e.conexiones, e1), e2)) =obs conectadas?(e1, e2, m))
 					∧ ((∀ e1, e2: string) (definido?(e.conexiones, e1) ∧ₗ definido?(obtener(e.conexiones, e1), e2)) → e.sendas[i] =obs restriccion(e1, e2, m))
 
 Algoritmos
 
-Crear() → res: iMapa
+iCrear() → res: imap
 	res ← (sendas: Vacia(), conexiones: Vacio(), estaciones: Vacio())
 
-agregar(in/out m: iMapa, in e: estacion)
+iagregar(in/out m: imap, in e: estacion)
 	Agregar(m.estaciones, e)
 
-conectar(in/out m: iMapa, in e1: estacion, in e2: estacion, in r: restriccion)
+iconectar(in/out m: imap, in e1: estacion, in e2: estacion, in r: restriccion)
 	var i: nat ← Longitud(m.sendas)
 	AgregarAtras(m.sendas, r)
 	if ¬definido?(m.conexiones, e1) then 
@@ -92,14 +92,14 @@ conectar(in/out m: iMapa, in e1: estacion, in e2: estacion, in r: restriccion)
 	definir(obtener(m.conexiones, e2), e1, i)
 
 
-estaciones(in m: iMapa) → res: itConj(string)
+iestaciones(in m: imap) → res: itConj(string)
 	res ← CrearIt(m.estaciones)
 
-conectadas?(in m: iMapa, in e1: estacion, in e2: estacion) → res: Boolean
+iconectadas?(in m: imap, in e1: estacion, in e2: estacion) → res: Boolean
 	res ← definido?(m.conexiones, e1) ∧ₗ definido?(obtener(m.conexiones, e1), e2)
 
-idSenda(in e1: estacion, in e2: estacion) → res: Int
+iidSenda(in e1: estacion, in e2: estacion) → res: Int
 	res ← obtener(obtener(m.conexiones, e1), e2)
 
-sendas(in m: iMapa) → res: const ?Vector(Restriccion)
+isendas(in m: imap) → res: const ?Vector(Restriccion)
 	iterador solo lectura?
