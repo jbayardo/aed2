@@ -4,7 +4,7 @@ mapa:
 
 Robot:
 	#inf -> nat
-	tags -> conjlineal(string)
+	tags -> Conjunto(string)
 	estacion -> string
 	posicion -> puntero al heap (bastante seguro, confirmar)
 
