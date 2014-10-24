@@ -1,4 +1,6 @@
-Interfaz
+********************************************************************************
+************						 Interfaz 						************
+********************************************************************************
 
 Parametros Formales
 	géneros α
@@ -8,10 +10,12 @@ Parametros Formales
 		Complejidad: O(lower(a1, a2))
 		Descripción: funcion de comparación de αs
 
-Se explica con: ColaDePrioridadExtendida(α), IteradorUnidireccionalModificable(α)
+Se explica con: ColaDePrioridadExtendida(α), IteradorUnidireccional(α)
 Generos: ColaPrioridad(α), itCola(α)
 
-************************** Operaciones de la cola ******************************
+********************************************************************************
+************					   Operaciones 						************
+********************************************************************************
 
 Crear() → res : ColaPrioridad(α)
 Pre ≡ {true}
@@ -60,7 +64,9 @@ TAD ColaDePrioridadExtendida(α)
 			else encolar(proximo(c), borrar(e, desencolar(c))) fi
 Fin TAD
 
-*********************************** Representación *****************************
+********************************************************************************
+************					 Representación						************
+********************************************************************************
 
 ColaPrioridad(α) se representa con estr(α)
 	donde estr(α) es tupla(
@@ -68,10 +74,10 @@ ColaPrioridad(α) se representa con estr(α)
 						ultimo : puntero(nodo(α)),
 						tamaño : nat)
 	donde nodo(α) es tupla(
-						arr  : puntero(nodo(α)),
-						izq  : puntero(nodo(α)),
-						der  : puntero(nodo(α)),
-						dato : α)
+						arr    : puntero(nodo(α)),
+						izq    : puntero(nodo(α)),
+						der    : puntero(nodo(α)),
+						dato   : α)
 
 Rep: ^(estr(α)) → boolean
 Rep(e) ≡ true ⟺
@@ -129,7 +135,9 @@ Abs: ^(estr(α)) → ColaDePrioridadExtendida(α)
 		proximo(t) =obs e.cab→dato ∧
 		(∀e : α) (((e ∈ t) ∧ ¬(e =obs proximo(t))) ⟺ (e ∈ desencolar(t)))
 
-************************************** Algoritmos ******************************
+********************************************************************************
+************					  Algoritmos						************
+********************************************************************************
 
 iCrear() → res : estr(α)
 	res ← ⟨cabeza: NULL, ultimo: NULL, tamaño: 0⟩
@@ -252,3 +260,27 @@ iBajar(in/out p : puntero(nodo(α)))
 		end if
 	end while
 end function
+
+***********					Operaciones del iterador 				************
+
+Actual(in i : itCola(α)) → res : α
+Pre ≡ {HayMas?(i)}
+Post ≡ {res =obs Actual(i)}
+Complejidad: O(1)
+Descripción: Devuelve el elemento guardado por el iterador de cola.
+
+***********				   Representación del iterador 				************
+
+itCola(α) se representa con it(α)
+	donde it(α) es puntero(nodo)
+
+Rep: ^(it(α)) → boolean
+Rep(e) ≡ true ⟺ ¬(e =obs NULL)
+
+Abs: ^(it(α)) → IteradorUnidireccional(α)
+(∀e : ^(it(α))) Abs(e) =obs i / Siguientes(i) =obs <*e>
+
+*********** 				Algorítmos del Iterador 				************
+
+iActual(i : it(α)) → res : α
+	res ← *i

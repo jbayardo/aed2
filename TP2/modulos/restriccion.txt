@@ -1,4 +1,6 @@
-Interfaz
+********************************************************************************
+************						 Interfaz 						************
+********************************************************************************
 
 Preguntar si no hay que definir una operacion que sea el tamaño del arbol sobre
 el TAD para expresar la complejidad de Verifica?.
@@ -12,7 +14,9 @@ Deberiamos ver que onda las cuestiones de aliasing.
 Se explica con: Restricción
 Géneros: restricción
 
-******************************* Operaciones ************************************
+********************************************************************************
+************					   Operaciones 						************
+********************************************************************************
 
 Var(in s: string) → res: restricción
 Pre ≡ {true}
@@ -45,7 +49,9 @@ Complejidad: O(R)
 Descripcion: Evalua si la restricción r evalua a verdadero asumiendo que las
 variables que figuran en tags son verdaderas.
 
-********************************** Representación ******************************
+********************************************************************************
+************					 Representación						************
+********************************************************************************
 
 restricción se representa con estr
 	donde estr es tupla(
@@ -76,7 +82,9 @@ Abs(e) ≡
 		NOT Abs(*e.op1)
 	fi fi fi
 
-************************************** Algoritmos ******************************
+********************************************************************************
+************					  Algoritmos						************
+********************************************************************************
 
 iVar(in s: string) → res: estr
 	res ← ⟨tipo: VAR, op1: NULL, op2: NULL, valor: s⟩
@@ -107,8 +115,10 @@ iVerifica?(in tags: conj(string), in r: estr) → res: bool
 	end case
 end function
 
-/*
-La complejidad de iVerificar es O(R), siendo R la cantidad de restricciones anidadas.
-Esto se debe a que para verificar una restriccion vale para un conj(string), si esta no es un Var, debe verificar que valga para sus restricciones anidadas en op1 y/o op2 (depende si la restriccion es de tipo NOT o no), recursivamente, hasta llegar a un Var.
-Luego, cada restriccion devuelve el resultado anidado, por lo que se pasaria por cada nodo 2 veces, ergo, O(2R), y por algebra de ordenes, esto es equivalente a O(R)
-*/
+
+La complejidad de iVerifica? es O(R), siendo R la cantidad de restricciones anidadas. Esto
+se debe a que para verificar una restriccion vale para un conj(string), si esta no es un
+Var, debe verificar que valga para sus restricciones anidadas en op1 y/o op2 (depende si
+la restriccion es de tipo NOT o no), recursivamente, hasta llegar a un Var. Luego, cada
+restriccion devuelve el resultado anidado, por lo que se pasaria por cada nodo 2 veces,
+ergo, O(2R), y por algebra de ordenes, esto es equivalente a O(R)

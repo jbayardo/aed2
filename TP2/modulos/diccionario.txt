@@ -2,6 +2,8 @@
 PREGUNTAR:
 	En iCrear() que hacer con significado, usar punteros?
 
+*** Cambiar el nombre de insertar por Definir
+
 MODULO DiccString(α)
 
 INTERFAZ
@@ -61,14 +63,14 @@ REPRESENTACION
 				significado: α,
 				definido: bool
 				)
-			
+
 	Rep : trie t -> bool
-		Rep(t) ≡  !π₃(t) ɅL ((Vp1, p2 puntero є {aplanar(π₁(t),0)}) if p1 != p2 then *p1 != *p2 fi Ʌ *p1 != t) 
+		Rep(t) ≡  !π₃(t) ɅL ((Vp1, p2 puntero є {aplanar(π₁(t),0)}) if p1 != p2 then *p1 != *p2 fi Ʌ *p1 != t)
 
 	aplanar: array_estatico[256] de puntero(trie) -> secu(puntero(trie))
-		aplanar(a,n) ≡ 
+		aplanar(a,n) ≡
 			if n < 255 then
-				if a[n] = null then 
+				if a[n] = null then
 					aplanar(a,n+1)
 				else
 					aplanar(*a[n], 0) & aplanar(a,n+1)
@@ -78,11 +80,11 @@ REPRESENTACION
 
 	Abs : trie t -> dicc(string; nat) {Rep(t)}
 		Abs(t) ≡ Abs'(t, 0, <>)
-		
+
 		Abs'(t,n,s) ≡
 			if n < 256 then
 				if π₁(t)[n] != NULL then
-					if π₃( *( π₁(t)[n] ) ) then 
+					if π₃( *( π₁(t)[n] ) ) then
 						unirD( definir(s, π₂( *(π₁(t)[n]) ), abs'(*(π₁(t)[n]), 0, s ○ n)), abs'(t, n+1, s))
 					else
 						unirD( abs'(*(π₁(t)[n]), 0, s ○ n), abs'(t, n+1, s))
@@ -93,14 +95,14 @@ REPRESENTACION
 			else
 				vacio
 			fi
-		
+
 		unirD(d, d') ≡
 			if(Ø?(claves(d'))) then
 				d
 			else
 				definir(dameuno(claves(d')), obtener(dameuno(claves(d'))), unirD(d, borrar(dameuno(claves(d')), d')))
 			fi
-	
+
 ABS CARACTERIZADO
 	Abs : trie t -> dicc(string; nat) {Rep(t)}
 	(∀t : trie) Abs(t) =obs d:dicc(c, s) /
@@ -116,13 +118,13 @@ ABS CARACTERIZADO
 						def?(fin(c), *t.continuacion[prim(c)])
 					fi
 				fi
-		∧ 
+		∧
 		obtener(c, d) =obs 	if (t.definido ∧ vacio?(c)) then
 						t.significado
 					else
 						obtener(fin(c), *t.continuacion[prim(c)])
 					fi
-	
+
 ALGORITMOS
 		DiccString(α) se representa con trie, donde trie es:
 		tupla(
@@ -130,12 +132,12 @@ ALGORITMOS
 			significado: α,
 			definido: bool
 		)
-			
+
 	iCrear() → res : DiccString(α)
 		res <- (continuacion: CREARARREGLO(256), definido: False) // y significado???
-		
+
 	iInsertar(in/out d : DiccString(α), in k : string, in v : α)
-		if vacia?(k) then 
+		if vacia?(k) then
 			d.definido <- True
 			d.significado <- v
 		else
@@ -144,18 +146,18 @@ ALGORITMOS
 			fi
 			Insertar(d.continuacion[prim(k)], fin(k), v)
 		fi
-	
+
 	iDefinido?(in d : DiccString(α), in k : string) → res : bool
 		if vacia?(k) then
 			res ← d.definido
 		else
 			definido?(d.continuacion[prim(k)], fin(k))
 		fi
-		
+
 	iObtener(in d : DiccString(α), in k : string) → res : α
 		if vacia?(k) then
 			res ← d.significado
 		else
 			obtener(d.continuacion[prim(k)], fin(k))
 		fi
-	
+
