@@ -63,8 +63,8 @@ Abs: ^(iter) → Iterador Unidireccional(α)
 ************					  Algoritmos						************
 ********************************************************************************
 
-iCrearIt(in it : iter) → res: itVectorPointer(α)
-	res ← ⟨actual: 0, len: Longitud(it), vec: &it⟩
+iCrearIt(in input_vec : VectorPointer(α)) → res: itVectorPointer(α)
+	res ← ⟨actual: 0, len: Longitud(input_vec), vec: &input_vec⟩
 end function
 
 iHaySiguiente(in it : iter) → res: bool
