@@ -77,8 +77,17 @@ Ciudad se representa con city,
 	donde city es: tupla(
 						robots: VectorPointer(robot),
 						mapa: Mapa,
-						robotsEnEstacion: DiccString(colaPrioridad(??)),
+						robotsEnEstacion: DiccString(colaPrioridad(robot)),
 						)
+
+	robot es: tupla(
+					tags: conj(tags),
+					infracciones: nat,
+					rur: nat,
+					infringe_restriccion: Vector(Bool),
+					estacion: string,
+					mi_estacion: Puntero al heap (?)
+	)
 
 
 ********************************************************************************
