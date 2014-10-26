@@ -1,151 +1,138 @@
-﻿	Hacer tad pelado Dicc
-PREGUNTAR:
+﻿PREGUNTAR:
 	En iCrear() que hacer con significado, usar punteros?
-
-*** Cambiar el nombre de insertar por Definir
 
 MODULO DiccString(α)
 
-INTERFAZ
+********************************************************************************
+************						 Interfaz 						************
+********************************************************************************
 
-	Parametros formales
-		generos α
-		funcion ∙ = ∙ (in a1 : α, a2 : α) → res : bool
-			Pre ≡ {true}
-			Post ≡ {res =obs (a1 = a2)}
-			Complejidad: O(equal(a1, a2))
-			Descripcion: funcion de igualdad de αs
+Parametros formales
+	generos α
+	funcion ∙ = ∙ (in a1 : α, a2 : α) → res : bool
+		Pre ≡ {true}
+		Post ≡ {res =obs (a1 = a2)}
+		Complejidad: O(equal(a1, a2))
+		Descripcion: funcion de igualdad de αs
 
-	Se explica con: dicc(string, α)
-	Generos: DiccString(α)
+Se explica con: dicc(string, α)
+Generos: DiccString(α)
 
-	Crear() → res : DiccString(α)
-	Pre ≡ {true}
-	Post ≡ {res =obs vacio}
-	Complejidad: O(1)
-	Descripcion: Crea un diccionario vacio.
+********************************************************************************
+************					   Operaciones 						************
+********************************************************************************
 
-	Insertar(in/out d : DiccString(α), in k : string, in v : α)
-	Pre ≡ {d =obs d₀}
-	Post ≡ {d =obs definir(k, v, d₀)}
-	Complejidad: O(|k|)
-	Descripcion: Inserta una clave en el diccionario.
+Crear() → res : DiccString(α)
+Pre ≡ {true}
+Post ≡ {res =obs vacio}
+Complejidad: O(1)
+Descripcion: Crea un diccionario vacio.
 
-	Definido?(in d : DiccString(α), in k : string) → res : bool
-	Pre ≡ {true}
-	Post ≡ {res =obs def?(k, d)}
-	Complejidad: O(|k|)
-	Descripcion: Dice si una clave esta definido.
+definir(in/out d : DiccString(α), in k : string, in v : α)
+Pre ≡ {d =obs d₀}
+Post ≡ {d =obs definir(k, v, d₀)}
+Complejidad: O(|k|)
+Descripcion: Inserta una clave en el diccionario.
 
-	Obtener(in d : DiccString(α), in k : string) → res : α
-	Pre ≡ {def?(k, d)}
-	Post ≡ {res =obs obtener(k, d)}
-	Complejidad: O(|k|)
-	Descripcion: Obtiene el significado de la clave en el diccionario
+Definido?(in d : DiccString(α), in k : string) → res : bool
+Pre ≡ {true}
+Post ≡ {res =obs def?(k, d)}
+Complejidad: O(|k|)
+Descripcion: Dice si una clave esta definido.
 
-REPRESENTACION
+Obtener(in d : DiccString(α), in k : string) → res : α
+Pre ≡ {def?(k, d)}
+Post ≡ {res =obs obtener(k, d)}
+Complejidad: O(|k|)
+Descripcion: Obtiene el significado de la clave en el diccionario
 
-	DiccString(α) se representa con trie, donde trie es:
-		tupla(
-				continuacion: array_estatico[256] de puntero(trie),
-				significado: α,
-				definido: bool
-				)
+********************************************************************************
+************					 Representación						************
+********************************************************************************
 
-	Rep : trie t -> bool
-		Rep(t) ≡  !π₃(t) ɅL ((Vp1, p2 puntero є {aplanar(π₁(t),0)}) if p1 != p2 then *p1 != *p2 fi Ʌ *p1 != t)
+DiccString(α) se representa con trie
+	donde trie es tupla(
+					continuacion : array_estatico[256] de puntero(trie),
+					significado	 : α,
+					definido     : bool)
 
-	aplanar: array_estatico[256] de puntero(trie) -> secu(puntero(trie))
-		aplanar(a,n) ≡
-			if n < 255 then
-				if a[n] = null then
-					aplanar(a,n+1)
-				else
-					aplanar(*a[n], 0) & aplanar(a,n+1)
-			else
-				<>
-			fi
+Rep : trie t → bool
+Rep(t) ≡ true ⟺ !π₃(t) ɅL
+	((∀ p1, p2 : puntero є {aplanar(π₁(t), 0)}) (
+		 p1 !=  p2 ⟹ₗ
+		*p1 != *p2
+	)Ʌ
+	*p1 != t)
 
-	Abs : trie t -> dicc(string; nat) {Rep(t)}
-		Abs(t) ≡ Abs'(t, 0, <>)
-
-		Abs'(t,n,s) ≡
-			if n < 256 then
-				if π₁(t)[n] != NULL then
-					if π₃( *( π₁(t)[n] ) ) then
-						unirD( definir(s, π₂( *(π₁(t)[n]) ), abs'(*(π₁(t)[n]), 0, s ○ n)), abs'(t, n+1, s))
-					else
-						unirD( abs'(*(π₁(t)[n]), 0, s ○ n), abs'(t, n+1, s))
-					fi
-				else
-					abs'(t, n+1, s)
-				fi
-			else
-				vacio
-			fi
-
-		unirD(d, d') ≡
-			if(Ø?(claves(d'))) then
-				d
-			else
-				definir(dameuno(claves(d')), obtener(dameuno(claves(d'))), unirD(d, borrar(dameuno(claves(d')), d')))
-			fi
-
-ABS CARACTERIZADO
-	Abs : trie t -> dicc(string; nat) {Rep(t)}
-	(∀t : trie) Abs(t) =obs d:dicc(c, s) /
-		Def?(c, d) =obs if (t = null) then
-					false
-				else
-					if (vacio?(c)) then
-						if (t.definido)
-							true
-						else
-							false
-					else
-						def?(fin(c), *t.continuacion[prim(c)])
-					fi
-				fi
-		∧
-		obtener(c, d) =obs 	if (t.definido ∧ vacio?(c)) then
-						t.significado
-					else
-						obtener(fin(c), *t.continuacion[prim(c)])
-					fi
-
-ALGORITMOS
-		DiccString(α) se representa con trie, donde trie es:
-		tupla(
-			continuacion: array_estatico[256] de puntero(trie),
-			significado: α,
-			definido: bool
-		)
-
-	iCrear() → res : DiccString(α)
-		res <- (continuacion: CREARARREGLO(256), definido: False) // y significado???
-
-	iInsertar(in/out d : DiccString(α), in k : string, in v : α)
-		if vacia?(k) then
-			d.definido <- True
-			d.significado <- v
+aplanar: array_estatico[256] de puntero(trie) → secu(puntero(trie))
+aplanar(a,n) ≡
+	if n >= 255 then
+		<>
+	else
+		if a[n] = null then
+			aplanar(a, n+1)
 		else
-			if d.continuacion[prim(k)] == NULL
-				d.continuacion[prim(k)] = &Crear()
+			aplanar(*a[n], 0) & aplanar(a, n+1)
+		fi
+	fi
+
+Abs : trie t → dicc(string; α) {Rep(t)}
+(∀t : trie) Abs(t) =obs d:dicc(c, s) /
+	Def?(c, d) =obs 
+		if (t == null) then
+			false
+		else
+			if vacio?(c) then
+				t.definido
+			else
+				def?(fin(c), *t.continuacion[prim(c)])
 			fi
-			Insertar(d.continuacion[prim(k)], fin(k), v)
+		fi
+	∧ Def?(c, d) ⟹ₗ
+	obtener(c, d) =obs 
+		if vacio?(c) then
+			t.significado
+		else
+			obtener(fin(c), *t.continuacion[prim(c)])
 		fi
 
-	iDefinido?(in d : DiccString(α), in k : string) → res : bool
-		if vacia?(k) then
-			res ← d.definido
-		else
-			definido?(d.continuacion[prim(k)], fin(k))
-		fi
+********************************************************************************
+************					  Algoritmos						************
+********************************************************************************
 
-	iObtener(in d : DiccString(α), in k : string) → res : α
-		if vacia?(k) then
-			res ← d.significado
-		else
-			obtener(d.continuacion[prim(k)], fin(k))
-		fi
+DiccString(α) se representa con trie, donde trie es:
+	tupla(
+		continuacion : array_estatico[256] de puntero(trie),
+		significado  : α,
+		definido     : bool
+	)
+
+iCrear() → res : DiccString(α)
+	res <- (continuacion: CREARARREGLO(256), definido: False) // y significado??? // No lo poniamos y listo??????
+
+idefinir(in/out d : DiccString(α), in k : string, in v : α)
+	if vacia?(k) then
+		d.definido    <- True
+		d.significado <- v
+	else
+		if  d.continuacion[prim(k)] == NULL then
+			d.continuacion[prim(k)] = &Crear()
+		end if
+		definir(d.continuacion[prim(k)], fin(k), v)
+	end if
+
+iDefinido?(in d : DiccString(α), in k : string) → res : bool
+	if vacia?(k) then
+		res ← d.definido
+	else
+		definido?(d.continuacion[prim(k)], fin(k))
+	end if
+
+iObtener(in d : DiccString(α), in k : string) → res : α
+	if vacia?(k) then
+		res ← d.significado
+	else
+		obtener(d.continuacion[prim(k)], fin(k))
+	end if
+
 

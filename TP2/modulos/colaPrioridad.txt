@@ -82,7 +82,7 @@ ColaPrioridad(α) se representa con estr(α)
 Rep: ^(estr(α)) → boolean
 Rep(e) ≡ true ⟺
 	(e.cabeza =obs NULL ⟺ e.ultimo =obs NULL) ∧
-	e.tamaño = Tamaño(e.cabeza) ∧
+	e.tamaño =obs Tamaño(e.cabeza) ∧
 	InvPadres(e.cab) ∧
 	No hay ciclos en el arbol ∧ₗ
 	MaxHeap(e.cab) ∧
@@ -147,8 +147,6 @@ iTamaño(in t : estr(α)) → res : nat
 	res ← t.tamaño
 end function
 
-/////////////////////////// VERIFICAR ENCOLAR Y DESENCOLAR
-
 iEncolar(in/out t : estr(α), in e : α) → res : itCola(α)
 	var tmp : puntero(nodo(α)) ← NULL
 
@@ -191,6 +189,16 @@ iEncolar(in/out t : estr(α), in e : α) → res : itCola(α)
 	res ← crearIter(t, p) ------------------- esta funcion tiene que estar
 end function
 
+En el peor caso, tenemos un árbol con más de 1 elemento, en el que el último nodo
+agregado está a la derecha de su padre, fundamentalmente el peor es cuando el
+árbol es completo.
+En este caso, observemos que lo que sucederá es que subiremos hasta la raíz del
+árbol, y luego se bajaremos hacia el último nodo a la izquierda del árbol. Es
+decir, recorreremos dos veces la altura del árbol (2*log(#t)). Luego, en
+absolutamente todos los casos haremos a lo sumo log(#t) pasos para restablecer
+el invariante utilizando Subir. Es decir, haremos 3*log(#t), por lo que en el
+peor de los casos es O(log(#t)).
+
 iDesencolar(in/out t : estr(α)) → res : α
 	res ← t.cabeza→dato
 
@@ -227,7 +235,17 @@ iDesencolar(in/out t : estr(α)) → res : α
 	t.tamaño--
 end function
 
-iBorrar(in/out t : ColaPrioridad(α), in i : itCola(α))
+En el peor caso, tenemos un árbol con más de 1 elemento, en el que el último nodo
+agregado está a la izquierda de su padre, fundamentalmente el peor es cuando el
+árbol tiene un nodo de más para ser completo.
+En este caso, observemos que lo que sucederá es que subiremos hasta la raíz del
+árbol, y luego se bajaremos hacia el último nodo a la derecha del árbol. Es
+decir, recorreremos dos veces la altura del árbol (2*log(#t)). Luego, en
+absolutamente todos los casos haremos a lo sumo log(#t) pasos para restablecer
+el invariante utilizando Bajar. Es decir, haremos 3*log(#t), por lo que en el
+peor de los casos es O(log(#t)).
+
+iBorrar(in/out t : estr(α), in i : itCola(α))
 	Obtener el puntero subyacente al iterador
 	Swappearlo por el ultimo
 	Borrar el ultimo
@@ -246,6 +264,12 @@ iSubir(in/out p : puntero(nodo(α)))
 		p ← p→arr
 	end while
 end function
+
+Observemos que en el peor caso, se va a iterar hasta que p→arr sea NULL. Pero el
+invariante de representación asegura que el único caso en que esto sucede es que
+el nodo sea la raiz. Es decir, desde una posición arbitraria la máxima cantidad
+de pasos es la altura del árbol, por lo que en el peor caso, la complejidad de
+iSubir es log(#t).
 
 // PRE: p != NULL
 // Post: se restablecio el rep
@@ -266,32 +290,31 @@ iBajar(in/out p : puntero(nodo(α)))
 	end while
 end function
 
+Observemos que en el peor caso, se va a iterar hasta que tanto p→izq como p→der.
+sean NULL. Pero el invariante de representación asegura que el único caso en que
+esto sucede es que el nodo al que se llega sea una hoja. Es decir, desde una
+posición arbitraria la máxima cantidad de pasos es la altura del árbol, por lo
+que en el peor caso, la complejidad de iBajar es log(#t).
+
 ********************************************************************************
 ***********					Operaciones del iterador 				************
 ********************************************************************************
 
-Actual(in i : itCola(α)) → res : α
-Pre ≡ {HayMas?(i)}
-Post ≡ {res =obs Actual(i)}
-Complejidad: O(1)
-Descripción: Devuelve el elemento guardado por el iterador de cola.
+?????????????????????????????????
 
 ********************************************************************************
 ***********				   Representación del iterador 				************
 ********************************************************************************
 
 itCola(α) se representa con it(α)
-	donde it(α) es puntero(nodo)
+	donde it(α) es puntero(nodo(α))
 
 Rep: ^(it(α)) → boolean
 Rep(e) ≡ true ⟺ ¬(e =obs NULL)
 
 Abs: ^(it(α)) → IteradorUnidireccional(α)
-(∀e : ^(it(α))) Abs(e) =obs i / Siguientes(i) =obs <*e>
+(∀e : ^(it(α))) Abs(e) =obs i / Siguientes(i) =obs *e ∙ <>
 
 ********************************************************************************
 *********** 				Algorítmos del Iterador 				************
 ********************************************************************************
-
-iActual(i : it(α)) → res : α
-	res ← *i
