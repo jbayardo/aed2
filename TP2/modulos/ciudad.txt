@@ -45,11 +45,12 @@ Post ≡ {res =obs Mapa(c)}
 Complejidad: O(1)
 Descripcion: Devuelve el mapa de la ciudad.
 
-Robots(in c: ciudad) → res: ItVectorPointer(???)
+Robots(in c: ciudad) → res: ItVectorPointer(robot)
 Pre ≡ {true}
-Post ≡ {res =obs Iterador Unidireccional(Puntero(???))}
+Post ≡ {alias(res =obs Iterador Unidireccional(Puntero(robot)))}
 Complejidad: O(1)
 Descripcion: Devuelve un iterador de los robots que hay en la ciudad.
+Aliasing: res no es modificable.
 
 Estacion(in c: ciudad, in u: nat) → res: estacion
 Pre ≡ { u ∈ robots(c)}
@@ -57,11 +58,12 @@ Post ≡ {res =obs Estacion(u, c)}
 Complejidad: O(1)
 Descripcion: Devuelve la estacion donde esta el robot con rur u.
 
-tags(in c: ciudad, in u: nat) → res: conj(tags)
+tags(in c: ciudad, in u: nat) → res: itConj(string)
 Pre ≡ { u ∈ robots(c)}
-Post ≡ {res =obs tags(u, c)}
+Post ≡ {alias(res =obs CrearIt(tags(u, c)))}
 Complejidad: O(1)
 Descripcion: Devuelve los tags del robot con rur u.
+Aliasing: res no es modificable.
 
 #infracciones(in c: ciudad, in u: nat) → res: nat
 Pre ≡ { u ∈ robots(c)}
@@ -81,7 +83,7 @@ Ciudad se representa con city,
 						)
 
 	robot es: tupla(
-					tags: conj(tags),
+					tags: Puntero(conj(tags)),
 					infracciones: nat,
 					rur: nat,
 					infringe_restriccion: Vector(Bool),
@@ -101,7 +103,7 @@ iCrear(in m: Mapa) → res: city
 	it ← m.Estaciones()
 
 	while HaySiguiente(it) do
-		Insertar(robots_en_estacion, *it, Crear())
+		Insertar(robots_en_estacion, Siguiente(it), Crear()) ///???? Siguiente?
 		Avanzar(it)
 	end while
 
@@ -113,7 +115,7 @@ iCrear(in m: Mapa) → res: city
 iEntrar(in ts: conj(tags), in e: estacion, in/out c: city)
 	rob: robot
 
-	rob ← ⟨tags: conj(tags), infracciones: 0, rur: ProximoRUR(city), infringe_restriccion: Vacia(), estacion: e, mi_estacion: Encolar(obtener(robotsEnEstacion, e), rob)⟩
+	rob ← ⟨tags: &conj(tags), infracciones: 0, rur: ProximoRUR(city), infringe_restriccion: Vacia(), estacion: e, mi_estacion: Encolar(obtener(robotsEnEstacion, e), rob)⟩
 
 	it: ItVectorPointer(Restriccion)
 	it ← Sendas(c.mapa)
@@ -135,6 +137,20 @@ iMover(in rur: nat, in e: estacion, in/out c: city)
 
 	Borrar(Obtener(c.robotsEnEstacion, rob→estacion), rob→mi_estacion)
 
+	infringe: nat
+
+	infringe ← rob→infracciones
+
+	id_senda: nat
+
+	id_senda ← idSenda(c.mapa, rob→estacion, e)
+
+	if(rob→infringe_restriccion[id_senda])
+		infringe ← infringe + 1
+	end if
+
+	rob→infracciones ← infringe
+
 	rob→mi_estacion ← Encolar(obtener(c.robotsEnEstacion,  e), *rob)
 
 iInspeccion(in e: estacion, in/out c: city)
@@ -152,10 +168,13 @@ iRobots(in c: city) → res: ItVectorPointer(robot)
 	res ← CrearIt(c.robots)
 
 iEstacion(in c: city, in u: nat) → res: estacion
+	res ← c.robots[u]→estacion
 
-itags(in c: city, in u: nat) → res: conj(tags)
+itags(in c: city, in u: nat) → res: itConj(string)
+	res ← CrearIt(c.robots[u]→tags)
 
 i#infracciones(in c: city, in u: nat) → res: nat
+	res ← c.robots[u]→infracciones
 
 
 
