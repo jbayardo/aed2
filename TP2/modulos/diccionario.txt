@@ -31,12 +31,6 @@ INTERFAZ
 	Complejidad: O(|k|)
 	Descripcion: Inserta una clave en el diccionario.
 
-	NO	#Borrar(in/out d : DiccString(α), in k : string)
-	VA	#Pre ≡ {def?(k, d) ∧ d =obs d₀}
-		#Post ≡ {d =obs borrar(k, d₀)}
-		#Complejidad: O(|k|)
-		#Descripcion: Borra una clave del diccionario.
-
 	Definido?(in d : DiccString(α), in k : string) → res : bool
 	Pre ≡ {true}
 	Post ≡ {res =obs def?(k, d)}
@@ -48,12 +42,6 @@ INTERFAZ
 	Post ≡ {res =obs obtener(k, d)}
 	Complejidad: O(|k|)
 	Descripcion: Obtiene el significado de la clave en el diccionario
-
-	NO	##Claves(in d : DiccString(α)) → res : nat
-	VA	#Pre ≡ {true}
-		#Post ≡ {res =obs #claves(d)}
-		#Complejidad: O(1)
-		#Descripcion: Devuelve la cantidad de claves definidas en el diccionario.
 
 REPRESENTACION
 

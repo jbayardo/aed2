@@ -9,10 +9,10 @@ Géneros: Ciudad
 ************					   Operaciones 						************
 ********************************************************************************
 
-Crear(in m: iMapa) → res: Ciudad
+Crear(in m: Mapa) → res: Ciudad
 Pre ≡ {true}
 Post ≡ {res =obs Crear(m)}
-Complejidad: O(1)
+Complejidad: O(#m.Estaciones())
 Descripcion: Crea una nueva ciudad a partir de un mapa.
 
 Entrar(in ts: conj(tags), in e: estacion, in/out c: Ciudad)
@@ -86,12 +86,76 @@ Ciudad se representa con city,
 					rur: nat,
 					infringe_restriccion: Vector(Bool),
 					estacion: string,
-					mi_estacion: Puntero al heap (?)
+					mi_estacion: itCola(robot)
 	)
 
 
 ********************************************************************************
 ************					  Algoritmos						************
 ********************************************************************************
+
+
+iCrear(in m: Mapa) → res: city
+	robots_en_estacion: Crear()
+	it: itConj(string)
+	it ← m.Estaciones()
+
+	while HaySiguiente(it) do
+		Insertar(robots_en_estacion, *it, Crear())
+		Avanzar(it)
+	end while
+
+	Insertar(robots_en_estacion, *it, Crear())
+
+	res ← ⟨robots: Vacia(), mapa: m, robotsEnEstacion: robots_en_estacion ⟩
+
+
+iEntrar(in ts: conj(tags), in e: estacion, in/out c: city)
+	rob: robot
+
+	rob ← ⟨tags: conj(tags), infracciones: 0, rur: ProximoRUR(city), infringe_restriccion: Vacia(), estacion: e, mi_estacion: Encolar(obtener(robotsEnEstacion, e), rob)⟩
+
+	it: ItVectorPointer(Restriccion)
+	it ← Sendas(c.mapa)
+
+	AgregarAtras(rob.infringe_restriccion, ¬Verifica?(ts, Actual(it)))
+
+	while HaySiguiente(it) do
+		Avanzar(it)
+		AgregarAtras(rob.infringe_restriccion, ¬Verifica?(ts, Actual(it)))
+	end while
+
+	AgregarAtras(c.robots, &rob)
+
+
+iMover(in rur: nat, in e: estacion, in/out c: city)
+	rob: Puntero(robot)
+
+	rob ← c.robots[rur]
+
+	Borrar(Obtener(c.robotsEnEstacion, rob→estacion), rob→mi_estacion)
+
+	rob→mi_estacion ← Encolar(obtener(c.robotsEnEstacion,  e), *rob)
+
+iInspeccion(in e: estacion, in/out c: city)
+	rob: robot
+	rob ← Desencolar(Obtener(c.robotsEnEstacion, e))
+	c.robots[rob.rur] ← NULL
+
+iProximoRUR(in c: city) → res: nat
+	res ← Longitud(c.robots)
+
+iMapa(in c: city) → res: Mapa
+	res ← c.mapa
+
+iRobots(in c: city) → res: ItVectorPointer(robot)
+	res ← CrearIt(c.robots)
+
+iEstacion(in c: city, in u: nat) → res: estacion
+
+itags(in c: city, in u: nat) → res: conj(tags)
+
+i#infracciones(in c: city, in u: nat) → res: nat
+
 
 
