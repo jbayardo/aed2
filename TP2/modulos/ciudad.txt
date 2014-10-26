@@ -103,11 +103,11 @@ iCrear(in m: Mapa) → res: city
 	it ← m.Estaciones()
 
 	while HaySiguiente(it) do
-		Insertar(robots_en_estacion, Siguiente(it), Crear()) ///???? Siguiente?
+		Definir(robots_en_estacion, Siguiente(it), Crear()) ///???? Siguiente?
 		Avanzar(it)
 	end while
 
-	Insertar(robots_en_estacion, *it, Crear())
+	Definir(robots_en_estacion, *it, Crear())
 
 	res ← ⟨robots: Vacia(), mapa: m, robotsEnEstacion: robots_en_estacion ⟩
 
