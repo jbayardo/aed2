@@ -29,7 +29,7 @@ Descripcion: Conecta 2 estaciones del mapa entre con una restriccion para ese vi
 
 Estaciones(in m : Mapa) → res : itConj(string)
 Pre ≡ {true}
-Post ≡ {res =obs Iterador Unidireccional(string)}
+Post ≡ {res =obs Iterador Unidireccional(string)} 						VERIFICAR
 Complejidad: O(1)
 Descripcion: Devuelve un iterador al conjunto de las estaciones del mapa.
 
@@ -41,13 +41,13 @@ Descripcion: Indica si 2 estaciones estan conectadas.
 
 idSenda(in m : Mapa, in e1 : estacion, in e2 : estacion) → res : nat
 Pre ≡ {e1, e2 ∈ estaciones(m) ∧ₗ conectadas?(m, e1, e2)}
-Post ≡ {*m.sendas[res] =obs Restriccion(e1, e2, m)}	
+Post ≡ {*m.sendas[res] =obs Restriccion(e1, e2, m)} 					VERIFICAR
 Complejidad: O|e1| + |e2|)
 Descripcion: Devuelve el id de la senda entre e1 y e2.
 
 Sendas(in m : Mapa) → res : itVectorPointer(restriccion)
 Pre ≡ {true}
-Post ≡ {res =obs Iterador Unidireccional(Puntero(restriccion))}
+Post ≡ {res =obs Iterador Unidireccional(Puntero(restriccion))} 		VERIFICAR
 Complejidad: O(1)
 Descripcion: Devuelve las restricciones de las sendas del mapa
 
