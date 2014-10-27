@@ -1,8 +1,6 @@
 ﻿PREGUNTAR:
 	En iCrear() que hacer con significado, usar punteros?
 
-MODULO DiccString(α)
-
 ********************************************************************************
 ************						 Interfaz 						************
 ********************************************************************************
@@ -28,7 +26,7 @@ Post ≡ {res =obs vacio}
 Complejidad: O(1)
 Descripcion: Crea un diccionario vacio.
 
-definir(in/out d : DiccString(α), in k : string, in v : α)
+Definir(in/out d : DiccString(α), in k : string, in v : α)
 Pre ≡ {d =obs d₀}
 Post ≡ {d =obs definir(k, v, d₀)}
 Complejidad: O(|k|)
@@ -52,16 +50,15 @@ Descripcion: Obtiene el significado de la clave en el diccionario
 
 DiccString(α) se representa con trie
 	donde trie es tupla(
-					continuacion : array_estatico[256] de puntero(trie),
-					significado	 : α,
-					definido     : bool)
+						continuacion : array_estatico[256] de puntero(trie),
+						significado	 : α,
+						definido     : bool)
 
-Rep : trie t → bool
-Rep(t) ≡ true ⟺ !π₃(t) ɅL
-	((∀ p1, p2 : puntero є {aplanar(π₁(t), 0)}) (
-		 p1 !=  p2 ⟹ₗ
-		*p1 != *p2
-	)Ʌ
+Rep: trie t → bool
+Rep(t) ≡ true ⟺ ¬π₃(t) ∧ₗ
+	((∀p1, p2 : puntero ∈ {aplanar(π₁(t), 0)}) (
+		 ¬(p1 =obs p2) ⟹ₗ ¬(*p1 =obs *p2)
+	) ∧
 	*p1 != t)
 
 aplanar: array_estatico[256] de puntero(trie) → secu(puntero(trie))
@@ -76,9 +73,9 @@ aplanar(a,n) ≡
 		fi
 	fi
 
-Abs : trie t → dicc(string; α) {Rep(t)}
-(∀t : trie) Abs(t) =obs d:dicc(c, s) /
-	Def?(c, d) =obs 
+Abs: ^(trie) t → dicc(string, α)										{Rep(t)}
+(∀t : ^(trie)) Abs(t) =obs d /
+	Def?(c, d) =obs
 		if (t == null) then
 			false
 		else
@@ -89,12 +86,12 @@ Abs : trie t → dicc(string; α) {Rep(t)}
 			fi
 		fi
 	∧ Def?(c, d) ⟹ₗ
-	obtener(c, d) =obs 
-		if vacio?(c) then
-			t.significado
-		else
-			obtener(fin(c), *t.continuacion[prim(c)])
-		fi
+		obtener(c, d) =obs
+			if vacio?(c) then
+				t.significado
+			else
+				obtener(fin(c), *t.continuacion[prim(c)])
+			fi
 
 ********************************************************************************
 ************					  Algoritmos						************
@@ -108,9 +105,10 @@ DiccString(α) se representa con trie, donde trie es:
 	)
 
 iCrear() → res : DiccString(α)
-	res <- (continuacion: CREARARREGLO(256), definido: False) // y significado??? // No lo poniamos y listo??????
+	res <- ⟨continuacion: CREARARREGLO(256), definido: False⟩ // y significado??? // No lo poniamos y listo??????
+end function
 
-idefinir(in/out d : DiccString(α), in k : string, in v : α)
+iDefinir(in/out d : DiccString(α), in k : string, in v : α)
 	if vacia?(k) then
 		d.definido    <- True
 		d.significado <- v
@@ -118,21 +116,22 @@ idefinir(in/out d : DiccString(α), in k : string, in v : α)
 		if  d.continuacion[prim(k)] == NULL then
 			d.continuacion[prim(k)] = &Crear()
 		end if
-		definir(d.continuacion[prim(k)], fin(k), v)
+		Definir(d.continuacion[prim(k)], fin(k), v)
 	end if
+end function
 
 iDefinido?(in d : DiccString(α), in k : string) → res : bool
 	if vacia?(k) then
 		res ← d.definido
 	else
-		definido?(d.continuacion[prim(k)], fin(k))
+		Definido?(d.continuacion[prim(k)], fin(k))
 	end if
+end function
 
 iObtener(in d : DiccString(α), in k : string) → res : α
 	if vacia?(k) then
 		res ← d.significado
 	else
-		obtener(d.continuacion[prim(k)], fin(k))
+		Obtener(d.continuacion[prim(k)], fin(k))
 	end if
-
-
+end function

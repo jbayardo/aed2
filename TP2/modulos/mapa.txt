@@ -29,25 +29,25 @@ Descripcion: Conecta 2 estaciones del mapa entre con una restriccion para ese vi
 
 Estaciones(in m : Mapa) → res : itConj(string)
 Pre ≡ {true}
-Post ≡ {res =obs Iterador Unidireccional(string)} 						VERIFICAR
+Post ≡ {res =obs IteradorUnidireccional(string)} 						VERIFICAR
 Complejidad: O(1)
 Descripcion: Devuelve un iterador al conjunto de las estaciones del mapa.
 
 Conectadas?(in m : Mapa, in e1 : estacion, in e2 : estacion) → res : bool
 Pre ≡ {e1, e2 ∈ estaciones(m)}
 Post ≡ {res =obs conectadas?(m, e1, e2)}
-Complejidad: O|e1| + |e2|)
+Complejidad: O(|e1| + |e2|)
 Descripcion: Indica si 2 estaciones estan conectadas.
 
 idSenda(in m : Mapa, in e1 : estacion, in e2 : estacion) → res : nat
 Pre ≡ {e1, e2 ∈ estaciones(m) ∧ₗ conectadas?(m, e1, e2)}
 Post ≡ {*m.sendas[res] =obs Restriccion(e1, e2, m)} 					VERIFICAR
-Complejidad: O|e1| + |e2|)
+Complejidad: O(|e1| + |e2|)
 Descripcion: Devuelve el id de la senda entre e1 y e2.
 
 Sendas(in m : Mapa) → res : itVectorPointer(restriccion)
 Pre ≡ {true}
-Post ≡ {res =obs Iterador Unidireccional(Puntero(restriccion))} 		VERIFICAR
+Post ≡ {res =obs IteradorUnidireccional(Puntero(restriccion))} 			VERIFICAR
 Complejidad: O(1)
 Descripcion: Devuelve las restricciones de las sendas del mapa
 
@@ -55,16 +55,16 @@ Descripcion: Devuelve las restricciones de las sendas del mapa
 ************					 Representación						************
 ********************************************************************************
 
-Mapa se representa con imap,
-	donde imap es: tupla(
+Mapa se representa con estr,
+	donde estr es: tupla(
 						sendas     : VectorPointer(Restriccion),
 						conexiones : DiccString(DiccString(Int)),
 						estaciones : conj(string)
 						)
 
-Rep: ^(imap) → boolean
+Rep: ^(estr) → boolean
 Rep(e) ≡ true ⟺
-	(claves(e.conexiones) ⊂ e.estaciones) ∧ₗ
+	claves(e.conexiones) ⊂ e.estaciones ∧ₗ
 	((∀e1 : string)
 		e1 ∈ claves(e.conexiones) ∧ₗ
 		claves(obtener(e1, e.conexiones)) ⊂ e.estaciones ∧ₗ
@@ -74,27 +74,27 @@ Rep(e) ≡ true ⟺
 			(e1 ∈ claves(e.conexiones) ∧ₗ e2 ∈ claves(obtener(e1, e.conexiones)) ⟹ₗ
 				obtener(e2, obtener(e1, e.conexiones)) < longitud(e.sendas))))
 
-Abs: ^(imap) → Mapa
-(∀e : ^(imap)) Abs(e) =obs m /
+Abs: ^(estr) → Mapa
+(∀e : ^(estr)) Abs(e) =obs m /
 	(e.estaciones =obs estaciones(m)) ∧
 	((∀ e1, e2: string)
 		definido?(e.conexiones, e1) ∧ₗ
 		(definido?(obtener(e.conexiones, e1), e2) =obs conectadas?(e1, e2, m)) ∧
-		(conectadas?(e1, e2, m) ⟹ *e.sendas[i] =obs restriccion(e1, e2, m)))
+		(conectadas?(e1, e2, m) ⟹ₗ *e.sendas[i] =obs restriccion(e1, e2, m)))
 
 ********************************************************************************
 ************					  Algoritmos						************
 ********************************************************************************
 
-iCrear() → res : imap
+iCrear() → res : estr
 	res ← ⟨sendas: Vacia(), conexiones: Vacio(), estaciones: Vacio()⟩
 end function
 
-iAgregar(in/out m : imap, in e : estacion)
+iAgregar(in/out m : estr, in e : estacion)
 	Agregar(m.estaciones, e)
 end function
 
-iConectar(in/out m : imap, in e1 : estacion, in e2 : estacion, in r : restriccion)
+iConectar(in/out m : estr, in e1 : estacion, in e2 : estacion, in r : restriccion)
 	var i : nat ← Longitud(m.sendas)
 	AgregarAtras(m.sendas, &r)
 
@@ -110,18 +110,18 @@ iConectar(in/out m : imap, in e1 : estacion, in e2 : estacion, in r : restriccio
 	Definir(Obtener(m.conexiones, e2), e1, i)
 end function
 
-iEstaciones(in m : imap) → res : itConj(string)
+iEstaciones(in m : estr) → res : itConj(string)
 	res ← CrearIt(m.estaciones)
 end function
 
-iConectadas?(in m : imap, in e1 : estacion, in e2 : estacion) → res : bool
+iConectadas?(in m : estr, in e1 : estacion, in e2 : estacion) → res : bool
 	res ← Definido?(m.conexiones, e1) ∧ₗ Definido?(obtener(m.conexiones, e1), e2)
 end function
 
-iidSenda(in m : imap, in e1 : estacion, in e2 : estacion) → res : nat
+iidSenda(in m : estr, in e1 : estacion, in e2 : estacion) → res : nat
 	res ← Obtener(Obtener(m.conexiones, e1), e2)
 end function
 
-iSendas(in m : imap) → res: itVectorPointer(Restriccion)
+iSendas(in m : estr) → res: itVectorPointer(Restriccion)
 	res ← CrearIt(m.sendas)
 end function

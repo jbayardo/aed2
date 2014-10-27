@@ -12,6 +12,13 @@ Géneros: Ciudad
 Crear(in m: Mapa) → res: Ciudad
 Pre ≡ {true}
 Post ≡ {res =obs Crear(m)}
+Complejidad: O(#estaciones(m))
+Descripcion: Crea una nueva ciudad a partir de un mapa.
+
+Entrar(in ts: conj(tags), in e: estacion, in/out c: Ciudad)
+Pre ≡ {e ∈ estaciones(c.mapa) ∧ c₀ =obs c}
+Post ≡ {c =obs entrar(ts, e, c₀)}
+Complejidad: O(Long(e) + S*R + Nₜₒₜₐₗ) 						VER BIEN COMO ESCRIBIR ESTA VERGA
 Complejidad: O(#Estaciones(m) * |eₘ|)
 Descripcion: Crea una nueva ciudad a partir de un mapa.
 
@@ -22,15 +29,15 @@ Complejidad: O(|e| + S*R + Nₜₒₜₐₗ)
 Descripcion: Agrega un conjunto de caracteristicas nuevo a la ciudad, creando un nuevo robot.
 
 Mover(in rur: nat, in e: estacion, in/out c: Ciudad)
-Pre ≡ {u ∈ robots(c) ∧ e ∈ estaciones(c) ∧ₗ conectadas?(estacion(u, c), e, mapa(c))}
+Pre ≡ {u ∈ robots(c) ∧ e ∈ estaciones(c) ∧ₗ conectadas?(estacion(u, c), e, mapa(c)) ∧ c₀ =obs c}
 Post ≡ {estacion(u,c) =obs e}
-Complejidad: O(|e| + |estacion(u,c)| + Log(#RobotsEn(e, c)) + Log(#RobotsEn(estacion(u,c), c)))
+Complejidad: O(Long(e) + Long(estacion(u, c)) + Log(#robotsEn(estacion(u,c), c)) + Log(#robotsEn(e, c)))
 Descripcion: Mueve a un robot de una estacion a otra.
 
 Inspeccion(in e: estacion, in/out c: Ciudad)
 Pre ≡ { e ∈ estaciones(c)}
 Post ≡ {???}
-Complejidad: O(|e| + Log(#RobotsEn(e, c)))
+Complejidad: O(Long(e) + Log(#robotsEn(e, c)))
 Descripcion: Remueve al robot mas infractor en la estacion e de la ciudad.
 
 ProximoRUR(in c: ciudad) → res: nat
@@ -54,7 +61,7 @@ Aliasing: res no es modificable.
 
 Estacion(in c: ciudad, in u: nat) → res: estacion
 Pre ≡ { u ∈ robots(c)}
-Post ≡ {res =obs Estacion(u, c)}
+Post ≡ {res =obs estacion(u, c)}
 Complejidad: O(1)
 Descripcion: Devuelve la estacion donde esta el robot con rur u.
 
@@ -75,44 +82,43 @@ Descripcion: Devuelve la cantidad de infracciones del robot con rur u.
 ************					 Representación						************
 ********************************************************************************
 
-Ciudad se representa con city,
-	donde city es: tupla(
-						robots: VectorPointer(robot),
-						mapa: Mapa,
-						robotsEnEstacion: DiccString(colaPrioridad(robot)),
-						)
-
-	robot es: tupla(
-					tags: Puntero(conj(tags)),
-					infracciones: nat,
-					rur: nat,
-					infringe_restriccion: Vector(Bool),
-					estacion: string,
-					mi_estacion: itCola(robot)
+Ciudad se representa con ciudad,
+	donde ciudad es: tupla(
+						robots           : VectorPointer(robot),
+						mapa             : Mapa,
+						robotsEnEstacion : DiccString(colaPrioridad(robot)))
+	donde robot es: tupla(
+						tags                 : conj(tags),
+						infracciones         : nat,
+						rur                  : nat,
+						infringe_restriccion : Vector(Bool),
+						estacion             : string,
+						mi_estacion          : itCola(robot)
 	)
 
-Rep: ^(city) → boolean
-Rep(e) ≡ true ⟺ ((∀ s: estacion) 
+Rep: ^(ciudad) → boolean
+Rep(e) ≡ true ⟺ ((∀ s: estacion)
 
-Abs: ^(city) → Ciudad
-(∀e : ^(city)) Abs(e) =obs c / e.robots =obs robots(c) 
-						∧ longitud(e.robots) =obs ProximoRUR(c)
-						∧ e.mapa =obs Mapa(c)
-						∧ ((∀u: rur) (u < Longitud(e.robots) ∧ₗ e.robots[u] != NULL ∧ₗ 
-						(e.robots[u].estacion =obs Estacion(u,c) ∧ (*e.robots[u].tags =obs tags(u,c))
-						∧ (e.robots[u].infracciones =obs #infracciones(u,c))))
+Abs: ^(ciudad) → Ciudad
+(∀e : ^(ciudad)) Abs(e) =obs c /
+	e.robots =obs robots(c) ∧ 					VERIFICAR, ACA HAY PUNTEROS A NULL.
+												HABRIA QUE CONVERTIRLO A CONJUNTO
+	longitud(e.robots) =obs ProximoRUR(c) ∧
+	e.mapa =obs mapa(c) ∧
+	(∀u : rur)
+		(u < Longitud(e.robots) ∧ₗ e.robots[u] != NULL) ⟹ₗ
+			((e.robots[u].estacion =obs estacion(u, c)) ∧
+			(e.robots[u].tags =obs tags(u, c)) ∧
+			(e.robots[u].infracciones =obs #infracciones(u, c)))
 
 
 ********************************************************************************
 ************					  Algoritmos						************
 ********************************************************************************
 
-
-iCrear(in m: Mapa) → res: city
-	robots_en_estacion: DiccString(ColaPrioridad(robot))
-	robots_en_estacion: Crear()
-	it: itConj(string)
-	it ← m.Estaciones()
+iCrear(in m : Mapa) → res : ciudad
+	var robots_en_estacion: DiccString(ColaPrioridad(robot)) ← Crear()
+	var it: itConj(string) ← m.Estaciones()
 
 	while HaySiguiente(it) do
 		Definir(robots_en_estacion, Siguiente(it), Crear()) ///???? Siguiente?
@@ -122,24 +128,23 @@ iCrear(in m: Mapa) → res: city
 	Definir(robots_en_estacion, *it, Crear())
 
 	res ← ⟨robots: Vacia(), mapa: m, robotsEnEstacion: robots_en_estacion ⟩
+end function
 
 Explicacion de la complejidad.
 Recorrer todas las estaciones en el mapa es O(E).
 Definir cada entrada en robots_en_estacion es O(|eₘ|), siendo eₘ el nombre de estacion mas largo, y hay que hacerlo E veces.
 Por esto, la complejidad es O(|eₘ| * E)
 
+iEntrar(in ts : conj(tags), in e : estacion, in/out c : ciudad)
+	var rob : robot ⟨
+		tags: &conj(tags),
+		infracciones: 0,
+		rur: ProximoRUR(ciudad),
+		infringe_restriccion: Vacia(),
+		estacion: e,
+		mi_estacion: Encolar(obtener(robotsEnEstacion, e), rob)⟩
 
-
-
-
-iEntrar(in ts: conj(tags), in e: estacion, in/out c: city)
-	rob: robot
-
-	rob ← ⟨tags: &conj(tags), infracciones: 0, rur: ProximoRUR(city), infringe_restriccion: Vacia(), 
-			estacion: e, mi_estacion: Encolar(Obtener(robotsEnEstacion, e), rob)⟩
-
-	it: ItVectorPointer(Restriccion)
-	it ← Sendas(c.mapa)
+	var it : ItVectorPointer(Restriccion) ← Sendas(c.mapa)
 
 	AgregarAtras(rob.infringe_restriccion, ¬Verifica?(ts, Actual(it)))
 
@@ -149,6 +154,7 @@ iEntrar(in ts: conj(tags), in e: estacion, in/out c: city)
 	end while
 
 	AgregarAtras(c.robots, &rob)
+end function
 
 Explicacion de la complejidad.
 La operacion obtener(robotsEnEstacion, e) tiene complejidad O(|e|).
@@ -158,24 +164,14 @@ Evaluar si un robot infringe o no cada senda (Verifica?) es O(R).
 Finalmente, agregar un robot a robots de la ciudad es O(N) en el peor caso, siendo N la cantidad de robots en la ciudad, como esta explicado en agregar atras de vector. Este O(N) por algebra de ordenes acota superiormente al costo logaritmico de encolar.
 Finalmente, la complejidad queda en |e| + S*R + Nₜₒₜₐₗ
 
-
-
-
-
-iMover(in rur: nat, in e: estacion, in/out c: city)
-	rob: Puntero(robot)
-
-	rob ← c.robots[rur]
+<<<<<<< HEAD
+iMover(in rur : nat, in e : estacion, in/out c : ciudad)
+	var rob : puntero(robot) ← c.robots[rur]
 
 	Borrar(Obtener(c.robotsEnEstacion, rob→estacion), rob→mi_estacion)
 
-	infringe: nat
-
-	infringe ← rob→infracciones
-
-	id_senda: nat
-
-	id_senda ← idSenda(c.mapa, rob→estacion, e)
+	var infringe : nat ← rob→infracciones
+	var id_senda : nat ← idSenda(c.mapa, rob→estacion, e)
 
 	if(rob→infringe_restriccion[id_senda])
 		infringe ← infringe + 1
@@ -184,6 +180,7 @@ iMover(in rur: nat, in e: estacion, in/out c: city)
 	rob→infracciones ← infringe
 
 	rob→mi_estacion ← Encolar(obtener(c.robotsEnEstacion,  e), *rob)
+end function
 
 La complejidad de Obtener es O(|e1|), siendo e1 rob→estacion.
 Borrar de la cola de prioridad teniendo el iterador al elemento es O(Log(#cola)), siendo #cola la cantidad de elementos de la cola.
@@ -191,32 +188,31 @@ Todo el calculo de si infringe o no es O(1) porque ya esta precalculado.
 Luego, insertarlo en otra cola es O(|e|) para encontrarla en el diccionario y O(Log(#cola)) para insertarlo.
 Esto da como resultado O(|e1| + |e| + Log(#cola1) + Log(#cola2))
 
-
-
-
-
-iInspeccion(in e: estacion, in/out c: city)
-	rob: robot
-	rob ← Desencolar(Obtener(c.robotsEnEstacion, e))
+iInspeccion(in e: estacion, in/out c: ciudad)
+	var rob : robot ← Desencolar(Obtener(c.robotsEnEstacion, e))
 	c.robots[rob.rur] ← NULL
+end function
 
-iProximoRUR(in c: city) → res: nat
+iProximoRUR(in c: ciudad) → res: nat
 	res ← Longitud(c.robots)
+end function
 
-iMapa(in c: city) → res: Mapa
+iMapa(in c: ciudad) → res: Mapa
 	res ← c.mapa
+end function
 
-iRobots(in c: city) → res: ItVectorPointer(robot)
+iRobots(in c: ciudad) → res: ItVectorPointer(robot)
 	res ← CrearIt(c.robots)
+end function
 
-iEstacion(in c: city, in u: nat) → res: estacion
+iEstacion(in c: ciudad, in u: nat) → res: estacion
 	res ← c.robots[u]→estacion
+end function
 
-itags(in c: city, in u: nat) → res: itConj(string)
+itags(in c: ciudad, in u: nat) → res: itConj(string)
 	res ← CrearIt(c.robots[u]→tags)
+end function
 
-i#infracciones(in c: city, in u: nat) → res: nat
+i#infracciones(in c: ciudad, in u: nat) → res: nat
 	res ← c.robots[u]→infracciones
-
-
-
+end function
