@@ -122,11 +122,15 @@ iCrear(in m: Mapa) → res: city
 	Definir(robots_en_estacion, *it, Crear())
 
 	res ← ⟨robots: Vacia(), mapa: m, robotsEnEstacion: robots_en_estacion ⟩
-/*****
+
+Explicacion de la complejidad.
 Recorrer todas las estaciones en el mapa es O(E).
 Definir cada entrada en robots_en_estacion es O(|eₘ|), siendo eₘ el nombre de estacion mas largo, y hay que hacerlo E veces.
 Por esto, la complejidad es O(|eₘ| * E)
-*****/
+
+
+
+
 
 iEntrar(in ts: conj(tags), in e: estacion, in/out c: city)
 	rob: robot
@@ -146,7 +150,6 @@ iEntrar(in ts: conj(tags), in e: estacion, in/out c: city)
 
 	AgregarAtras(c.robots, &rob)
 
-/*****
 Explicacion de la complejidad.
 La operacion obtener(robotsEnEstacion, e) tiene complejidad O(|e|).
 La operacion Encolar de cola de prioridad es O(Log de la cantidad de elementos de la cola).
@@ -154,7 +157,9 @@ Como se evaluan todas las sendas para saber si un robot infringe o no, el recorr
 Evaluar si un robot infringe o no cada senda (Verifica?) es O(R).
 Finalmente, agregar un robot a robots de la ciudad es O(N) en el peor caso, siendo N la cantidad de robots en la ciudad, como esta explicado en agregar atras de vector. Este O(N) por algebra de ordenes acota superiormente al costo logaritmico de encolar.
 Finalmente, la complejidad queda en |e| + S*R + Nₜₒₜₐₗ
-*****/
+
+
+
 
 
 iMover(in rur: nat, in e: estacion, in/out c: city)
@@ -185,6 +190,9 @@ Borrar de la cola de prioridad teniendo el iterador al elemento es O(Log(#cola))
 Todo el calculo de si infringe o no es O(1) porque ya esta precalculado.
 Luego, insertarlo en otra cola es O(|e|) para encontrarla en el diccionario y O(Log(#cola)) para insertarlo.
 Esto da como resultado O(|e1| + |e| + Log(#cola1) + Log(#cola2))
+
+
+
 
 
 iInspeccion(in e: estacion, in/out c: city)
