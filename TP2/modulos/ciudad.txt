@@ -12,7 +12,7 @@ Géneros: Ciudad
 Crear(in m: Mapa) → res: Ciudad
 Pre ≡ {true}
 Post ≡ {res =obs Crear(m)}
-Complejidad: O(#m.Estaciones())
+Complejidad: O(#Estaciones(m) * |eₘ|)
 Descripcion: Crea una nueva ciudad a partir de un mapa.
 
 Entrar(in ts: conj(tags), in e: estacion, in/out c: Ciudad)
@@ -109,6 +109,7 @@ Abs: ^(city) → Ciudad
 
 
 iCrear(in m: Mapa) → res: city
+	robots_en_estacion: DiccString(ColaPrioridad(robot))
 	robots_en_estacion: Crear()
 	it: itConj(string)
 	it ← m.Estaciones()
@@ -121,12 +122,17 @@ iCrear(in m: Mapa) → res: city
 	Definir(robots_en_estacion, *it, Crear())
 
 	res ← ⟨robots: Vacia(), mapa: m, robotsEnEstacion: robots_en_estacion ⟩
-
+/*****
+Recorrer todas las estaciones en el mapa es O(E).
+Definir cada entrada en robots_en_estacion es O(|eₘ|), siendo eₘ el nombre de estacion mas largo, y hay que hacerlo E veces.
+Por esto, la complejidad es O(|eₘ| * E)
+*****/
 
 iEntrar(in ts: conj(tags), in e: estacion, in/out c: city)
 	rob: robot
 
-	rob ← ⟨tags: &conj(tags), infracciones: 0, rur: ProximoRUR(city), infringe_restriccion: Vacia(), estacion: e, mi_estacion: Encolar(obtener(robotsEnEstacion, e), rob)⟩
+	rob ← ⟨tags: &conj(tags), infracciones: 0, rur: ProximoRUR(city), infringe_restriccion: Vacia(), 
+			estacion: e, mi_estacion: Encolar(Obtener(robotsEnEstacion, e), rob)⟩
 
 	it: ItVectorPointer(Restriccion)
 	it ← Sendas(c.mapa)
@@ -139,6 +145,16 @@ iEntrar(in ts: conj(tags), in e: estacion, in/out c: city)
 	end while
 
 	AgregarAtras(c.robots, &rob)
+
+/*****
+Explicacion de la complejidad.
+La operacion obtener(robotsEnEstacion, e) tiene complejidad O(|e|).
+La operacion Encolar de cola de prioridad es O(Log de la cantidad de elementos de la cola).
+Como se evaluan todas las sendas para saber si un robot infringe o no, el recorrido lineal del iterador es O(S), siendo S la cantidad de sendas que hay en el mapa.
+Evaluar si un robot infringe o no cada senda (Verifica?) es O(R).
+Finalmente, agregar un robot a robots de la ciudad es O(N) en el peor caso, siendo N la cantidad de robots en la ciudad, como esta explicado en agregar atras de vector. Este O(N) por algebra de ordenes acota superiormente al costo logaritmico de encolar.
+Finalmente, la complejidad queda en |e| + S*R + Nₜₒₜₐₗ
+*****/
 
 
 iMover(in rur: nat, in e: estacion, in/out c: city)
