@@ -16,21 +16,21 @@ Complejidad: O(#m.Estaciones())
 Descripcion: Crea una nueva ciudad a partir de un mapa.
 
 Entrar(in ts: conj(tags), in e: estacion, in/out c: Ciudad)
-Pre ≡ {e ∈ estaciones(c.mapa)}
-Post ≡ {c.robots[ProximoRUR-1].tags =obs ts }
+Pre ≡ {e ∈ estaciones(Mapa(c)) ∧ c =obs c₀}
+Post ≡ { c =obs Entrar(ts, e, c₀)}
 Complejidad: O(|e| + S*R + Nₜₒₜₐₗ)
 Descripcion: Agrega un conjunto de caracteristicas nuevo a la ciudad, creando un nuevo robot.
 
 Mover(in rur: nat, in e: estacion, in/out c: Ciudad)
 Pre ≡ {u ∈ robots(c) ∧ e ∈ estaciones(c) ∧ₗ conectadas?(estacion(u, c), e, mapa(c))}
 Post ≡ {estacion(u,c) =obs e}
-Complejidad: O(|e| + |estacion(u,c)| + Log(Nₑ) + Log)  //Ver bien! :D
+Complejidad: O(|e| + |estacion(u,c)| + Log(#RobotsEn(e, c)) + Log(#RobotsEn(estacion(u,c), c)))
 Descripcion: Mueve a un robot de una estacion a otra.
 
 Inspeccion(in e: estacion, in/out c: Ciudad)
 Pre ≡ { e ∈ estaciones(c)}
 Post ≡ {???}
-Complejidad: O(|e| + Log(Nₑ))
+Complejidad: O(|e| + Log(#RobotsEn(e, c)))
 Descripcion: Remueve al robot mas infractor en la estacion e de la ciudad.
 
 ProximoRUR(in c: ciudad) → res: nat
