@@ -52,44 +52,33 @@ DiccString(α) se representa con trie(α)
 						significado	 : puntero(α)
 						)
 
-Rep: trie(α) t → bool
-Rep(t) ≡ true ⟺ t.significado == NULL ∧ₗ
-	((∀p1, p2 : puntero ∈ {aplanar(t.continuacion, 0)}) (
-		 ¬(p1 =obs p2) ⟹ₗ ¬(*p1 =obs *p2)
-	) ∧
-	*p1 != t)
 
-aplanar: array_estatico[256] de puntero(trie) → secu(puntero(trie))
-aplanar(a,n) ≡
-	if n >= 255 then
-		<>
+Rep: trie(α) t → bool
+Rep(t) ≡ true ⟺
+	No hay ciclos ∧
+	((∀i : nat) (i < 256) ⟹ₗ t.continuacion[i] =obs NULL) ⟹ t.significado =obs NULL ∧ₗ
+	(∀i : nat) (i < 256 ∧ₗ ¬(t.continuacion[i] =obs NULL)) ⟹ₗ Rep(*(t.continuacion[i]))
+
+Abs: ^(trie(α)) t → dicc(string, α)										{Rep(t)}
+(∀t : ^(trie(α))) Abs(t) =obs d /
+	(∀c : string)
+		def?(c, d) =obs def'?(c, t) ∧
+		def'?(c, t) ⟹ₗ obt'(c, t) =obs obtener(c, d)
+
+def?': string × ^(trie(α)) → bool
+def?'(s, t) ≡
+	if vacia?(s) then ¬(t.significado =obs NULL)
 	else
-		if a[n] == null then
-			aplanar(a, n+1)
-		else
-			(aplanar(*a[n], 0) & aplanar(a, n+1)) ◦ a[n]
-		fi
+		if t.continuacion[ord(prim(s))] =obs NULL then false
+		else def?(fin(s), t.continuacion[ord(prim(s)]) fi
 	fi
 
-Abs: ^(trie(α)) t → dicc(string, α)										{Rep(t)}  REVISAR!!!!
-(∀t : ^(trie(α))) Abs(t) =obs d /
-	Def?(c, d) =obs
-		if (t == null) then
-			false
-		else
-			if vacio?(c) then
-				t.definido
-			else
-				def?(fin(c), *t.continuacion[prim(c)])
-			fi
-		fi
-	∧ Def?(c, d) ⟹ₗ
-		obtener(c, d) =obs
-			if vacio?(c) then
-				t.significado
-			else
-				obtener(fin(c), *t.continuacion[prim(c)])
-			fi
+obt': string s × ^(trie(α)) t → α 									{def'?(s, t)}
+obt'(s, t) ≡
+	if vacia?(s) then t.significado
+	else
+		obt'(fin(s), t.continuacion[ord(prim(s)]) fi
+	fi
 
 ********************************************************************************
 ************					  Algoritmos						************
@@ -103,35 +92,47 @@ iDefinir(in/out d : trie(α), in k : string, in v : α)
 	nat i ← 0
 	puntero(trie(α)) t ← d
 	while i < longitud(k) do
-		if t.continuacion[k[i]] == NULL then
-			t.continuacion[k[i]] ← &Crear()
+		if t.continuacion[ord(k[i])] == NULL then
+			t.continuacion[ord(k[i])] ← &Crear()
 		end if
-		t ← t.continuacion[k[i]]
+		t ← t.continuacion[ord(k[i])]
 		i ← i + 1
 	end while
 	t.significado ← &v
 end function
 
-Como se puede observar el bucle principal depende exlusivamente de la cantidad de caracteres del arreglo, por lo que el mejor caso es que el mismo tenga 0 caracteres en donde automaticamente saldra y definira la palabra vacia y su costo sera O(1), pero tanto el caso promedio como el peor sera en donde el largo del arreglo es mayor a 0 entonces dado que todas las operaciones dentro del bucle tienen costo O(1) tendra un costo equivalente al tamaño del arreglo (O(|k|)) ya que tendra que recorrerlo para definir letra por letra dentro de la estructura hasta llegar a su fin y definir el significado que tardara solo 1 operacion
+Como se puede observar el bucle principal depende exlusivamente de la cantidad de
+caracteres del arreglo, por lo que el mejor caso es que el mismo tenga 0 caracteres
+en donde automaticamente saldra y definira la palabra vacia y su costo sera O(1),
+pero tanto el caso promedio como el peor sera en donde el largo del arreglo es mayor
+a 0 entonces dado que todas las operaciones dentro del bucle tienen costo O(1)
+tendra un costo equivalente al tamaño del arreglo (O(|k|)) ya que tendra que
+recorrerlo para definir letra por letra dentro de la estructura hasta llegar a su
+fin y definir el significado que tardara solo 1 operacion.
 
 iDefinido?(in d : trie(α), in k : string) → res : bool
 	nat i ← 0
 	puntero(trie(α)) t ← d
 	bool listo ← False
-	while i < longitud(k) ∧ t.continuacion[k[i]] != NULL do
-		t ← t.continuacion[k[i]]
+	while i < longitud(k) ∧ t.continuacion[ord(k[i])] != NULL do
+		t ← t.continuacion[ord(k[i])]
 		i ← i + 1
 	end while
 	res ← t.significado != NULL ∧ i == longitud(k)
 end function
 
-En el peor caso(si el arreglo esta definido dentro de la estructura y el mismo tiene largo mayor a 0) dado que las operaciones dentro del bucle tienen costo O(1) y se repetiran |k| veces, para ir recorriendo la estructura, este tendra un costo O(|k|) pero en el caso de que no este definido el costo sera O(|k| - n) con n cantidad de caracteres que no pertenecen al prefijo perteneciente a la estructura por lo que el peor caso sera O(|k|)
+En el peor caso(si el arreglo esta definido dentro de la estructura y el mismo
+tiene largo mayor a 0) dado que las operaciones dentro del bucle tienen costo O(1)
+y se repetiran |k| veces, para ir recorriendo la estructura, este tendra un costo
+O(|k|) pero en el caso de que no este definido el costo sera O(|k| - n) con n
+cantidad de caracteres que no pertenecen al prefijo perteneciente a la estructura
+por lo que el peor caso sera O(|k|).
 
 iObtener(in d : trie(α), in k : string) → res : α
 	var i : nat ← 0
 	puntero(trie(α)) t ← d
 	while i < longitud(k) do
-		t ← t.continuacion[k[i]]
+		t ← t.continuacion[ord(k[i])]
 		i ← i + 1
 	end while
 	res ← *t.significado
