@@ -28,19 +28,19 @@ Post ≡ {res =obs haySiguiente?(it)}
 Complejidad: O(n)
 Descripcion: Devuelve true si y solo si en el iterador quedan elementos para avanzar.
 
-Siguiente(in it : itVectorPointer(α)) → res : α
+Siguiente(in it : itVectorPointer(α)) → res : puntero(α)
 Pre ≡ {HaySiguiente(it)}
 Post ≡ {alias(res =obs Siguiente(it))}
 Complejidad: O(n)
 Descripcion: Devuelve el elemento siguiente a la posicion del iterador.
-Aliasing: res no es modificable.
+Aliasing: res y su contenido no son modificables.
 
-Actual(in it: itVectorPointer(α)) → res: α
+Actual(in it: itVectorPointer(α)) → res : puntero(α)
 Pre ≡ {HayMas?(it)}
 Post ≡ {alias(res =obs Actual(it))}
 Complejidad: O(1)
 Descripcion: Devuelve el elemento actual del iterador.
-Aliasing: res no es modificable.
+Aliasing: res y su contenido no son modificables.
 
 Avanzar(in/out it : itVectorPointer(α))
 Pre ≡ {it = it₀ ∧ HaySiguiente?(it)}
@@ -75,8 +75,8 @@ iCrearIt(in input_vec : VectorPointer(α)) → res: itVectorPointer(α)
 	res ← ⟨actual: 0, len: Longitud(input_vec), vec: &input_vec⟩
 end function
 
-iActual(in it: iter(α)) → res: α
-	res ← (*it.vec)[iter.actual]
+iActual(in it: iter(α)) → res: puntero(α)
+	res ← (it.vec)[iter.actual]
 
 iHaySiguiente(in it : iter(α)) → res : bool
 	var next : nat ← it.actual + 1
@@ -95,7 +95,7 @@ iSiguiente(in it : iter(α)) → res : α
 		next ← next + 1
 	end while
 
-	res ← *(*it.vec)[next]
+	res ← (*it.vec)[next]
 end function
 
 iAvanzar(in/out it : iter(α))

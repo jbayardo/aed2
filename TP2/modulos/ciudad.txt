@@ -183,11 +183,11 @@ iEntrar(in ts : conj(tags), in e : estacion, in/out c : city)
 
 	var it : ItVectorPointer(Restriccion) ← Sendas(c.mapa)
 
-	AgregarAtras(rob.infringe_restriccion, ¬Verifica?(ts, Actual(it)))
+	AgregarAtras(rob.infringe_restriccion, ¬Verifica?(ts, *Actual(it)))
 
 	while HaySiguiente(it) do
 		Avanzar(it)
-		AgregarAtras(rob.infringe_restriccion, ¬Verifica?(ts, Actual(it)))
+		AgregarAtras(rob.infringe_restriccion, ¬Verifica?(ts, *Actual(it)))
 	end while
 
 	AgregarAtras(c.robots, &rob)
