@@ -1,0 +1,61 @@
+********************************************************************************
+************						 Interfaz 						************
+********************************************************************************
+
+Se explica con: Conj(String)
+Géneros: conjRapidoString
+
+********************************************************************************
+************					   Operaciones 						************
+********************************************************************************
+
+Vacio() → res: conjRapidoString
+Pre ≡ {true}
+Post ≡ {res =obs ϕ}
+Complejidad: O(1)
+Descripcion: Crea un conjunto vacio.
+
+
+Agregar(in/out c: conjRapidoString, in s: string)
+Pre ≡ {true}
+Post ≡ {c =obs Ag(s, c)}
+Complejidad: O(long(s))
+Descripcion: Agrega un string al conjunto.
+
+Pertenece(in c: conjRapidoString, in s: string) → res: bool
+Pre ≡ {true}
+Post ≡ {res =obs s ∈ c}
+Complejidad: O(long(s))
+Descripcion: Se fija si s pertenece al conjunto o no.
+
+
+
+********************************************************************************
+************					 Representación						************
+********************************************************************************
+
+conjRapidoString se representa con conjRap,
+	conjRap es DiccString(Bool)
+
+
+Rep: ^(conjRap) → boolean
+Rep(e) ≡ true ⟺ ????
+
+Abs: ^(conjRap) → Conj(String)  													{Rep(e)}
+(∀e : ^(conjRap)) Abs(e) =obs m / ????
+
+
+********************************************************************************
+************					  Algoritmos						************
+********************************************************************************
+
+iVacio() → res: conjRap
+	res ← Crear()
+
+iAgregar(in/out c: conjRap, in s: string)
+	if ¬Definido?(c, s)
+		Definir(c, s)
+	end if
+
+iPertenece(in c: conjRap, in s: string) → res: bool
+	res ← Definido?(c, s)
