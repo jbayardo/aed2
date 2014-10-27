@@ -18,31 +18,32 @@ Descripcion: Crea un mapa vacío
 Agregar(in/out m : Mapa, in e : estacion)
 Pre ≡ {e ∉ estaciones(m) ∧ m₀ =obs m}
 Post ≡ {m =obs agregar(e, m₀)}
-Complejidad: O(#estaciones(m) + Long(e))
+Complejidad: O(#estaciones(m) + long(e))
 Descripcion: Agrega una estación al mapa
 
 Conectar(in/out m : Mapa, in e1 : estacion, in e2 : estacion, in r : restriccion)
 Pre ≡ {e1, e2 ∈ estaciones(m) ∧ₗ ¬conectadas?(m, e1, e2) ∧ m₀ =obs m}
 Post ≡ {m =obs conectar(e1, e2, r, m)}
-Complejidad: O(Long(e1) + Long(e2) + S)
+Complejidad: O(long(e1) + long(e2) + S)
 Descripcion: Conecta 2 estaciones del mapa entre con una restriccion para ese vinculo.
 
 Estaciones(in m : Mapa) → res : itConj(string)
 Pre ≡ {true}
-Post ≡ {res =obs IteradorUnidireccional(string)} 						VERIFICAR
+Post ≡ {alias(esPermutación?(SecuSuby(res), estaciones(m))) ∧ vacia?(Anteriores(res))}
+									VERIFICARLOOOOOOOOOOOOOOOOOO
 Complejidad: O(1)
 Descripcion: Devuelve un iterador al conjunto de las estaciones del mapa.
 
 Conectadas?(in m : Mapa, in e1 : estacion, in e2 : estacion) → res : bool
 Pre ≡ {e1, e2 ∈ estaciones(m)}
 Post ≡ {res =obs conectadas?(m, e1, e2)}
-Complejidad: O(Long(e1) + Long(e2))
+Complejidad: O(long(e1) + long(e2))
 Descripcion: Indica si 2 estaciones estan conectadas.
 
 idSenda(in m : Mapa, in e1 : estacion, in e2 : estacion) → res : nat
 Pre ≡ {e1, e2 ∈ estaciones(m) ∧ₗ conectadas?(m, e1, e2)}
 Post ≡ {*m.sendas[res] =obs Restriccion(e1, e2, m)} 					VERIFICAR
-Complejidad: O(Long(e1) + Long(e2))
+Complejidad: O(long(e1) + long(e2))
 Descripcion: Devuelve el id de la senda entre e1 y e2.
 
 Sendas(in m : Mapa) → res : itVectorPointer(restriccion)

@@ -62,7 +62,8 @@ Descripcion: Devuelve la estacion donde esta el robot con rur u.
 
 Tags(in c : ciudad, in u : nat) → res : itConj(string)
 Pre ≡ {u ∈ robots(c)}
-Post ≡ {alias(res =obs CrearIt(tags(u, c)))}
+Post ≡ {alias(esPermutacion?(SecuSuby(res), tags(u, c)) ∧ vacia?(Anteriores(res)))}
+                                VERIFIQUEISHON
 Complejidad: O(1)
 Descripcion: Devuelve los tags del robot con rur u.
 Aliasing: res no es modificable.
@@ -173,7 +174,7 @@ Definir cada entrada en robots_en_estacion es O(|eₘ|), siendo eₘ el nombre d
 Por esto, la complejidad es O(|eₘ| * E)
 
 iEntrar(in ts : conj(tags), in e : estacion, in/out c : city)
-	var rob : robot ⟨
+	var rob : robot ← ⟨
 		tags: &conj(tags),
 		infracciones: 0,
 		rur: ProximoRUR(city),
@@ -183,11 +184,9 @@ iEntrar(in ts : conj(tags), in e : estacion, in/out c : city)
 
 	var it : ItVectorPointer(Restriccion) ← Sendas(c.mapa)
 
-	AgregarAtras(rob.infringe_restriccion, ¬Verifica?(ts, Actual(it)))
-
 	while HaySiguiente(it) do
-		Avanzar(it)
 		AgregarAtras(rob.infringe_restriccion, ¬Verifica?(ts, Actual(it)))
+        Avanzar(it)
 	end while
 
 	AgregarAtras(c.robots, &rob)
