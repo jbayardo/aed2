@@ -41,7 +41,6 @@ Complejidad: O(1)
 Descripcion: Devuelve el elemento actual del iterador.
 Aliasing: res no es modificable.
 
-
 Avanzar(in/out it : itVectorPointer(α))
 Pre ≡ {it = it₀ ∧ HaySiguiente?(it)}
 Post ≡ {it =obs Avanzar(it₀)}
@@ -52,19 +51,18 @@ Descripcion: Avanza a la posicion siguiente del iterador.
 ************					 Representación						************
 ********************************************************************************
 
-itVectorPointer(α) se representa con iter,
-	donde iter es: tupla(
+itVectorPointer(α) se representa con iter(α),
+	donde iter(α) es: tupla(
 						actual : nat,
 						len    : nat,
 						vec    : puntero(VectorPointer(α)))
 
-Rep: ^(iter) → boolean
-(∀e : ^(iter)) Rep(e) ≡ true ⟺
-	(e.actual < e.len) ∧ ( e.vec != NULL ∧ₗ e.len = Longitud(*e.vec))
+Rep: ^(iter(α) → boolean
+(∀e : ^(iter(α)) Rep(e) ≡ true ⟺
+	(e.actual < e.len) ∧ (¬(e.vec =obs NULL) ∧ₗ e.len = Longitud(*e.vec))
 
-
-Abs: ^(iter) i → IteradorUnidireccional(α)								{Rep(i)}
-(∀e : ^(iter)) Abs(e) =obs m /
+Abs: ^(iter(α)) i → IteradorUnidireccional(α)							{Rep(i)}
+(∀e : ^(iter(α)) Abs(e) =obs m /
 	Longitud(Siguientes(m)) =obs (e.len - e.actual) ∧
 	(∀i : nat) (i < e.len ∧ₗ *e.vec[i] =obs Siguientes(m)[i])
 
@@ -76,10 +74,10 @@ iCrearIt(in input_vec : VectorPointer(α)) → res: itVectorPointer(α)
 	res ← ⟨actual: 0, len: Longitud(input_vec), vec: &input_vec⟩
 end function
 
-iActual(in it: iter) → res: α
-	res ← *iter.vec[iter.actual]
+iActual(in it: iter(α)) → res: α
+	res ← (*it.vec)[iter.actual]
 
-iHaySiguiente(in it : iter) → res : bool
+iHaySiguiente(in it : iter(α)) → res : bool
 	var next : nat ← it.actual + 1
 
 	while next < len ∧ (*it.vec)[next] == NULL do
@@ -89,7 +87,7 @@ iHaySiguiente(in it : iter) → res : bool
 	res ← next != len
 end function
 
-iSiguiente(in it : iter) → res : α
+iSiguiente(in it : iter(α)) → res : α
 	var next : nat ← it.actual + 1
 
 	while (*it.vec)[next] == NULL do
@@ -99,7 +97,7 @@ iSiguiente(in it : iter) → res : α
 	res ← *(*it.vec)[next]
 end function
 
-iAvanzar(in/out it : iter)
+iAvanzar(in/out it : iter(α))
 	var next : nat ← it.actual + 1
 
 	while (*it.vec)[next] == NULL do
