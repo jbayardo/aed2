@@ -59,7 +59,8 @@ Mapa se representa con estr,
 	donde estr es: tupla(
 						sendas     : VectorPointer(Restriccion),
 						conexiones : DiccString(DiccString(Int)),
-						estaciones : conj(string))
+						estaciones : conj(string)
+						)
 
 Rep: ^(estr) → boolean
 Rep(e) ≡ true ⟺
