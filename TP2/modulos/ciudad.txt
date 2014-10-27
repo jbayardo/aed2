@@ -200,7 +200,6 @@ Evaluar si un robot infringe o no cada senda (Verifica?) es O(R).
 Finalmente, agregar un robot a robots de la ciudad es O(N) en el peor caso, siendo N la cantidad de robots en la ciudad, como esta explicado en agregar atras de vector. Este O(N) por algebra de ordenes acota superiormente al costo logaritmico de encolar.
 Finalmente, la complejidad queda en |e| + S*R + Nₜₒₜₐₗ
 
-
 iMover(in rur : nat, in e : estacion, in/out c : city)
 	var rob : puntero(robot) ← c.robots[rur]
 
