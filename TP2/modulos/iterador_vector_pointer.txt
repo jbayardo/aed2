@@ -70,7 +70,7 @@ Abs: ^(iter(α)) i → IteradorUnidireccional(α)							{Rep(i)}
 ********************************************************************************
 ************					  Algoritmos						************
 ********************************************************************************
-
+//FIJARSE EN ITERADOR UNIDIRECCIONAL TAD NO MODIFICABLE Y HACERLO EN BASE A ESO
 iCrearIt(in input_vec : VectorPointer(α)) → res: itVectorPointer(α)
 	res ← ⟨actual: 0, len: Longitud(input_vec), vec: &input_vec⟩
 end function
