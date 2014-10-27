@@ -19,6 +19,13 @@ Entrar(in ts: conj(tags), in e: estacion, in/out c: Ciudad)
 Pre ≡ {e ∈ estaciones(c.mapa) ∧ c₀ =obs c}
 Post ≡ {c =obs entrar(ts, e, c₀)}
 Complejidad: O(Long(e) + S*R + Nₜₒₜₐₗ) 						VER BIEN COMO ESCRIBIR ESTA VERGA
+Complejidad: O(#Estaciones(m) * |eₘ|)
+Descripcion: Crea una nueva ciudad a partir de un mapa.
+
+Entrar(in ts: conj(tags), in e: estacion, in/out c: Ciudad)
+Pre ≡ {e ∈ estaciones(Mapa(c)) ∧ c =obs c₀}
+Post ≡ { c =obs Entrar(ts, e, c₀)}
+Complejidad: O(|e| + S*R + Nₜₒₜₐₗ)
 Descripcion: Agrega un conjunto de caracteristicas nuevo a la ciudad, creando un nuevo robot.
 
 Mover(in rur: nat, in e: estacion, in/out c: Ciudad)
@@ -109,9 +116,9 @@ Abs: ^(ciudad) → Ciudad
 ************					  Algoritmos						************
 ********************************************************************************
 
-iCrear(in m: Mapa) → res: ciudad
-	var robots_en_estacion: Crear()										????????
-	var it : itConj(string) ← Estaciones(m)
+iCrear(in m : Mapa) → res : ciudad
+	var robots_en_estacion: DiccString(ColaPrioridad(robot)) ← Crear()
+	var it: itConj(string) ← m.Estaciones()
 
 	while HaySiguiente(it) do
 		Definir(robots_en_estacion, Siguiente(it), Crear()) ///???? Siguiente?
@@ -123,7 +130,12 @@ iCrear(in m: Mapa) → res: ciudad
 	res ← ⟨robots: Vacia(), mapa: m, robotsEnEstacion: robots_en_estacion ⟩
 end function
 
-iEntrar(in ts: conj(tags), in e: estacion, in/out c: ciudad)
+Explicacion de la complejidad.
+Recorrer todas las estaciones en el mapa es O(E).
+Definir cada entrada en robots_en_estacion es O(|eₘ|), siendo eₘ el nombre de estacion mas largo, y hay que hacerlo E veces.
+Por esto, la complejidad es O(|eₘ| * E)
+
+iEntrar(in ts : conj(tags), in e : estacion, in/out c : ciudad)
 	var rob : robot ⟨
 		tags: &conj(tags),
 		infracciones: 0,
@@ -144,7 +156,16 @@ iEntrar(in ts: conj(tags), in e: estacion, in/out c: ciudad)
 	AgregarAtras(c.robots, &rob)
 end function
 
-iMover(in rur: nat, in e: estacion, in/out c: ciudad)
+Explicacion de la complejidad.
+La operacion obtener(robotsEnEstacion, e) tiene complejidad O(|e|).
+La operacion Encolar de cola de prioridad es O(Log de la cantidad de elementos de la cola).
+Como se evaluan todas las sendas para saber si un robot infringe o no, el recorrido lineal del iterador es O(S), siendo S la cantidad de sendas que hay en el mapa.
+Evaluar si un robot infringe o no cada senda (Verifica?) es O(R).
+Finalmente, agregar un robot a robots de la ciudad es O(N) en el peor caso, siendo N la cantidad de robots en la ciudad, como esta explicado en agregar atras de vector. Este O(N) por algebra de ordenes acota superiormente al costo logaritmico de encolar.
+Finalmente, la complejidad queda en |e| + S*R + Nₜₒₜₐₗ
+
+<<<<<<< HEAD
+iMover(in rur : nat, in e : estacion, in/out c : ciudad)
 	var rob : puntero(robot) ← c.robots[rur]
 
 	Borrar(Obtener(c.robotsEnEstacion, rob→estacion), rob→mi_estacion)
@@ -160,6 +181,12 @@ iMover(in rur: nat, in e: estacion, in/out c: ciudad)
 
 	rob→mi_estacion ← Encolar(obtener(c.robotsEnEstacion,  e), *rob)
 end function
+
+La complejidad de Obtener es O(|e1|), siendo e1 rob→estacion.
+Borrar de la cola de prioridad teniendo el iterador al elemento es O(Log(#cola)), siendo #cola la cantidad de elementos de la cola.
+Todo el calculo de si infringe o no es O(1) porque ya esta precalculado.
+Luego, insertarlo en otra cola es O(|e|) para encontrarla en el diccionario y O(Log(#cola)) para insertarlo.
+Esto da como resultado O(|e1| + |e| + Log(#cola1) + Log(#cola2))
 
 iInspeccion(in e: estacion, in/out c: ciudad)
 	var rob : robot ← Desencolar(Obtener(c.robotsEnEstacion, e))
