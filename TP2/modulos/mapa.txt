@@ -74,7 +74,7 @@ Rep(e) ≡ true ⟺
 			(e1 ∈ claves(e.conexiones) ∧ₗ e2 ∈ claves(obtener(e1, e.conexiones)) ⟹ₗ
 				obtener(e2, obtener(e1, e.conexiones)) < longitud(e.sendas))))
 
-Abs: ^(estr) → Mapa
+Abs: ^(estr) → mapa  												{Rep(e)}
 (∀e : ^(estr)) Abs(e) =obs m /
 	(e.estaciones =obs estaciones(m)) ∧
 	((∀ e1, e2: string)
