@@ -128,7 +128,7 @@ Izquierdista(p) ≡
 Tamaño: puntero(nodo(α)) → nat
 Tamaño(p) ≡ if p =obs NULL then 0 else 1 + Tamaño(p→izq) + Tamaño(p→der) fi
 
-Abs: ^(estr(α)) → ColaDePrioridadExtendida(α)
+Abs: ^(estr(α)) e → ColaDePrioridadExtendida(α)							{Rep(e)}
 (∀e : ^(estr(α))) Abs(e) =obs t /
 	vacia?(t) =obs (e.tam =obs 0) ∧
 	¬vacia?(t) ⟹ₗ
@@ -148,9 +148,7 @@ iTamaño(in t : estr(α)) → res : nat
 end function
 
 iEncolar(in/out t : estr(α), in e : α) → res : itCola(α)
-	var tmp : puntero(nodo(α)) ← NULL
-
-	tmp ← &⟨arr: NULL, izq: NULL, der: NULL, dato: e⟩
+	var tmp : puntero(nodo(α)) ← &⟨arr: NULL, izq: NULL, der: NULL, dato: e⟩
 
 	if Tamaño(t) == 0 then
 		tmp→arr ← NULL
