@@ -59,7 +59,8 @@ Mapa se representa con imap,
 	donde imap es: tupla(
 						sendas     : VectorPointer(Restriccion),
 						conexiones : DiccString(DiccString(Int)),
-						estaciones : conj(string))
+						estaciones : conj(string)
+						)
 
 Rep: ^(imap) → boolean
 Rep(e) ≡ true ⟺
