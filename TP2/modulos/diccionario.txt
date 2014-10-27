@@ -48,13 +48,13 @@ Descripcion: Obtiene el significado de la clave en el diccionario
 ************					 Representación						************
 ********************************************************************************
 
-DiccString(α) se representa con trie
-	donde trie es tupla(
-						continuacion : array_estatico[256] de puntero(trie),
+DiccString(α) se representa con trie(α)
+	donde trie(α) es tupla(
+						continuacion : array_estatico[256] de puntero(trie(α)),
 						significado	 : α,
 						definido     : bool)
 
-Rep: trie t → bool
+Rep: trie(α) t → bool
 Rep(t) ≡ true ⟺ ¬π₃(t) ∧ₗ
 	((∀p1, p2 : puntero ∈ {aplanar(π₁(t), 0)}) (
 		 ¬(p1 =obs p2) ⟹ₗ ¬(*p1 =obs *p2)
@@ -73,8 +73,8 @@ aplanar(a,n) ≡
 		fi
 	fi
 
-Abs: ^(trie) t → dicc(string, α)										{Rep(t)}
-(∀t : ^(trie)) Abs(t) =obs d /
+Abs: ^(trie(α)) t → dicc(string, α)										{Rep(t)}
+(∀t : ^(trie(α))) Abs(t) =obs d /
 	Def?(c, d) =obs
 		if (t == null) then
 			false
@@ -97,18 +97,11 @@ Abs: ^(trie) t → dicc(string, α)										{Rep(t)}
 ************					  Algoritmos						************
 ********************************************************************************
 
-DiccString(α) se representa con trie, donde trie es:
-	tupla(
-		continuacion : array_estatico[256] de puntero(trie),
-		significado  : α,
-		definido     : bool
-	)
-
-iCrear() → res : DiccString(α)
+iCrear() → res : trie(α)
 	res <- ⟨continuacion: CREARARREGLO(256), definido: False⟩ // y significado??? // No lo poniamos y listo??????
 end function
 
-iDefinir(in/out d : DiccString(α), in k : string, in v : α)
+iDefinir(in/out d : trie(α), in k : string, in v : α)
 	if vacia?(k) then
 		d.definido    <- True
 		d.significado <- v
@@ -120,7 +113,7 @@ iDefinir(in/out d : DiccString(α), in k : string, in v : α)
 	end if
 end function
 
-iDefinido?(in d : DiccString(α), in k : string) → res : bool
+iDefinido?(in d : trie(α), in k : string) → res : bool
 	if vacia?(k) then
 		res ← d.definido
 	else
@@ -128,7 +121,7 @@ iDefinido?(in d : DiccString(α), in k : string) → res : bool
 	end if
 end function
 
-iObtener(in d : DiccString(α), in k : string) → res : α
+iObtener(in d : trie(α), in k : string) → res : α
 	if vacia?(k) then
 		res ← d.significado
 	else
