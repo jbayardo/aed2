@@ -91,6 +91,17 @@ Ciudad se representa con city,
 					mi_estacion: itCola(robot)
 	)
 
+Rep: ^(city) → boolean
+Rep(e) ≡ true ⟺ ((∀ s: estacion) 
+
+Abs: ^(city) → Ciudad
+(∀e : ^(city)) Abs(e) =obs c / e.robots =obs robots(c) 
+						∧ longitud(e.robots) =obs ProximoRUR(c)
+						∧ e.mapa =obs Mapa(c)
+						∧ ((∀u: rur) (u < Longitud(e.robots) ∧ₗ e.robots[u] != NULL ∧ₗ 
+						(e.robots[u].estacion =obs Estacion(u,c) ∧ (*e.robots[u].tags =obs tags(u,c))
+						∧ (e.robots[u].infracciones =obs #infracciones(u,c))))
+
 
 ********************************************************************************
 ************					  Algoritmos						************
