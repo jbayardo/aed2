@@ -9,64 +9,57 @@ Géneros: Ciudad
 ************					   Operaciones 						************
 ********************************************************************************
 
-Crear(in m: Mapa) → res: Ciudad
+Crear(in m : Mapa) → res : Ciudad
 Pre ≡ {true}
 Post ≡ {res =obs Crear(m)}
-Complejidad: O(#estaciones(m))
+Complejidad: O(#estaciones(m) * |eₘ|)
 Descripcion: Crea una nueva ciudad a partir de un mapa.
 
-Entrar(in ts: conj(tags), in e: estacion, in/out c: Ciudad)
-Pre ≡ {e ∈ estaciones(c.mapa) ∧ c₀ =obs c}
+Entrar(in ts : conj(tags), in e : estacion, in/out c : Ciudad)
+Pre ≡ {e ∈ estaciones(mapa(c)) ∧ c =obs c₀}
 Post ≡ {c =obs entrar(ts, e, c₀)}
 Complejidad: O(Long(e) + S*R + Nₜₒₜₐₗ) 						VER BIEN COMO ESCRIBIR ESTA VERGA
-Complejidad: O(#Estaciones(m) * |eₘ|)
-Descripcion: Crea una nueva ciudad a partir de un mapa.
-
-Entrar(in ts: conj(tags), in e: estacion, in/out c: Ciudad)
-Pre ≡ {e ∈ estaciones(Mapa(c)) ∧ c =obs c₀}
-Post ≡ { c =obs Entrar(ts, e, c₀)}
-Complejidad: O(|e| + S*R + Nₜₒₜₐₗ)
 Descripcion: Agrega un conjunto de caracteristicas nuevo a la ciudad, creando un nuevo robot.
 
-Mover(in rur: nat, in e: estacion, in/out c: Ciudad)
+Mover(in rur : nat, in e : estacion, in/out c : Ciudad)
 Pre ≡ {u ∈ robots(c) ∧ e ∈ estaciones(c) ∧ₗ conectadas?(estacion(u, c), e, mapa(c)) ∧ c₀ =obs c}
-Post ≡ {estacion(u,c) =obs e}
+Post ≡ {c =obs mover(rur, e, c₀)}
 Complejidad: O(Long(e) + Long(estacion(u, c)) + Log(#robotsEn(estacion(u,c), c)) + Log(#robotsEn(e, c)))
 Descripcion: Mueve a un robot de una estacion a otra.
 
-Inspeccion(in e: estacion, in/out c: Ciudad)
-Pre ≡ { e ∈ estaciones(c)}
-Post ≡ {???}
+Inspeccion(in e : estacion, in/out c : Ciudad)
+Pre ≡ {e ∈ estaciones(c)}
+Post ≡ {c =obs inspección(e, c)}
 Complejidad: O(Long(e) + Log(#robotsEn(e, c)))
 Descripcion: Remueve al robot mas infractor en la estacion e de la ciudad.
 
-ProximoRUR(in c: ciudad) → res: nat
+ProximoRUR(in c : ciudad) → res : nat
 Pre ≡ {true}
 Post ≡ {res =obs ProximoRUR(c)}
 Complejidad: O(1)
 Descripcion: Devuelve el proximo rur disponible.
 
-Mapa(in c: ciudad) → res: Mapa
+Mapa(in c : ciudad) → res : Mapa
 Pre ≡ {true}
 Post ≡ {res =obs Mapa(c)}
 Complejidad: O(1)
 Descripcion: Devuelve el mapa de la ciudad.
 
-Robots(in c: ciudad) → res: ItVectorPointer(robot)
+Robots(in c : ciudad) → res : ItVectorPointer(robot)
 Pre ≡ {true}
 Post ≡ {alias(res =obs Iterador Unidireccional(Puntero(robot)))}
 Complejidad: O(1)
 Descripcion: Devuelve un iterador de los robots que hay en la ciudad.
 Aliasing: res no es modificable.
 
-Estacion(in c: ciudad, in u: nat) → res: estacion
-Pre ≡ { u ∈ robots(c)}
+Estacion(in c : ciudad, in u : nat) → res : estacion
+Pre ≡ {u ∈ robots(c)}
 Post ≡ {res =obs estacion(u, c)}
 Complejidad: O(1)
 Descripcion: Devuelve la estacion donde esta el robot con rur u.
 
-tags(in c: ciudad, in u: nat) → res: itConj(string)
-Pre ≡ { u ∈ robots(c)}
+tags(in c : ciudad, in u : nat) → res : itConj(string)
+Pre ≡ {u ∈ robots(c)}
 Post ≡ {alias(res =obs CrearIt(tags(u, c)))}
 Complejidad: O(1)
 Descripcion: Devuelve los tags del robot con rur u.
@@ -164,7 +157,6 @@ Evaluar si un robot infringe o no cada senda (Verifica?) es O(R).
 Finalmente, agregar un robot a robots de la ciudad es O(N) en el peor caso, siendo N la cantidad de robots en la ciudad, como esta explicado en agregar atras de vector. Este O(N) por algebra de ordenes acota superiormente al costo logaritmico de encolar.
 Finalmente, la complejidad queda en |e| + S*R + Nₜₒₜₐₗ
 
-<<<<<<< HEAD
 iMover(in rur : nat, in e : estacion, in/out c : ciudad)
 	var rob : puntero(robot) ← c.robots[rur]
 
