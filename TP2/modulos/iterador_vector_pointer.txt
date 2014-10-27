@@ -34,6 +34,13 @@ Complejidad: O(n)
 Descripcion: Devuelve el elemento siguiente a la posicion del iterador.
 Aliasing: res no es modificable.
 
+Actual(in it: itVectorPointer(α)) → res: α
+Pre ≡ {HayMas?(it)}
+Post ≡ {alias(res =obs Actual(it))}
+Complejidad: O(1)
+Descripcion: Devuelve el elemento actual del iterador.
+Aliasing: res no es modificable.
+
 Avanzar(in/out it: itVectorPointer(α))
 Pre ≡ {it = it₀ ∧ HaySiguiente?(it)}
 Post ≡ {it =obs Avanzar(it₀)}
@@ -66,6 +73,9 @@ Abs: ^(iter) → Iterador Unidireccional(α)
 iCrearIt(in input_vec : VectorPointer(α)) → res: itVectorPointer(α)
 	res ← ⟨actual: 0, len: Longitud(input_vec), vec: &input_vec⟩
 end function
+
+iActual(in it: iter) → res: α
+	res ← *iter.vec[iter.actual]
 
 iHaySiguiente(in it : iter) → res: bool
 	var next : nat ← it.actual + 1
