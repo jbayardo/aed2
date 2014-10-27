@@ -102,13 +102,13 @@ iDefinir(in/out d : trie(α), in k : string, in v : α)
 end function
 
 Como se puede observar el bucle principal depende exlusivamente de la cantidad de
-caracteres del arreglo, por lo que el mejor caso es que el mismo tenga 0 caracteres
+caracteres del vector, por lo que el mejor caso es que el mismo tenga 0 caracteres
 en donde automaticamente saldra y definira la palabra vacia y su costo sera O(1),
-pero tanto el caso promedio como el peor sera en donde el largo del arreglo es mayor
+pero tanto el caso promedio como el peor sera en donde el largo del vector es mayor
 a 0 entonces dado que todas las operaciones dentro del bucle tienen costo O(1)
-tendra un costo equivalente al tamaño del arreglo (O(|k|)) ya que tendra que
+tendra un costo equivalente al tamaño del vector (O(long(k))) ya que tendra que
 recorrerlo para definir letra por letra dentro de la estructura hasta llegar a su
-fin y definir el significado que tardara solo 1 operacion.
+fin y definir el significado que tiene costo O(1).
 
 iDefinido?(in d : trie(α), in k : string) → res : bool
 	nat i ← 0
@@ -121,12 +121,12 @@ iDefinido?(in d : trie(α), in k : string) → res : bool
 	res ← t.significado != NULL ∧ i == longitud(k)
 end function
 
-En el peor caso(si el arreglo esta definido dentro de la estructura y el mismo
+En el peor caso(si el string esta definido dentro de la estructura y el mismo
 tiene largo mayor a 0) dado que las operaciones dentro del bucle tienen costo O(1)
-y se repetiran |k| veces, para ir recorriendo la estructura, este tendra un costo
-O(|k|) pero en el caso de que no este definido el costo sera O(|k| - n) con n
+y se repetiran long(k) veces, para ir recorriendo la estructura, este tendra un costo
+O(long(k)) pero en el caso de que no este definido el costo sera O(long(k) - n) con n
 cantidad de caracteres que no pertenecen al prefijo perteneciente a la estructura
-por lo que el peor caso sera O(|k|).
+por lo que el peor caso sera O(long(k)).
 
 iObtener(in d : trie(α), in k : string) → res : α
 	var i : nat ← 0
@@ -138,4 +138,6 @@ iObtener(in d : trie(α), in k : string) → res : α
 	res ← *t.significado
 end function
 
-Se explica igual que iDefinido
+En el peor caso dado que las operaciones dentro del bucle tienen costo O(1)
+y se repetiran long(k) veces, para ir recorriendo la estructura, este tendra un costo
+O(long(k)).
