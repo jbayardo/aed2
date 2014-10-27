@@ -11,16 +11,15 @@ Géneros: Ciudad
 
 Crear(in m : Mapa) → res : Ciudad
 Pre ≡ {true}
-Post ≡ {res =obs Crear(m)}
-Complejidad: O(#estaciones(m) * |eₘ|) 							VER BIEN COMO ESCRIBIR ESTA VERGA
+Post ≡ {res =obs Crear(m)} actualizar con la copia de mapa.
+Complejidad: O(#estaciones(m) * |eₘ|)
 Descripcion: Crea una nueva ciudad a partir de un mapa.
-																FALTA DECIR QUE SE HACE UNA COPIA
-																DEL MAPA
+Aliasing: Se realiza una copia del mapa.
 
 Entrar(in ts : conj(tags), in e : estacion, in/out c : Ciudad)
 Pre ≡ {e ∈ estaciones(mapa(c)) ∧ c =obs c₀}
 Post ≡ {c =obs entrar(ts, e, c₀)}
-Complejidad: O(Long(e) + S*R + Nₜₒₜₐₗ) 						VER BIEN COMO ESCRIBIR ESTA VERGA
+Complejidad: O(Long(e) + S*R + Nₜₒₜₐₗ) 						VER BIEN COMO ESCRIBIR ESTA
 Descripcion: Agrega un conjunto de caracteristicas nuevo a la ciudad, creando un nuevo robot.
 
 Mover(in rur : nat, in e : estacion, in/out c : Ciudad)
@@ -44,8 +43,9 @@ Descripcion: Devuelve el proximo rur disponible.
 Mapa(in c : ciudad) → res : Mapa
 Pre ≡ {true}
 Post ≡ {res =obs Mapa(c)}
-Complejidad: O(1)
+Complejidad: O(1) actualizar
 Descripcion: Devuelve el mapa de la ciudad.
+Aliasing: res es una copia de mapa
 
 Robots(in c : ciudad) → res : ItVectorPointer(robot)
 Pre ≡ {true}
