@@ -180,6 +180,13 @@ iMover(in rur: nat, in e: estacion, in/out c: city)
 
 	rob→mi_estacion ← Encolar(obtener(c.robotsEnEstacion,  e), *rob)
 
+La complejidad de Obtener es O(|e1|), siendo e1 rob→estacion.
+Borrar de la cola de prioridad teniendo el iterador al elemento es O(Log(#cola)), siendo #cola la cantidad de elementos de la cola.
+Todo el calculo de si infringe o no es O(1) porque ya esta precalculado.
+Luego, insertarlo en otra cola es O(|e|) para encontrarla en el diccionario y O(Log(#cola)) para insertarlo.
+Esto da como resultado O(|e1| + |e| + Log(#cola1) + Log(#cola2))
+
+
 iInspeccion(in e: estacion, in/out c: city)
 	rob: robot
 	rob ← Desencolar(Obtener(c.robotsEnEstacion, e))
