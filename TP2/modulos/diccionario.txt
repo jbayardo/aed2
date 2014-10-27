@@ -1,9 +1,4 @@
-﻿CAMBIE:
--Estructura: no mas bool
--Rep: por el tema del bool
--Hay que revisar el ABS
--iDefinir estaba mal devolvia una hoja del trie
--iCrear por el tema de la estructura
+﻿QUEDA SOLO REVISAR EL ABS
 ********************************************************************************
 ************						 Interfaz 						************
 ********************************************************************************
@@ -32,19 +27,19 @@ Descripcion: Crea un diccionario vacio.
 Definir(in/out d : DiccString(α), in k : string, in v : α)
 Pre ≡ {d =obs d₀}
 Post ≡ {d =obs definir(k, v, d₀)}
-Complejidad: O(|k|)
+Complejidad: O(long(k))
 Descripcion: Inserta una clave en el diccionario.
 
 Definido?(in d : DiccString(α), in k : string) → res : bool
 Pre ≡ {true}
 Post ≡ {res =obs def?(k, d)}
-Complejidad: O(|k|)
+Complejidad: O(long(k))
 Descripcion: Dice si una clave esta definido.
 
 Obtener(in d : DiccString(α), in k : string) → res : α
 Pre ≡ {def?(k, d)}
 Post ≡ {res =obs obtener(k, d)}
-Complejidad: O(|k|)
+Complejidad: O(long(k))
 Descripcion: Obtiene el significado de la clave en el diccionario
 
 ********************************************************************************
@@ -139,7 +134,7 @@ iObtener(in d : trie(α), in k : string) → res : α
 		t ← t.continuacion[k[i]]
 		i ← i + 1
 	end while
-	res ← t.significado
+	res ← *t.significado
 end function
 
 Se explica igual que iDefinido
