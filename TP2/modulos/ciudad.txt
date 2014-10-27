@@ -58,14 +58,14 @@ Post ≡ {res =obs estacion(u, c)}
 Complejidad: O(1)
 Descripcion: Devuelve la estacion donde esta el robot con rur u.
 
-tags(in c : ciudad, in u : nat) → res : itConj(string)
+Tags(in c : ciudad, in u : nat) → res : itConj(string)
 Pre ≡ {u ∈ robots(c)}
 Post ≡ {alias(res =obs CrearIt(tags(u, c)))}
 Complejidad: O(1)
 Descripcion: Devuelve los tags del robot con rur u.
 Aliasing: res no es modificable.
 
-#infracciones(in c: ciudad, in u: nat) → res: nat
+#Infracciones(in c: ciudad, in u: nat) → res: nat
 Pre ≡ { u ∈ robots(c)}
 Post ≡ {res =obs #infracciones(u, c)}
 Complejidad: O(1)
@@ -81,18 +81,33 @@ Ciudad se representa con city,
 						mapa             : Mapa,
 						robotsEnEstacion : DiccString(colaPrioridad(robot)))
 	donde robot es: tupla(
-						tags                 : conj(tags),
-						infracciones         : nat,
 						rur                  : nat,
-						infringe_restriccion : Vector(Bool),
+						infracciones         : nat,
+						tags                 : conj(tags),
 						estacion             : string,
+						infringe_restriccion : Vector(Bool),
 						mi_estacion          : itCola(robot)
 	)
 
-Rep: ^(city) → boolean
-Rep(e) ≡ true ⟺ ((∀ s: estacion)
 
-Abs: ^(city) → Ciudad
+Escribimos el rep de ciudad informalmente:
+
+Las claves del diccionario e.robotsEnEstacion todas pertenecen a las estaciones
+definidas en e.mapa.
+Todos los robots pertenecientes a las colas de los significados de e.robotsEnEstacion
+tienen la clausula estacíon puesta al sigificado de la cola a la que pertenecen.
+Los elementos de e.robots que no sean NULL cumplen que
+	* El rur es igual a su indice en e.robots.
+	* El robot pertenece a la cola de prioridad en la entrada estacion de
+	e.robotsEnEstacion (obviamente, la entrada debe estar también definida).
+	* mi_estacion se corresponde con la posición del robot en la cola de prioridad
+	asociada a la estación en la que se encuentra.
+	* infringe_restriccion se corresponde con los caminos que hay en el mapa, y
+	aparte se corresponde con si el robot verifica o no la restricción entre las
+	sendas.
+	* Los elementos en tags tienen una longitud menor o igual a 64.
+
+Abs: ^(city) c → Ciudad 												{Rep(c)}
 (∀e : ^(city)) Abs(e) =obs c /
 	e.robots =obs robots(c) ∧ 					VERIFICAR, ACA HAY PUNTEROS A NULL.
 												HABRIA QUE CONVERTIRLO A CONJUNTO
@@ -166,8 +181,8 @@ iMover(in rur : nat, in e : estacion, in/out c : city)
 	var infringe : nat ← rob→infracciones
 	var id_senda : nat ← idSenda(c.mapa, rob→estacion, e)
 
-	if(rob→infringe_restriccion[id_senda])
-		infringe ← infringe + 1
+	if rob→infringe_restriccion[id_senda] then
+		infringe++
 	end if
 
 	rob→infracciones ← infringe
@@ -202,10 +217,10 @@ iEstacion(in c: city, in u: nat) → res: estacion
 	res ← c.robots[u]→estacion
 end function
 
-itags(in c: city, in u: nat) → res: itConj(string)
+iTags(in c: city, in u: nat) → res: itConj(string)
 	res ← CrearIt(c.robots[u]→tags)
 end function
 
-i#infracciones(in c: city, in u: nat) → res: nat
+i#Infracciones(in c: city, in u: nat) → res: nat
 	res ← c.robots[u]→infracciones
 end function
