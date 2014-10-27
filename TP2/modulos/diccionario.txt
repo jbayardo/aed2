@@ -102,29 +102,34 @@ iCrear() → res : trie(α)
 end function
 
 iDefinir(in/out d : trie(α), in k : string, in v : α)
-	if vacia?(k) then
-		d.definido    <- True
-		d.significado <- v
-	else
-		if  d.continuacion[prim(k)] == NULL then
-			d.continuacion[prim(k)] = &Crear()
+	while !vacia?(k) do 							
+		if d.continuacion[prim(k)] == NULL then 		
+			d.continuacion[prim(k)] = &Crear() 			
 		end if
-		Definir(d.continuacion[prim(k)], fin(k), v)
-	end if
+		d ← d.continuacion[prim(k)] 					
+		k ← fin(k) 									
+	end while											
+	d.definido 	  ← true 								
+	d.significado ← v 									
 end function
+
+Como se puede observar el bucle principal depende exlusivamente de la cantidad de caracteres del arreglo, por lo que el mejor caso es que el mismo tenga 0 caracteres en donde automaticamente saldra y definira la palabra vacia y su costo sera O(1), pero tanto el caso promedio como el peor sera en donde el largo del arreglo es mayor a 0 entonces dado que todas las operaciones dentro del bucle tienen costo O(1) tendra un costo equivalente al tamaño del arreglo (O(|k|)) ya que tendra que recorrerlo para definir letra por letra dentro de la estructura hasta llegar a su fin y definir el significado que tardara solo 1 operacion
 
 iDefinido?(in d : trie(α), in k : string) → res : bool
-	if vacia?(k) then
-		res ← d.definido
-	else
-		Definido?(d.continuacion[prim(k)], fin(k))
-	end if
+	while !vacia(k) do
+		d ← d.continuacion[prim(k)]
+		k ← fin(k)
+	end while
+	res ← d.definido
 end function
 
+En el peor caso(si el arreglo esta definido dentro de la estructura y el mismo tiene largo mayor a 0) dado que las operaciones dentro del bucle tienen costo O(1) y se repetiran |k| veces, para ir recorriendo la estructura, este tendra un costo O(|k|) pero en el caso de que no este definido el costo sera O(|k| - n) con n cantidad de caracteres que no pertenecen al prefijo perteneciente a la estructura por lo que el peor caso sera O(|k|)
+
 iObtener(in d : trie(α), in k : string) → res : α
-	if vacia?(k) then
-		res ← d.significado
-	else
-		Obtener(d.continuacion[prim(k)], fin(k))
-	end if
+	while !vacia(k) do
+		d ← d.continuacion[prim(k)]
+		k ← fin(k)
+	end while
+	res ← d.significado
 end function
+Se explica igual que iDefinido
