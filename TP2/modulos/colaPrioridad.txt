@@ -250,8 +250,6 @@ iBorrar(in/out t : estr(α), in i : itCola(α))
 	Reestablecer el invariante
 end function
 
-////////////////////////////// A ESTAS 3 ULTIMAS LES FALTA LAS PRE Y POS ///////
-
 // PRE: p != NULL
 // POST: se restablecio el rep
 iSubir(in/out p : puntero(nodo(α)))
