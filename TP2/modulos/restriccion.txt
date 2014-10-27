@@ -76,7 +76,7 @@ Rep(e) ≡ true ⟺
 	(¬(e.op1 =obs NULL) ⟹ₗ Rep(*e.op1)) ∧
 	(¬(e.op2 =obs NULL) ⟹ₗ Rep(*e.op2))
 
-Abs: ^(estr) → Restricción 									{Rep(e)}
+Abs: ^(estr) → Restricción 												{Rep(e)}
 Abs(e) ≡
 	if e.tipo =obs VAR then
 		⟨e.valor⟩

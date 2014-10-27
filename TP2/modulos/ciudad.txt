@@ -12,8 +12,10 @@ Géneros: Ciudad
 Crear(in m : Mapa) → res : Ciudad
 Pre ≡ {true}
 Post ≡ {res =obs Crear(m)}
-Complejidad: O(#estaciones(m) * |eₘ|)
+Complejidad: O(#estaciones(m) * |eₘ|) 							VER BIEN COMO ESCRIBIR ESTA VERGA
 Descripcion: Crea una nueva ciudad a partir de un mapa.
+																FALTA DECIR QUE SE HACE UNA COPIA
+																DEL MAPA
 
 Entrar(in ts : conj(tags), in e : estacion, in/out c : Ciudad)
 Pre ≡ {e ∈ estaciones(mapa(c)) ∧ c =obs c₀}
@@ -66,7 +68,7 @@ Descripcion: Devuelve los tags del robot con rur u.
 Aliasing: res no es modificable.
 
 #Infracciones(in c: ciudad, in u: nat) → res: nat
-Pre ≡ { u ∈ robots(c)}
+Pre ≡ {u ∈ robots(c)}
 Post ≡ {res =obs #infracciones(u, c)}
 Complejidad: O(1)
 Descripcion: Devuelve la cantidad de infracciones del robot con rur u.
@@ -89,29 +91,49 @@ Ciudad se representa con city,
 						mi_estacion          : itCola(robot)
 	)
 
+*********************************************************
+********** COMO HAGO PARA DEFINIR LA RELACION DE ORDEN ENTRE ROBOTS??
+********** Esto funciona??
+*********************************************************
+
+∙ < ∙ (in r1 : robot, r2 : robot) → res : bool
+Pre ≡ {true}
+Post ≡ {res =obs (r1 < r2)}
+Complejidad: O(1)
+Descripción: funcion de comparación de robots
+	if r1.infracciones < r2.infracciones then
+		res ← true
+	else
+		if r1.infracciones == r2.infracciones then
+			res ← r1.rur < r2.rur
+		else
+			res ← false
+		end if
+	end if
+end function
+
 
 Escribimos el rep de ciudad informalmente:
 
-Las claves del diccionario e.robotsEnEstacion todas pertenecen a las estaciones
+∙ Las claves del diccionario e.robotsEnEstacion todas pertenecen a las estaciones
 definidas en e.mapa.
-Todos los robots pertenecientes a las colas de los significados de e.robotsEnEstacion
+∙ Todos los robots pertenecientes a las colas de los significados de e.robotsEnEstacion
 tienen la clausula estacíon puesta al sigificado de la cola a la que pertenecen.
-Los elementos de e.robots que no sean NULL cumplen que
-	* El rur es igual a su indice en e.robots.
-	* El robot pertenece a la cola de prioridad en la entrada estacion de
+∙ Los elementos de e.robots que no sean NULL cumplen que
+	∙ El rur es igual a su indice en e.robots.
+	∙ El robot pertenece a la cola de prioridad en la entrada estacion de
 	e.robotsEnEstacion (obviamente, la entrada debe estar también definida).
-	* mi_estacion se corresponde con la posición del robot en la cola de prioridad
+	∙ mi_estacion se corresponde con la posición del robot en la cola de prioridad
 	asociada a la estación en la que se encuentra.
-	* infringe_restriccion se corresponde con los caminos que hay en el mapa, y
+	∙ infringe_restriccion se corresponde con los caminos que hay en el mapa, y
 	aparte se corresponde con si el robot verifica o no la restricción entre las
 	sendas.
-	* Los elementos en tags tienen una longitud menor o igual a 64.
+	∙ Los elementos en tags tienen una longitud menor o igual a 64.
 
 Abs: ^(city) c → Ciudad 												{Rep(c)}
 (∀e : ^(city)) Abs(e) =obs c /
-	e.robots =obs robots(c) ∧ 					VERIFICAR, ACA HAY PUNTEROS A NULL.
-												HABRIA QUE CONVERTIRLO A CONJUNTO
-	longitud(e.robots) =obs ProximoRUR(c) ∧
+	convertir(e.robots) =obs robots(c) ∧
+	Long(e.robots) =obs ProximoRUR(c) ∧
 	e.mapa =obs mapa(c) ∧
 	(∀u : rur)
 		(u < Longitud(e.robots) ∧ₗ e.robots[u] != NULL) ⟹ₗ
@@ -119,6 +141,13 @@ Abs: ^(city) c → Ciudad 												{Rep(c)}
 			(e.robots[u].tags =obs tags(u, c)) ∧
 			(e.robots[u].infracciones =obs #infracciones(u, c)))
 
+convertir: secu(puntero(α)) → conj(α)
+convertir(xs) ≡
+	if vacia?(xs) then ϕ
+	else
+		if prim(xs) =obs NULL then convertir(fin(xs))
+		else Ag(prim(xs), convertir(fin(xs))) fi
+	fi
 
 ********************************************************************************
 ************					  Algoritmos						************
@@ -198,31 +227,35 @@ Todo el calculo de si infringe o no es O(1) porque ya esta precalculado.
 Luego, insertarlo en otra cola es O(|e|) para encontrarla en el diccionario y O(Log(#cola)) para insertarlo.
 Esto da como resultado O(|e1| + |e| + Log(#cola1) + Log(#cola2))
 
-iInspeccion(in e: estacion, in/out c: city)
-	var rob : robot ← Desencolar(Obtener(c.robotsEnEstacion, e))
-	c.robots[rob.rur] ← NULL
+iInspeccion(in e : estacion, in/out c : city)
+	var cola : colaPrioridad(robot) ← Obtener(c.robotsEnEstacion, e)
+
+	if tamaño(cola) > 0 then
+		var rob : robot ← Desencolar(cola)
+		c.robots[rob.rur] ← NULL
+	end if
 end function
 
-iProximoRUR(in c: city) → res: nat
+iProximoRUR(in c : city) → res : nat
 	res ← Longitud(c.robots)
 end function
 
-iMapa(in c: city) → res: Mapa
+iMapa(in c : city) → res : Mapa
 	res ← c.mapa
 end function
 
-iRobots(in c: city) → res: ItVectorPointer(robot)
+iRobots(in c : city) → res : ItVectorPointer(robot)
 	res ← CrearIt(c.robots)
 end function
 
-iEstacion(in c: city, in u: nat) → res: estacion
-	res ← c.robots[u]→estacion
+iEstacion(in c : city, in u : nat) → res : estacion
+	res ← (c.robots[u])→estacion
 end function
 
-iTags(in c: city, in u: nat) → res: itConj(string)
-	res ← CrearIt(c.robots[u]→tags)
+iTags(in c : city, in u : nat) → res : itConj(string)
+	res ← CrearIt((c.robots[u])→tags)
 end function
 
-i#Infracciones(in c: city, in u: nat) → res: nat
-	res ← c.robots[u]→infracciones
+i#Infracciones(in c : city, in u : nat) → res : nat
+	res ← (c.robots[u])→infracciones
 end function

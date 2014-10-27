@@ -18,13 +18,13 @@ Descripcion: Crea un mapa vacío
 Agregar(in/out m : Mapa, in e : estacion)
 Pre ≡ {e ∉ estaciones(m) ∧ m₀ =obs m}
 Post ≡ {m =obs agregar(e, m₀)}
-Complejidad: O(#estaciones(m) + |e|)
+Complejidad: O(#estaciones(m) + Long(e))
 Descripcion: Agrega una estación al mapa
 
 Conectar(in/out m : Mapa, in e1 : estacion, in e2 : estacion, in r : restriccion)
 Pre ≡ {e1, e2 ∈ estaciones(m) ∧ₗ ¬conectadas?(m, e1, e2) ∧ m₀ =obs m}
 Post ≡ {m =obs conectar(e1, e2, r, m)}
-Complejidad: O(|e1| + |e2| + S)
+Complejidad: O(Long(e1) + Long(e2) + S)
 Descripcion: Conecta 2 estaciones del mapa entre con una restriccion para ese vinculo.
 
 Estaciones(in m : Mapa) → res : itConj(string)
@@ -36,13 +36,13 @@ Descripcion: Devuelve un iterador al conjunto de las estaciones del mapa.
 Conectadas?(in m : Mapa, in e1 : estacion, in e2 : estacion) → res : bool
 Pre ≡ {e1, e2 ∈ estaciones(m)}
 Post ≡ {res =obs conectadas?(m, e1, e2)}
-Complejidad: O(|e1| + |e2|)
+Complejidad: O(Long(e1) + Long(e2))
 Descripcion: Indica si 2 estaciones estan conectadas.
 
 idSenda(in m : Mapa, in e1 : estacion, in e2 : estacion) → res : nat
 Pre ≡ {e1, e2 ∈ estaciones(m) ∧ₗ conectadas?(m, e1, e2)}
 Post ≡ {*m.sendas[res] =obs Restriccion(e1, e2, m)} 					VERIFICAR
-Complejidad: O(|e1| + |e2|)
+Complejidad: O(Long(e1) + Long(e2))
 Descripcion: Devuelve el id de la senda entre e1 y e2.
 
 Sendas(in m : Mapa) → res : itVectorPointer(restriccion)
@@ -74,13 +74,13 @@ Rep(e) ≡ true ⟺
 			(e1 ∈ claves(e.conexiones) ∧ₗ e2 ∈ claves(obtener(e1, e.conexiones)) ⟹ₗ
 				obtener(e2, obtener(e1, e.conexiones)) < longitud(e.sendas))))
 
-Abs: ^(estr) → mapa  												{Rep(e)}
+Abs: ^(estr) → mapa  													{Rep(e)}
 (∀e : ^(estr)) Abs(e) =obs m /
 	(e.estaciones =obs estaciones(m)) ∧
 	((∀ e1, e2: string)
 		definido?(e.conexiones, e1) ∧ₗ
 		(definido?(obtener(e.conexiones, e1), e2) =obs conectadas?(e1, e2, m)) ∧
-		(conectadas?(e1, e2, m) ⟹ₗ *e.sendas[i] =obs restriccion(e1, e2, m)))
+		(conectadas?(e1, e2, m) ⟹ₗ *(e.sendas)[i] =obs restriccion(e1, e2, m)))
 
 ********************************************************************************
 ************					  Algoritmos						************

@@ -9,7 +9,8 @@ Este iterador deberia estar en Vector
 itVectorPointer(α)
 Se explica con iterador unidireccional
 
-Se considera n igual a longitud(vec)
+Se considera n igual a longitud(vec)			ESTO NO ESTA BIEN. DEBERIA HACER
+												REFERENCIA AL TAD Iterador
 
 ********************************************************************************
 ************					   Operaciones 						************
