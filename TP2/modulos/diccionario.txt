@@ -69,10 +69,10 @@ aplanar(a,n) ≡
 	if n >= 255 then
 		<>
 	else
-		if a[n] = null then
+		if a[n] == null then
 			aplanar(a, n+1)
 		else
-			aplanar(*a[n], 0) & aplanar(a, n+1)
+			(aplanar(*a[n], 0) & aplanar(a, n+1)) ◦ a[n]
 		fi
 	fi
 
