@@ -82,8 +82,8 @@ Descripcion: Devuelve la cantidad de infracciones del robot con rur u.
 ************					 Representación						************
 ********************************************************************************
 
-Ciudad se representa con ciudad,
-	donde ciudad es: tupla(
+Ciudad se representa con city,
+	donde city es: tupla(
 						robots           : VectorPointer(robot),
 						mapa             : Mapa,
 						robotsEnEstacion : DiccString(colaPrioridad(robot)))
@@ -96,11 +96,11 @@ Ciudad se representa con ciudad,
 						mi_estacion          : itCola(robot)
 	)
 
-Rep: ^(ciudad) → boolean
+Rep: ^(city) → boolean
 Rep(e) ≡ true ⟺ ((∀ s: estacion)
 
-Abs: ^(ciudad) → Ciudad
-(∀e : ^(ciudad)) Abs(e) =obs c /
+Abs: ^(city) → Ciudad
+(∀e : ^(city)) Abs(e) =obs c /
 	e.robots =obs robots(c) ∧ 					VERIFICAR, ACA HAY PUNTEROS A NULL.
 												HABRIA QUE CONVERTIRLO A CONJUNTO
 	longitud(e.robots) =obs ProximoRUR(c) ∧
@@ -116,7 +116,7 @@ Abs: ^(ciudad) → Ciudad
 ************					  Algoritmos						************
 ********************************************************************************
 
-iCrear(in m : Mapa) → res : ciudad
+iCrear(in m : Mapa) → res : city
 	var robots_en_estacion: DiccString(ColaPrioridad(robot)) ← Crear()
 	var it: itConj(string) ← m.Estaciones()
 
@@ -135,11 +135,11 @@ Recorrer todas las estaciones en el mapa es O(E).
 Definir cada entrada en robots_en_estacion es O(|eₘ|), siendo eₘ el nombre de estacion mas largo, y hay que hacerlo E veces.
 Por esto, la complejidad es O(|eₘ| * E)
 
-iEntrar(in ts : conj(tags), in e : estacion, in/out c : ciudad)
+iEntrar(in ts : conj(tags), in e : estacion, in/out c : city)
 	var rob : robot ⟨
 		tags: &conj(tags),
 		infracciones: 0,
-		rur: ProximoRUR(ciudad),
+		rur: ProximoRUR(city),
 		infringe_restriccion: Vacia(),
 		estacion: e,
 		mi_estacion: Encolar(obtener(robotsEnEstacion, e), rob)⟩
@@ -165,7 +165,7 @@ Finalmente, agregar un robot a robots de la ciudad es O(N) en el peor caso, sien
 Finalmente, la complejidad queda en |e| + S*R + Nₜₒₜₐₗ
 
 <<<<<<< HEAD
-iMover(in rur : nat, in e : estacion, in/out c : ciudad)
+iMover(in rur : nat, in e : estacion, in/out c : city)
 	var rob : puntero(robot) ← c.robots[rur]
 
 	Borrar(Obtener(c.robotsEnEstacion, rob→estacion), rob→mi_estacion)
@@ -188,31 +188,31 @@ Todo el calculo de si infringe o no es O(1) porque ya esta precalculado.
 Luego, insertarlo en otra cola es O(|e|) para encontrarla en el diccionario y O(Log(#cola)) para insertarlo.
 Esto da como resultado O(|e1| + |e| + Log(#cola1) + Log(#cola2))
 
-iInspeccion(in e: estacion, in/out c: ciudad)
+iInspeccion(in e: estacion, in/out c: city)
 	var rob : robot ← Desencolar(Obtener(c.robotsEnEstacion, e))
 	c.robots[rob.rur] ← NULL
 end function
 
-iProximoRUR(in c: ciudad) → res: nat
+iProximoRUR(in c: city) → res: nat
 	res ← Longitud(c.robots)
 end function
 
-iMapa(in c: ciudad) → res: Mapa
+iMapa(in c: city) → res: Mapa
 	res ← c.mapa
 end function
 
-iRobots(in c: ciudad) → res: ItVectorPointer(robot)
+iRobots(in c: city) → res: ItVectorPointer(robot)
 	res ← CrearIt(c.robots)
 end function
 
-iEstacion(in c: ciudad, in u: nat) → res: estacion
+iEstacion(in c: city, in u: nat) → res: estacion
 	res ← c.robots[u]→estacion
 end function
 
-itags(in c: ciudad, in u: nat) → res: itConj(string)
+itags(in c: city, in u: nat) → res: itConj(string)
 	res ← CrearIt(c.robots[u]→tags)
 end function
 
-i#infracciones(in c: ciudad, in u: nat) → res: nat
+i#infracciones(in c: city, in u: nat) → res: nat
 	res ← c.robots[u]→infracciones
 end function
