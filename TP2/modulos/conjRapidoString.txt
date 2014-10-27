@@ -22,7 +22,7 @@ Post ≡ {c =obs Ag(s, c)}
 Complejidad: O(long(s))
 Descripcion: Agrega un string al conjunto.
 
-Pertenece(in c: conjRapidoString, in s: string) → res: bool
+Pertenece?(in c: conjRapidoString, in s: string) → res: bool
 Pre ≡ {true}
 Post ≡ {res =obs s ∈ c}
 Complejidad: O(long(s))
@@ -57,5 +57,5 @@ iAgregar(in/out c: conjRap, in s: string)
 		Definir(c, s)
 	end if
 
-iPertenece(in c: conjRap, in s: string) → res: bool
+iPertenece?(in c: conjRap, in s: string) → res: bool
 	res ← Definido?(c, s)
