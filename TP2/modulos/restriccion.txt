@@ -33,7 +33,7 @@ Post ≡ {res =obs NOT r}
 Complejidad: O(1)
 Descripcion: Crea una nueva restricción que no tiene que cumplir con r
 
-Verifica?(in tags : conj(string), in r : restricción) → res : bool
+Verifica?(in tags : conjRapidoString, in r : restricción) → res : bool
 Pre ≡ {true}
 Post ≡ {res =obs verifica?(tags, r)}
 Complejidad: O(#r)
