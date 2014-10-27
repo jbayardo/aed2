@@ -16,7 +16,7 @@ Complejidad: O(#estaciones(m) * |eₘ|)
 Descripcion: Crea una nueva ciudad a partir de un mapa.
 Aliasing: Se realiza una copia del mapa.
 
-Entrar(in ts : conj(tags), in e : estacion, in/out c : Ciudad)
+Entrar(in ts : conjRapidoString, in e : estacion, in/out c : Ciudad)
 Pre ≡ {e ∈ estaciones(mapa(c)) ∧ c =obs c₀}
 Post ≡ {c =obs entrar(ts, e, c₀)}
 Complejidad: O(Long(e) + S*R + Nₜₒₜₐₗ) 						VER BIEN COMO ESCRIBIR ESTA
@@ -60,7 +60,7 @@ Post ≡ {res =obs estacion(u, c)}
 Complejidad: O(1)
 Descripcion: Devuelve la estacion donde esta el robot con rur u.
 
-Tags(in c : ciudad, in u : nat) → res : itConj(string)
+Tags(in c : ciudad, in u : nat) → res : conjRapidoString
 Pre ≡ {u ∈ robots(c)}
 Post ≡ {alias(esPermutacion?(SecuSuby(res), tags(u, c)) ∧ vacia?(Anteriores(res)))}
                                 VERIFIQUEISHON
@@ -86,7 +86,7 @@ Ciudad se representa con city,
 	donde robot es: tupla(
 						rur                  : nat,
 						infracciones         : nat,
-						tags                 : conj(tags),
+						tags                 : Puntero(conjRapidoString),
 						estacion             : string,
 						infringe_restriccion : Vector(Bool),
 						mi_estacion          : itCola(robot)
@@ -156,10 +156,10 @@ convertir(xs) ≡
 
 iCrear(in m : Mapa) → res : city
 	var robots_en_estacion: DiccString(ColaPrioridad(robot)) ← Crear()
-	var it: itConj(string) ← m.Estaciones()
+	var it: itConj(string) ← Estaciones(m)
 
 	while HaySiguiente(it) do
-		Definir(robots_en_estacion, Siguiente(it), Crear()) ///???? Siguiente?
+		Definir(robots_en_estacion, Siguiente(it), Crear()) 
 		Avanzar(it)
 	end while
 
@@ -173,9 +173,9 @@ Recorrer todas las estaciones en el mapa es O(E).
 Definir cada entrada en robots_en_estacion es O(|eₘ|), siendo eₘ el nombre de estacion mas largo, y hay que hacerlo E veces.
 Por esto, la complejidad es O(|eₘ| * E)
 
-iEntrar(in ts : conj(tags), in e : estacion, in/out c : city)
+iEntrar(in ts : conjRapidoString, in e : estacion, in/out c : city)
 	var rob : robot ← ⟨
-		tags: &conj(tags),
+		tags: &ts,
 		infracciones: 0,
 		rur: ProximoRUR(city),
 		infringe_restriccion: Vacia(),
@@ -184,7 +184,7 @@ iEntrar(in ts : conj(tags), in e : estacion, in/out c : city)
 
 	var it : ItVectorPointer(Restriccion) ← Sendas(c.mapa)
 
-	while HaySiguiente(it) do
+	while HaySiguiente(it) do //cambiar itvector por lo q dice el tad
 		AgregarAtras(rob.infringe_restriccion, ¬Verifica?(ts, Actual(it)))
         Avanzar(it)
 	end while
@@ -250,8 +250,8 @@ iEstacion(in c : city, in u : nat) → res : estacion
 	res ← (c.robots[u])→estacion
 end function
 
-iTags(in c : city, in u : nat) → res : itConj(string)
-	res ← CrearIt((c.robots[u])→tags)
+iTags(in c : city, in u : nat) → res : conjRapidoString
+	res ← Copiar(*(c.robots[u])→tags)
 end function
 
 i#Infracciones(in c : city, in u : nat) → res : nat

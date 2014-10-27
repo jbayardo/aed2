@@ -28,6 +28,13 @@ Post ≡ {res =obs s ∈ c}
 Complejidad: O(long(s))
 Descripcion: Se fija si s pertenece al conjunto o no.
 
+Copiar(in c: conjRapidoString) → res: conjRapidoString
+Pre ≡ {true}
+Post ≡ {res =obs c}
+Complejidad: O(E * long(e))
+Descripcion: Devuelve una copia del conjunto.
+
+
 
 
 ********************************************************************************
@@ -59,3 +66,6 @@ iAgregar(in/out c: conjRap, in s: string)
 
 iPertenece?(in c: conjRap, in s: string) → res: bool
 	res ← Definido?(c, s)
+
+iCopiar(in c: conjRap) → res: conjRap
+	res ← Copiar(c)
