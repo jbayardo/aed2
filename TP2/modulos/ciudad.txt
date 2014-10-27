@@ -187,6 +187,8 @@ iMover(in rur : nat, in e : estacion, in/out c : city)
 
 	rob→infracciones ← infringe
 
+	rob→estacion ← e
+
 	rob→mi_estacion ← Encolar(obtener(c.robotsEnEstacion,  e), *rob)
 end function
 
