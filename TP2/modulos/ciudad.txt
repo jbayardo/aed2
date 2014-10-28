@@ -19,7 +19,7 @@ Aliasing: Se realiza una copia del mapa.
 Entrar(in ts : conjRapidoString, in e : estacion, in/out c : Ciudad)
 Pre ≡ {e ∈ estaciones(mapa(c)) ∧ c =obs c₀}
 Post ≡ {c =obs entrar(ts, e, c₀)}
-Complejidad: O(long(e) + S*R + Nₜₒₜₐₗ) 						VER BIEN COMO ESCRIBIR ESTA
+Complejidad: O(long(e) + S*R + Nₜₒₜₐₗ)
 Descripcion: Agrega un conjunto de caracteristicas nuevo a la ciudad, creando un nuevo robot.
 
 Mover(in rur : nat, in e : estacion, in/out c : Ciudad)
@@ -63,7 +63,6 @@ Descripcion: Devuelve la estacion donde esta el robot con rur u.
 Tags(in c : ciudad, in u : nat) → res : conjRapidoString
 Pre ≡ {u ∈ robots(c)}
 Post ≡ {alias(esPermutacion?(SecuSuby(res), tags(u, c)) ∧ vacia?(Anteriores(res)))}
-                                VERIFIQUEISHON
 Complejidad: O(1)
 Descripcion: Devuelve los tags del robot con rur u.
 Aliasing: res no es modificable.
@@ -162,10 +161,9 @@ iCrear(in m : Mapa) → res : city
 	res ← ⟨robots: Vacia(), mapa: m, robotsEnEstacion: robots_en_estacion ⟩
 end function
 
-Explicacion de la complejidad.
-Recorrer todas las estaciones en el mapa es O(E).
-Definir cada entrada en robots_en_estacion es O(|eₘ|), siendo eₘ el nombre de estacion mas largo, y hay que hacerlo E veces.
-Por esto, la complejidad es O(|eₘ| * E)
+Recorrer todas las estaciones en el mapa es O(E). Definir cada entrada en
+robots_en_estacion es O(|eₘ|), siendo eₘ el nombre de estacion mas largo, y hay
+que hacerlo E veces. Por esto, la complejidad es O(|eₘ| * E).
 
 iEntrar(in ts : conjRapidoString, in e : estacion, in/out c : city)
 	var rob : robot ← ⟨
@@ -194,7 +192,7 @@ Evaluar si un robot infringe o no cada senda (Verifica?) es O(R). Finalmente,
 agregar un robot a robots de la ciudad es O(N) en el peor caso, siendo N la cantidad
 de robots en la ciudad, como esta explicado en agregar atras de vector. Este O(N)
 por algebra de ordenes acota superiormente al costo logaritmico de encolar.
-Luego, la complejidad queda en |e| + S*R + Nₜₒₜₐₗ
+Luego, la complejidad queda en |e| + S*R + Nₜₒₜₐₗ.
 
 iMover(in rur : nat, in e : estacion, in/out c : city)
 	var rob : puntero(robot) ← c.robots[rur]
@@ -218,7 +216,7 @@ Borrar de la cola de prioridad teniendo el iterador al elemento es O(Log(#cola))
 siendo #cola la cantidad de elementos de la cola. Todo el calculo de si infringe
 o no es O(1) porque ya esta precalculado. Luego, insertarlo en otra cola es O(|e|)
 para encontrarla en el diccionario y O(Log(#cola)) para insertarlo. Esto da como
-resultado O(|e1| + |e| + Log(#cola1) + Log(#cola2))
+resultado O(|e1| + |e| + Log(#cola1) + Log(#cola2)).
 
 iInspeccion(in e : estacion, in/out c : city)
 	var cola : colaPrioridad(robot) ← Obtener(c.robotsEnEstacion, e)

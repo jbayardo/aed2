@@ -30,7 +30,6 @@ Descripcion: Conecta 2 estaciones del mapa entre con una restriccion para ese vi
 Estaciones(in m : Mapa) → res : itConj(string)
 Pre ≡ {true}
 Post ≡ {alias(esPermutación?(SecuSuby(res), estaciones(m))) ∧ vacia?(Anteriores(res))}
-									VERIFICARLOOOOOOOOOOOOOOOOOO
 Complejidad: O(1)
 Descripcion: Devuelve un iterador al conjunto de las estaciones del mapa.
 
@@ -42,7 +41,7 @@ Descripcion: Indica si 2 estaciones estan conectadas.
 
 idSenda(in m : Mapa, in e1 : estacion, in e2 : estacion) → res : nat
 Pre ≡ {e1, e2 ∈ estaciones(m) ∧ₗ conectadas?(m, e1, e2)}
-Post ≡ {*m.sendas[res] =obs Restriccion(e1, e2, m)} 					VERIFICAR
+Post ≡ {res es el id de la senda en nuestra representación}
 Complejidad: O(long(e1) + long(e2))
 Descripcion: Devuelve el id de la senda entre e1 y e2.
 
