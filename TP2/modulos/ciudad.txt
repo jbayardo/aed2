@@ -63,7 +63,7 @@ Descripcion: Devuelve la estacion donde esta el robot con rur u.
 Tags(in c : ciudad, in u : nat) → res : conjRapidoString
 Pre ≡ {u ∈ robots(c)}
 Post ≡ {alias(esPermutacion?(SecuSuby(res), tags(u, c)) ∧ vacia?(Anteriores(res)))}
-Complejidad: O(1) // NO ES O(1) !!!
+Complejidad: O(1)
 Descripcion: Devuelve los tags del robot con rur u.
 Aliasing: res no es modificable.
 
@@ -244,7 +244,7 @@ iEstacion(in c : city, in u : nat) → res : estacion
 end function
 
 iTags(in c : city, in u : nat) → res : conjRapidoString
-	res ← Copiar(*(c.robots[u])→tags)
+	res ← *(c.robots[u])→tags
 end function
 
 i#Infracciones(in c : city, in u : nat) → res : nat
