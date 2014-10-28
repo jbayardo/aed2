@@ -1,7 +1,7 @@
 ﻿TODO: COMPLEJIDAD DE CREARCOPIA, PONER CLAVES EN LA ESTRUCTURA?
-PREGUNTAR: 
+PREGUNTAR:
 -En los algoritmos si llamo a otra operacion la llamo con el "i" o sin el "i"
--En iCrearCopia hay que primero hacer una var trie o puedo laburar sobre res 
+-En iCrearCopia hay que primero hacer una var trie o puedo laburar sobre res
 	varias veces
 -En el Abs el string es vector o secu
 ********************************************************************************
@@ -63,7 +63,6 @@ DiccString(α) se representa con trie(α)
 						significado	 : puntero(α)
 						)
 
-
 Rep: trie(α) t → bool
 Rep(t) ≡ true ⟺
 	No hay ciclos ∧
@@ -73,23 +72,21 @@ Rep(t) ≡ true ⟺
 Abs: ^(trie(α)) t → dicc(string, α)										{Rep(t)}
 (∀t : ^(trie(α))) Abs(t) =obs d /
 	(∀c : string)
-		def?(c, d) =obs def'?(c, t, 0) ∧
-		def'?(c, t, 0) ⟹ₗ obt'(c, t, 0) =obs obtener(c, d)
+		def?(c, d) =obs def'?(c, t) ∧
+		def'?(c, t) ⟹ₗ obt'(c, t) =obs obtener(c, d)
 
-def?': string s × ^(trie(α)) t × nat n → bool
-def?'(s, t, n) ≡
-	if n >= Longitud(s) - 1 then ¬(t.significado =obs NULL)
+def?': string × ^(trie(α)) → bool
+def?'(s, t) ≡
+	if vacia?(s) then ¬(t.significado =obs NULL)
 	else
-		if t.continuacion[ord(s[n])] =obs NULL then false
-		else def?(s, t.continuacion[ord(s[n])], n+1) fi
+		if t.continuacion[ord(prim(s))] =obs NULL then false
+		else def?(fin(s), t.continuacion[ord(prim(s)]) fi
 	fi
 
-obt': string s × ^(trie(α)) t × nat n → α 									{def'?(s, t)}
-obt'(s, t, n) ≡
-	if n >= Longitud(s) - 1 then t.significado
-	else
-		obt'(s, t.continuacion[ord(s[n])], n+1)
-	fi
+obt': string s × ^(trie(α)) t → α 									{def'?(s, t)}
+obt'(s, t) ≡
+	if vacia?(s) then t.significado
+	else obt'(fin(s), t.continuacion[ord(prim(s)]) fi
 
 ********************************************************************************
 ************					  Algoritmos						************
@@ -162,7 +159,7 @@ iCopia(in d: trie(α)) → res : trie(α)
 	fi
 	while i < 256
 		if d.continuacion[i] != NULL then
-			t.continuacion[i] ← &Copia(*d.continuacion[i])		
+			t.continuacion[i] ← &Copia(*d.continuacion[i])
 		fi
 		i ← i + 1
 	end while
