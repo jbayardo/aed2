@@ -25,14 +25,15 @@ Descripción: Crea una cola vacia.
 
 Encolar(in/out t : ColaPrioridad(α), in e : α) → res : itCola(α)
 Pre ≡ {¬(e ∈ t) ∧ t₀ =obs t}
-Post ≡ {t =obs encolar(e, t₀) ∧ Actual(res) =obs e}
-Complejidad: O(log(#t))
+Post ≡ {t =obs encolar(e, t₀) ∧ alias(Actual(res) =obs e)}
+Complejidad: O(log(Tamaño(t)))
 Descripción: Inserta un elemento en la cola y devuelve un iterador posicionado en el elemento agregado.
+Aliasing: El iterador se invalida sii se borra el elemento utizando Desencolar.
 
 Desencolar(in/out t : ColaPrioridad(α)) → res : α
 Pre ≡ {¬vacia?(t) ∧ t =obs t₀}
 Post ≡ {t =obs desencolar(t₀) ∧ res =obs proximo(t₀)}
-Complejidad: O(log(#t))
+Complejidad: O(log(Tamaño(t)))
 Descripción: Desencola el elemento con mayor prioridad.
 
 Tamaño(in t : ColaPrioridad(α)) → res : nat
@@ -44,9 +45,9 @@ Descripción: Devuelve la cantidad de elementos en la cola.
 Borrar(in/out t : ColaPrioridad(α), in i : itCola(α))
 Pre ≡ {t₀ =obs t}
 Post ≡ {t =obs borrar(Actual(i), t₀)}
-Complejidad: O(log(#t))
+Complejidad: O(log(Tamaño(t)))
 Descripción: Borra el elemento al que apunta el iterador.
-Aliasing: Invalida el iterador??
+Aliasing: Invalida el iterador.
 
 TAD ColaDePrioridadExtendida(α)
 	extiende colaPrior(α)
@@ -184,7 +185,7 @@ iEncolar(in/out t : estr(α), in e : α) → res : itCola(α)
 	t.tamaño++
 
 	Subir(t.ultimo)
-	res ← crearIter(t, p) ------------------- esta funcion tiene que estar
+	res ← crearIter(t, p)
 end function
 
 En el peor caso, tenemos un árbol con más de 1 elemento, en el que el último nodo
@@ -250,8 +251,11 @@ iBorrar(in/out t : estr(α), in i : itCola(α))
 	Reestablecer el invariante
 end function
 
-// PRE: p != NULL
-// POST: se restablecio el rep
+Pre ≡ {p != NULL}
+Post ≡ {Se restableció el rep de la estructura de datos}
+Complejidad: O(log(#t))
+Descripción: Restablece el invariante si el nodo al que apunta p está fuera del
+lugar que le corresponde.
 iSubir(in/out p : puntero(nodo(α)))
 	while p→arr != NULL ∧ p→arr→dato < p→dato do
 		var tmp : α ← p→arr→dato
@@ -267,8 +271,11 @@ el nodo sea la raiz. Es decir, desde una posición arbitraria la máxima cantida
 de pasos es la altura del árbol, por lo que en el peor caso, la complejidad de
 iSubir es log(#t).
 
-// PRE: p != NULL
-// Post: se restablecio el rep
+Pre ≡ {p != NULL}
+Post ≡ {Se restableció el rep de la estructura de datos}
+Complejidad: O(log(#t))
+Descripción: Restablece el invariante si el nodo al que apunta p está fuera del
+lugar que le corresponde.
 iBajar(in/out p : puntero(nodo(α)))
 	while	(p→izq != NULL ∧ p→dato < p→izq→dato) ∨
 			(p→der != NULL ∧ p→der→dato < p→dato) do
@@ -296,7 +303,7 @@ que en el peor caso, la complejidad de iBajar es log(#t).
 ***********					Operaciones del iterador 				************
 ********************************************************************************
 
-?????????????????????????????????
+Ninguna.
 
 ********************************************************************************
 ***********				   Representación del iterador 				************
@@ -314,3 +321,11 @@ Abs: ^(it(α)) → IteradorUnidireccional(α)
 ********************************************************************************
 *********** 				Algorítmos del Iterador 				************
 ********************************************************************************
+
+Pre ≡ {p es un puntero en la estructura de t}
+Post ≡ {itCola es un iterador posicionado en p}
+Complejidad: O(1)
+Descripción: Crea un puntero disfrazado de iterador.
+crearIter(in t : colaPrioridad(α), p : puntero(nodo(α))) → res : itCola(α)
+	res ← p
+end function

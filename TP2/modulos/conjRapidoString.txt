@@ -2,71 +2,68 @@
 ************						 Interfaz 						************
 ********************************************************************************
 
-Se explica con: Conj(String)
+Se explica con: conj(String)
 Géneros: conjRapidoString
 
 ********************************************************************************
 ************					   Operaciones 						************
 ********************************************************************************
 
-Vacio() → res: conjRapidoString
+Vacio() → res : conjRapidoString
 Pre ≡ {true}
 Post ≡ {res =obs ϕ}
 Complejidad: O(1)
 Descripcion: Crea un conjunto vacio.
 
-
-Agregar(in/out c: conjRapidoString, in s: string)
+Agregar(in/out c : conjRapidoString, in s : string)
 Pre ≡ {true}
 Post ≡ {c =obs Ag(s, c)}
 Complejidad: O(long(s))
 Descripcion: Agrega un string al conjunto.
 
-Pertenece?(in c: conjRapidoString, in s: string) → res: bool
+Pertenece?(in c : conjRapidoString, in s : string) → res : bool
 Pre ≡ {true}
 Post ≡ {res =obs s ∈ c}
 Complejidad: O(long(s))
 Descripcion: Se fija si s pertenece al conjunto o no.
 
-Copiar(in c: conjRapidoString) → res: conjRapidoString
+Copiar(in c : conjRapidoString) → res : conjRapidoString
 Pre ≡ {true}
 Post ≡ {res =obs c}
 Complejidad: O(E * long(e))
 Descripcion: Devuelve una copia del conjunto.
 
-
-
-
 ********************************************************************************
 ************					 Representación						************
 ********************************************************************************
 
-conjRapidoString se representa con conjRap,
-	conjRap es DiccString(Bool)
-
+conjRapidoString se representa con conjRap, donde conjRap es DiccString(Bool)
 
 Rep: ^(conjRap) → boolean
-Rep(e) ≡ true ⟺ (∀ s: string) Definido?(e, s) →ₗ true = Obtener(e, s)
+Rep(e) ≡ true ⟺ (∀s : string) Definido?(e, s) ⟹ₗ Obtener(e, s) =obs true
 
-Abs: ^(conjRap) → Conj(String)  													{Rep(e)}
+Abs: ^(conjRap) → Conj(String)  										{Rep(e)}
 (∀e : ^(conjRap)) Abs(e) =obs c /
-				(∀ s: string) (Definido?(e, s) ∧ₗ Obtener(e, s)) =obs s ∈ c 
-
+				(∀s : string) (Definido?(e, s) ∧ₗ Obtener(e, s)) =obs s ∈ c
 
 ********************************************************************************
 ************					  Algoritmos						************
 ********************************************************************************
 
-iVacio() → res: conjRap
+iVacio() → res : conjRap
 	res ← Crear()
+end function
 
-iAgregar(in/out c: conjRap, in s: string)
-	if ¬Definido?(c, s)
+iAgregar(in/out c : conjRap, in s : string)
+	if ¬Definido?(c, s) then
 		Definir(c, s, true)
 	end if
+end function
 
-iPertenece?(in c: conjRap, in s: string) → res: bool
+iPertenece?(in c : conjRap, in s : string) → res : bool
 	res ← Definido?(c, s)
+end function
 
-iCopiar(in c: conjRap) → res: conjRap
+iCopiar(in c : conjRap) → res: conjRap
 	res ← Copiar(c)
+end function

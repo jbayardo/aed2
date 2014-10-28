@@ -19,19 +19,19 @@ Aliasing: Se realiza una copia del mapa.
 Entrar(in ts : conjRapidoString, in e : estacion, in/out c : Ciudad)
 Pre ≡ {e ∈ estaciones(mapa(c)) ∧ c =obs c₀}
 Post ≡ {c =obs entrar(ts, e, c₀)}
-Complejidad: O(Long(e) + S*R + Nₜₒₜₐₗ) 						VER BIEN COMO ESCRIBIR ESTA
+Complejidad: O(long(e) + S*R + Nₜₒₜₐₗ) 						VER BIEN COMO ESCRIBIR ESTA
 Descripcion: Agrega un conjunto de caracteristicas nuevo a la ciudad, creando un nuevo robot.
 
 Mover(in rur : nat, in e : estacion, in/out c : Ciudad)
 Pre ≡ {u ∈ robots(c) ∧ e ∈ estaciones(c) ∧ₗ conectadas?(estacion(u, c), e, mapa(c)) ∧ c₀ =obs c}
 Post ≡ {c =obs mover(rur, e, c₀)}
-Complejidad: O(Long(e) + Long(estacion(u, c)) + Log(#robotsEn(estacion(u,c), c)) + Log(#robotsEn(e, c)))
+Complejidad: O(long(e) + long(estacion(u, c)) + log(#robotsEn(estacion(u,c), c)) + log(#robotsEn(e, c)))
 Descripcion: Mueve a un robot de una estacion a otra.
 
 Inspeccion(in e : estacion, in/out c : Ciudad)
 Pre ≡ {e ∈ estaciones(c)}
 Post ≡ {c =obs inspección(e, c)}
-Complejidad: O(Long(e) + Log(#robotsEn(e, c)))
+Complejidad: O(long(e) + log(#robotsEn(e, c)))
 Descripcion: Remueve al robot mas infractor en la estacion e de la ciudad.
 
 ProximoRUR(in c : ciudad) → res : nat
@@ -68,7 +68,7 @@ Complejidad: O(1)
 Descripcion: Devuelve los tags del robot con rur u.
 Aliasing: res no es modificable.
 
-#Infracciones(in c: ciudad, in u: nat) → res: nat
+#Infracciones(in c : ciudad, in u : nat) → res : nat
 Pre ≡ {u ∈ robots(c)}
 Post ≡ {res =obs #infracciones(u, c)}
 Complejidad: O(1)
@@ -92,16 +92,11 @@ Ciudad se representa con city,
 						mi_estacion          : itCola(robot)
 	)
 
-*********************************************************
-********** COMO HAGO PARA DEFINIR LA RELACION DE ORDEN ENTRE ROBOTS??
-********** Esto funciona??
-*********************************************************
-
-∙ < ∙ (in r1 : robot, r2 : robot) → res : bool
 Pre ≡ {true}
 Post ≡ {res =obs (r1 < r2)}
 Complejidad: O(1)
 Descripción: funcion de comparación de robots
+∙ < ∙ (in r1 : robot, r2 : robot) → res : bool
 	if r1.infracciones < r2.infracciones then
 		res ← true
 	else
@@ -112,7 +107,6 @@ Descripción: funcion de comparación de robots
 		end if
 	end if
 end function
-
 
 Escribimos el rep de ciudad informalmente:
 
@@ -134,7 +128,7 @@ tienen la clausula estacíon puesta al sigificado de la cola a la que pertenecen
 Abs: ^(city) c → Ciudad 												{Rep(c)}
 (∀e : ^(city)) Abs(e) =obs c /
 	convertir(e.robots) =obs robots(c) ∧
-	Long(e.robots) =obs ProximoRUR(c) ∧
+	long(e.robots) =obs ProximoRUR(c) ∧
 	e.mapa =obs mapa(c) ∧
 	(∀u : rur)
 		(u < Longitud(e.robots) ∧ₗ e.robots[u] != NULL) ⟹ₗ
@@ -159,7 +153,7 @@ iCrear(in m : Mapa) → res : city
 	var it: itConj(string) ← Estaciones(m)
 
 	while HaySiguiente(it) do
-		Definir(robots_en_estacion, Siguiente(it), Crear()) 
+		Definir(robots_en_estacion, Siguiente(it), Crear())
 		Avanzar(it)
 	end while
 
@@ -192,13 +186,15 @@ iEntrar(in ts : conjRapidoString, in e : estacion, in/out c : city)
 	AgregarAtras(c.robots, &rob)
 end function
 
-Explicacion de la complejidad.
-La operacion obtener(robotsEnEstacion, e) tiene complejidad O(|e|).
-La operacion Encolar de cola de prioridad es O(Log de la cantidad de elementos de la cola).
-Como se evaluan todas las sendas para saber si un robot infringe o no, el recorrido lineal del iterador es O(S), siendo S la cantidad de sendas que hay en el mapa.
-Evaluar si un robot infringe o no cada senda (Verifica?) es O(R).
-Finalmente, agregar un robot a robots de la ciudad es O(N) en el peor caso, siendo N la cantidad de robots en la ciudad, como esta explicado en agregar atras de vector. Este O(N) por algebra de ordenes acota superiormente al costo logaritmico de encolar.
-Finalmente, la complejidad queda en |e| + S*R + Nₜₒₜₐₗ
+La operacion obtener(robotsEnEstacion, e) tiene complejidad O(|e|). La operacion
+Encolar de cola de prioridad es O(Log de la cantidad de elementos de la cola).
+Como se evaluan todas las sendas para saber si un robot infringe o no, el recorrido
+lineal del iterador es O(S), siendo S la cantidad de sendas que hay en el mapa.
+Evaluar si un robot infringe o no cada senda (Verifica?) es O(R). Finalmente,
+agregar un robot a robots de la ciudad es O(N) en el peor caso, siendo N la cantidad
+de robots en la ciudad, como esta explicado en agregar atras de vector. Este O(N)
+por algebra de ordenes acota superiormente al costo logaritmico de encolar.
+Luego, la complejidad queda en |e| + S*R + Nₜₒₜₐₗ
 
 iMover(in rur : nat, in e : estacion, in/out c : city)
 	var rob : puntero(robot) ← c.robots[rur]
@@ -213,17 +209,16 @@ iMover(in rur : nat, in e : estacion, in/out c : city)
 	end if
 
 	rob→infracciones ← infringe
-
 	rob→estacion ← e
-
 	rob→mi_estacion ← Encolar(obtener(c.robotsEnEstacion,  e), *rob)
 end function
 
 La complejidad de Obtener es O(|e1|), siendo e1 rob→estacion.
-Borrar de la cola de prioridad teniendo el iterador al elemento es O(Log(#cola)), siendo #cola la cantidad de elementos de la cola.
-Todo el calculo de si infringe o no es O(1) porque ya esta precalculado.
-Luego, insertarlo en otra cola es O(|e|) para encontrarla en el diccionario y O(Log(#cola)) para insertarlo.
-Esto da como resultado O(|e1| + |e| + Log(#cola1) + Log(#cola2))
+Borrar de la cola de prioridad teniendo el iterador al elemento es O(Log(#cola)),
+siendo #cola la cantidad de elementos de la cola. Todo el calculo de si infringe
+o no es O(1) porque ya esta precalculado. Luego, insertarlo en otra cola es O(|e|)
+para encontrarla en el diccionario y O(Log(#cola)) para insertarlo. Esto da como
+resultado O(|e1| + |e| + Log(#cola1) + Log(#cola2))
 
 iInspeccion(in e : estacion, in/out c : city)
 	var cola : colaPrioridad(robot) ← Obtener(c.robotsEnEstacion, e)
