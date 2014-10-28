@@ -50,7 +50,7 @@ Descripcion: Obtiene el significado de la clave en el diccionario
 Copia(in d: DiccString(α)) → res : DiccString(α)
 Pre ≡ {true}
 Post ≡ {res =obs d}
-Complejidad: O()																			ES CLAVES DE d?
+Complejidad: O()												FALTA ARREGLAR ESTO
 Descripcion: Crea un diccionario por copia
 
 ********************************************************************************
@@ -83,7 +83,7 @@ def?'(s, t) ≡
 		else def?(fin(s), t.continuacion[ord(prim(s)]) fi
 	fi
 
-obt': string s × ^(trie(α)) t → α 									{def'?(s, t)}
+obt': string s × ^(trie(α)) t → α 									{def?'(s, t)}
 obt'(s, t) ≡
 	if vacia?(s) then t.significado
 	else obt'(fin(s), t.continuacion[ord(prim(s)]) fi
@@ -93,7 +93,7 @@ obt'(s, t) ≡
 ********************************************************************************
 
 iCrear() → res : trie(α)
-	res ← ⟨continuacion: CREARARREGLO(256), significado: NULL⟩ 								PONER BIEN LO DE ARREGLO
+	res ← ⟨continuacion: CREARARREGLO(256), significado: NULL⟩ 			FALTA ARREGLAR ESTO
 end function
 
 iDefinir(in/out d : trie(α), in k : string, in v : α)
@@ -152,17 +152,21 @@ O(long(k)).
 
 iCopia(in d: trie(α)) → res : trie(α)
 	var i : nat ← 0
-	var t : trie(α) ← Crear()																ESTA BIEN HACER ESTO O LABURO SOBRE RES?
+	var t : trie(α) ← Crear()
+
 	if d.significado != NULL then
 		var v : α ← *d.significado
 		t.significado ← &v
-	fi
-	while i < 256
+	end if
+
+	while i < 256 do
 		if d.continuacion[i] != NULL then
 			t.continuacion[i] ← &Copia(*d.continuacion[i])
-		fi
+		end if
+
 		i ← i + 1
 	end while
-	res ← t 																				VEASE LO DE ARRIBA
+
+	res ← t
 end function
 

@@ -30,7 +30,7 @@ Descripcion: Se fija si s pertenece al conjunto o no.
 Copiar(in c : conjRapidoString) → res : conjRapidoString
 Pre ≡ {true}
 Post ≡ {res =obs c}
-Complejidad: O(E * long(e))
+Complejidad: O(E * long(e))                                 FALTA ARREGLAR ESTO
 Descripcion: Devuelve una copia del conjunto.
 
 ********************************************************************************

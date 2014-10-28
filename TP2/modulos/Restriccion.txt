@@ -114,7 +114,7 @@ iVerifica?(in tags : conj(string), in r : estr) → res : bool
 		[] tipo == NOT
 			res ← ¬Verifica?(tags, *r.op1)
 		[] tipo == VAR
-			res ← pertenece?(tags, r.valor)
+			res ← Pertenece?(tags, r.valor)
 	end case
 end function
 
