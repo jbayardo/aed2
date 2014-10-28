@@ -46,10 +46,11 @@ conjRapidoString se representa con conjRap,
 
 
 Rep: ^(conjRap) → boolean
-Rep(e) ≡ true ⟺ ????
+Rep(e) ≡ true ⟺ (∀ s: string) Definido?(e, s) →ₗ true = Obtener(e, s)
 
 Abs: ^(conjRap) → Conj(String)  													{Rep(e)}
-(∀e : ^(conjRap)) Abs(e) =obs m / ????
+(∀e : ^(conjRap)) Abs(e) =obs c /
+				(∀ s: string) (Definido?(e, s) ∧ₗ Obtener(e, s)) =obs s ∈ c 
 
 
 ********************************************************************************
