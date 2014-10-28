@@ -68,6 +68,7 @@ end function
 
 iActual(in it: iter(α)) → res: puntero(α)
 	res ← (it.vec)[iter.actual]
+end function
 
 iHayMas?(in it : iter(α)) → res : bool
 	var next : nat ← it.actual

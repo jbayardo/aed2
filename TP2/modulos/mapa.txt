@@ -51,6 +51,13 @@ Post ≡ {res =obs IteradorUnidireccional(Puntero(restriccion))} 			VERIFICAR
 Complejidad: O(1)
 Descripcion: Devuelve las restricciones de las sendas del mapa
 
+
+Copiar(in m: Mapa) → res : Mapa
+Pre ≡ {true}
+Post ≡ {res =obs m}
+Complejidad: O(Copiar(m.sendas) + Copiar(m.estaciones) + Copiar(m.conexiones))
+Descripcion: Devuelve una copia del mapa.
+
 ********************************************************************************
 ************					 Representación						************
 ********************************************************************************
@@ -125,3 +132,8 @@ end function
 iSendas(in m : estr) → res: itVectorPointer(Restriccion)
 	res ← CrearIt(m.sendas)
 end function
+
+iCopiar(in m : estr) → res: iMapa
+	res ← ⟨sendas: Copiar(m.sendas), conexiones: Copiar(m.conexiones), estaciones: Copiar(m.estaciones)⟩
+end function
+
