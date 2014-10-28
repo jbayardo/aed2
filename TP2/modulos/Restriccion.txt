@@ -40,6 +40,13 @@ Complejidad: O(#r)
 Descripcion: Evalua si la restricción r evalua a verdadero asumiendo que las
 variables que figuran en tags son verdaderas.
 
+
+Copiar(in r: restricción) → res : restricción
+Pre ≡ {true}
+Post ≡ {res =obs r}
+Complejidad: O(R)
+Descripcion: Devuelve una copia de la restricción.
+
 ********************************************************************************
 ************					 Representación						************
 ********************************************************************************
@@ -125,3 +132,20 @@ anidadas en op1 y/o op2 (depende si la restriccion es de tipo NOT o no),
 recursivamente, hasta llegar a un Var. Luego, cada restriccion devuelve el
 resultado anidado, por lo que se pasaria por cada nodo 2 veces, ergo, O(2R), y
 por algebra de ordenes, esto es equivalente a O(R)
+
+
+iCopiar(in r: estr) → res: estr
+	case
+		[] tipo == AND
+			res ← ⟨tipo: AND, op1: &Copiar(*r.op1), op2: &Copiar(*r.op2), valor: ""⟩
+		[] tipo == OR
+			res ← ⟨tipo: OR, op1: &Copiar(*r.op1), op2: &Copiar(*r.op2), valor: ""⟩
+		[] tipo == NOT
+			res ← ⟨tipo: Not, op1: &Copiar(*r.op1), op2: NULL, valor: ""⟩
+		[] tipo == VAR
+			res ← ⟨tipo: VAR, op1: NULL, op2: NULL, valor: Copiar(s)⟩
+	end case
+end function
+
+La complejidad de este algoritmo es O(R) porque se tienen que copiar todos los nodos.
+Como el valor esta acotado a 64 caracteres por enunciado, O(Copiar(s)) ≡ O(1)
