@@ -47,7 +47,7 @@ Post ≡ {res =obs obtener(k, d)}
 Complejidad: O(long(k))
 Descripcion: Obtiene el significado de la clave en el diccionario
 
-CrearCopia(in d: DiccString(α)) → res : DiccString(α)
+Copia(in d: DiccString(α)) → res : DiccString(α)
 Pre ≡ {true}
 Post ≡ {res =obs d}
 Complejidad: O()																			ES CLAVES DE d?
@@ -153,7 +153,7 @@ En el peor caso dado que las operaciones dentro del bucle tienen costo O(1)
 y se repetiran long(k) veces, para ir recorriendo la estructura, este tendra un costo
 O(long(k)).
 
-iCrearCopia(in d: trie(α)) → res : trie(α)
+iCopia(in d: trie(α)) → res : trie(α)
 	var i : nat ← 0
 	var t : trie(α) ← Crear()																ESTA BIEN HACER ESTO O LABURO SOBRE RES?
 	if d.significado != NULL then
@@ -162,7 +162,7 @@ iCrearCopia(in d: trie(α)) → res : trie(α)
 	fi
 	while i < 256
 		if d.continuacion[i] != NULL then
-			t.continuacion[i] ← &CrearCopia(*d.continuacion[i])		
+			t.continuacion[i] ← &Copia(*d.continuacion[i])		
 		fi
 		i ← i + 1
 	end while
