@@ -1,0 +1,216 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<meta charset="UTF-8">
+<html>
+<head>
+<title>/home/izikiel/Algo2/AlgoII/TP2/modulos/IteradorVectorPointer.txt</title>
+<style>
+.highlight .hll { background-color: #ffffcc }
+.highlight .c { color: #408080; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #BC7A00 } /* Comment.Preproc */
+.highlight .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #408080; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .gr { color: #FF0000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #00A000 } /* Generic.Inserted */
+.highlight .go { color: #808080 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0040D0 } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #7D9029 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #A0A000 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #BB6688 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
+.highlight * { font-family: monospace; }
+.highlight { font-size: 90%; }
+.highlight { line-height: normal; }
+.highlight .err { border: none !important }
+.highlight > pre { word-wrap: break-word; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<div class="highlight"><pre>********************************************************************************
+************                         Interfaz                         ************
+********************************************************************************
+
+VectorPointer(&#945;) es Vector(puntero(&#945;))
+
+Este iterador deberia estar en Vector
+
+itVectorPointer(&#945;)
+Se explica con iterador unidireccional
+
+Se considera n igual a longitud(vec).
+
+********************************************************************************
+************                       Operaciones                         ************
+********************************************************************************
+
+CrearIt(in vec : VectorPointer(&#945;)) &#8594; res : itVectorPointer(&#945;)
+Pre &#8801; {true}
+Post &#8801; {res =obs CrearItUni(in)}
+Complejidad: O(1)
+Descripcion: Crea un iterador unidireccional del VectorPointer(&#945;).
+
+HayMas?(in it : itVectorPointer(&#945;)) &#8594; res : bool
+Pre &#8801; {true}
+Post &#8801; {res =obs HayMas?(it)}
+Complejidad: O(n)
+Descripcion: Devuelve true si y solo si en el iterador quedan elementos para avanzar.
+
+Actual(in it: itVectorPointer(&#945;)) &#8594; res : puntero(&#945;)
+Pre &#8801; {HayMas?(it)}
+Post &#8801; {alias(res =obs Actual(it))}
+Complejidad: O(1)
+Descripcion: Devuelve el elemento actual del iterador.
+Aliasing: res y su contenido no son modificables.
+
+Avanzar(in/out it : itVectorPointer(&#945;))
+Pre &#8801; {it = it&#8320; &#8743; HayMas?(it)}
+Post &#8801; {it =obs Avanzar(it&#8320;)}
+Complejidad: O(n)
+Descripcion: Avanza a la posicion siguiente del iterador.
+
+********************************************************************************
+************                     Representaci&#243;n                        ************
+********************************************************************************
+
+itVectorPointer(&#945;) se representa con iter(&#945;),
+    donde iter(&#945;) es: tupla(
+                        actual : nat,
+                        len    : nat,
+                        vec    : puntero(VectorPointer(&#945;)))
+
+Rep: ^(iter(&#945;) &#8594; boolean
+(&#8704;e : ^(iter(&#945;)) Rep(e) &#8801; true &#10234;
+    (e.actual &lt; e.len) &#8743; (&#172;(e.vec =obs NULL) &#8743;&#8343; e.len = Longitud(*e.vec))
+
+Abs: ^(iter(&#945;)) i &#8594; IteradorUnidireccional(&#945;)                            {Rep(i)}
+(&#8704;e : ^(iter(&#945;)) Abs(e) =obs m /
+    Longitud(Siguientes(m)) =obs (e.len - e.actual) &#8743;
+    (&#8704;i : nat) (i &lt; e.len &#8743;&#8343; *e.vec[i] =obs Siguientes(m)[i])
+
+********************************************************************************
+************                      Algoritmos                        ************
+********************************************************************************
+iCrearIt(in input_vec : VectorPointer(&#945;)) &#8594; res: itVectorPointer(&#945;)
+    res &#8592; &#10216;actual: 0, len: Longitud(input_vec), vec: &amp;input_vec&#10217;
+end function
+
+
+iActual(in it: iter(&#945;)) &#8594; res: puntero(&#945;)
+    res &#8592; (it.vec)[iter.actual]
+end function
+
+iHayMas?(in it : iter(&#945;)) &#8594; res : bool
+    var next : nat &#8592; it.actual
+
+    while next &lt; len &#8743; (*it.vec)[next] == NULL do
+        next &#8592; next + 1
+    end while
+
+    res &#8592; next != len
+end function
+
+iAvanzar(in/out it : iter(&#945;))
+    var next : nat &#8592; it.actual + 1
+
+    while (*it.vec)[next] == NULL do
+        next &#8592; next + 1
+    end while
+
+    it.actual &#8592; next
+end function
+</pre></div>
+
+<script>
+// Indent wrapped lines in order to keep them out of the line-numbering column.
+
+// One of these methods should work for a given browser; though this means
+// possibly running the hangingIndent routine 3 times, it also ensures we successfully
+// wrap all code blocks, all the time, on all tested browsers.
+document.addEventListener('DOMContentLoaded', hangingIndentAllCodeBlocks, false);
+window.addEventListener('load', hangingIndentAllCodeBlocks, false);
+hangingIndentAllCodeBlocks();
+
+// Apply hanging indent CSS to wrapped lines in each div.highlight code block
+function hangingIndentAllCodeBlocks() {
+    var blocks = document.getElementsByClassName('highlight');
+    for (var i = 0; i < blocks.length; i++) {
+        hangingIndentCodeBlock(blocks[i]);
+    }
+}
+
+// Apply hanging indent CSS to wrapped lines in given block
+function hangingIndentCodeBlock(block) {
+    var lineNums = block.querySelectorAll('.lineno');
+    if (lineNums.length == 0) {
+        return;
+    }
+
+    // Calculate actual width of a character in the line numbers column
+    var first = lineNums[0];
+    var text = first.innerText || first.textContent;
+    var charWidth = first.offsetWidth / text.length;
+
+    // Adjustment width is width of line number column plus 1 more character-width
+    // for the trailing space that comes after the span.lineno element
+    var adjustWidth = charWidth * (text.length + 1);
+
+    // Indent the entire block by adjustWidth ...
+    block.firstChild.style.marginLeft = adjustWidth + 'px';
+
+    // ... and correspondingly de-indent just the starting line-number <span> of
+    // each line-of-code, resulting in only wrapped lines of code being indented
+    // past the column of line numbers
+    for (var i = 0; i < lineNums.length; i++) {
+        lineNums[i].style.marginLeft = -adjustWidth + 'px';
+    }
+}
+</script>
+</body>
+</html>

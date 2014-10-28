@@ -1,0 +1,323 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<meta charset="UTF-8">
+<html>
+<head>
+<title>/home/izikiel/Algo2/AlgoII/TP2/modulos/conjRapidoString.txt</title>
+<style>
+.highlight .hll { background-color: #ffffcc }
+.highlight .c { color: #408080; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #BC7A00 } /* Comment.Preproc */
+.highlight .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #408080; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .gr { color: #FF0000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #00A000 } /* Generic.Inserted */
+.highlight .go { color: #808080 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0040D0 } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #7D9029 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #A0A000 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #BB6688 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
+.highlight * { font-family: monospace; }
+.highlight { font-size: 90%; }
+.highlight { line-height: normal; }
+.highlight .err { border: none !important }
+.highlight > pre { word-wrap: break-word; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<div class="highlight"><pre>
+********************************************************************************
+************                         Interfaz                       ************
+********************************************************************************
+
+Parametros formales
+    generos α
+    funcion Copiar(in a: α) → res: α
+        Pre ≡ {true}
+        Post ≡ {res =obs a}
+        Complejidad: O(copy(a))
+        Descripcion: funcion de copia de α's.
+
+    funcion ∙ = ∙ (in a1 : α, a2 : α) → res : bool
+        Pre ≡ {true}
+        Post ≡ {res =obs (a1 = a2)}
+        Complejidad: O(equal(a1, a2))
+        Descripcion: funcion de igualdad de αs
+
+Se explica con: dicc(string, α)
+Generos: DiccString(α)
+
+********************************************************************************
+************                       Operaciones                      ************
+********************************************************************************
+
+Crear() → res : DiccString(α)
+Pre ≡ {true}
+Post ≡ {res =obs vacio}
+Complejidad: O(1)
+Descripcion: Crea un diccionario vacio.
+
+Definir(in/out d : DiccString(α), in k : string, in v : α)
+Pre ≡ {d =obs d₀}
+Post ≡ {d =obs definir(k, v, d₀)}
+Complejidad: O(long(k))
+Descripcion: Inserta una clave en el diccionario.
+
+Definido?(in d : DiccString(α), in k : string) → res : bool
+Pre ≡ {true}
+Post ≡ {res =obs def?(k, d)}
+Complejidad: O(long(k))
+Descripcion: Dice si una clave esta definido.
+
+Obtener(in d : DiccString(α), in k : string) → res : α
+Pre ≡ {def?(k, d)}
+Post ≡ {res =obs obtener(k, d)}
+Complejidad: O(long(k))
+Descripcion: Obtiene el significado de la clave en el diccionario
+
+Claves(in d : DiccString(α)) → res : itConj(string)
+Pre ≡ {true}
+Post ≡ {alias(esPermutación?(SecuSuby(res), claves(d))) ∧ vacia?(Anteriores(res))}
+Complejidad: O(1)
+Descripcion: Devuelve un iterador a las claves del diccionario.
+
+Copia(in d: DiccString(α)) → res : DiccString(α)
+Pre ≡ {true}
+Post ≡ {res =obs d}
+Complejidad: O(#Claves(d) * long(e) * Copia(Obtener(d, s))), donde e es la clave mas larga
+            y s pertenece a Claves(d)
+Descripcion: Crea un diccionario por copia.
+
+********************************************************************************
+************                     Representación                     ************
+********************************************************************************
+
+DiccString(α) se representa con cabeza(α)
+    donde cabeza(α) es tupla(
+                        claves: conj(string),
+                        significados: trie(α)
+                        )
+
+    donde trie(α) es tupla(
+                        continuacion : array_estatico[256] de puntero(trie(α)),
+                        significado  : puntero(α)
+                        )
+
+Rep: cabeza(α) t → bool                                                                     
+Rep(t) ≡ true ⟺ 
+    ((∀s: string)(s ∈ t.claves ⟺ def?'(t.significados, s))) ∧
+    No hay ciclos en significados ∧
+    ((∀i : nat) (i < 256) ⟹ₗ t.continuacion[i] =obs NULL) ⟹ t.significado =obs NULL ∧ₗ
+    (∀i : nat) (i < 256 ∧ₗ ¬(t.continuacion[i] =obs NULL)) ⟹ₗ Rep(*(t.continuacion[i]))
+
+Abs: ^(cabeza(α)) t → dicc(string, α)                                       {Rep(t)}
+(∀t : ^(cabeza(α))) Abs(t) =obs d /
+    (∀c : string)
+        def?(c, d) =obs def'?(c, t.significados) ∧
+        def'?(c, t.significados) ⟹ₗ obt'(c, t.significados) =obs obtener(c, d)
+
+def?': string × ^(trie(α)) → bool
+def?'(s, t) ≡
+    if vacia?(s) then ¬(t.significado =obs NULL)
+    else
+        if t.continuacion[ord(prim(s))] =obs NULL then false
+        else def?(fin(s), t.continuacion[ord(prim(s)]) fi
+    fi
+
+obt': string s × ^(trie(α)) t → α                                   {def?'(s, t)}
+obt'(s, t) ≡
+    if vacia?(s) then t.significado
+    else obt'(fin(s), t.continuacion[ord(prim(s)]) fi
+
+********************************************************************************
+************                      Algoritmos                        ************
+********************************************************************************
+
+iCrear() → res : cabeza(α)
+    res ← ⟨claves: Vacio(),
+         significados: ⟨continuacion: arreglo_estatico[256] de puntero(trie(α)),
+             significado: NULL⟩
+        ⟩ 
+end function
+
+iDefinir(in/out d : cabeza(α), in k : string, in v : α)
+    var i : nat ← 0
+    var t : puntero(trie(α)) ← &d.significados
+    var nuevo: bool ← false
+    while i < longitud(k) do
+        if t→continuacion[ord(k[i])] == NULL then
+            t→continuacion[ord(k[i])] ← &Crear()
+            nuevo ← true
+        end if
+        t ← *t→continuacion[ord(k[i])]
+        i ← i + 1
+    end while
+    t→significado ← &v
+    if nuevo then
+        AgregarRapido(d.claves, k)
+    fi
+end function
+
+Como se puede observar el bucle principal depende exlusivamente de la cantidad de
+caracteres del vector, por lo que el mejor caso es que el mismo tenga 0 caracteres
+en donde automaticamente saldra y definira la palabra vacia y su costo sera O(1),
+pero tanto el caso promedio como el peor sera en donde el largo del vector es mayor
+a 0 entonces dado que todas las operaciones dentro del bucle tienen costo O(1)              
+tendra un costo equivalente al tamaño del vector (O(long(k))) ya que tendra que
+recorrerlo para definir letra por letra dentro de la estructura hasta llegar a su
+fin y definir el significado que tiene costo O(1). A esto se le suma la complejidad
+de AgregarRapido de la clave al conjunto de claves (si esta no estaba definida),
+al ser la clave un string esto cuesta el copiar del vector de char, que es la longitud
+del vector por el costo de copiar cada char que es 1, quedando entonces la longitud del
+string k.
+
+iDefinido?(in d : cabeza(α), in k : string) → res : bool
+    var i : nat ← 0
+    var t : puntero(trie(α)) ← &d.significados
+    bool listo ← False
+    while i < longitud(k) ∧ t→continuacion[ord(k[i])] != NULL do
+        t ← t→continuacion[ord(k[i])]
+        i ← i + 1
+    end while
+    res ← t→significado != NULL ∧ i == longitud(k)
+end function
+
+En el peor caso(si el string esta definido dentro de la estructura y el mismo
+tiene largo mayor a 0) dado que las operaciones dentro del bucle tienen costo O(1)
+y se repetiran long(k) veces, para ir recorriendo la estructura, este tendra un costo
+O(long(k)) pero en el caso de que no este definido el costo sera O(long(k) - n) con n
+cantidad de caracteres que no pertenecen al prefijo perteneciente a la estructura
+por lo que el peor caso sera O(long(k)).
+
+iObtener(in d : cabeza(α), in k : string) → res : α
+    var i : nat ← 0
+    var t : puntero(trie(α)) ← &d.significados
+    while i < longitud(k) do
+        t ← t→continuacion[ord(k[i])]
+        i ← i + 1
+    end while
+    res ← *t→significado
+end function
+
+En el peor caso dado que las operaciones dentro del bucle tienen costo O(1)
+y se repetiran long(k) veces, para ir recorriendo la estructura, este tendra un costo
+O(long(k)).
+
+iClaves(in d: cabeza(α)) → res : itConj(string)
+    res ← CrearIt(d.claves)
+end function
+
+iCopia(in d: cabeza(α)) → res : cabeza(α)
+    var i : nat ← 0
+    var c : cabeza(α) ← Crear()
+    var it : itConj(string) ← CrearIt(d.claves)
+    while HaySiguiente(it)                                              
+        Definir(c, Siguiente(it), Copiar(Obtener(d, Siguiente(it))))
+        Avanzar(it)
+    end while
+    res ← c
+end function
+
+Al copiar se itera por todas las claves y se definen los significados creando una 
+copia de cada uno. Por lo tanto se multiplica el cardinal del conjunto de claves 
+por el obtener de cada claves por el copiar de cada significado. Por lo tanto para
+el peor caso tomamos el peor obtener que seria el de la clave mas larga y la copia de
+todos los significados.
+
+</pre></div>
+
+<script>
+// Indent wrapped lines in order to keep them out of the line-numbering column.
+
+// One of these methods should work for a given browser; though this means
+// possibly running the hangingIndent routine 3 times, it also ensures we successfully
+// wrap all code blocks, all the time, on all tested browsers.
+document.addEventListener('DOMContentLoaded', hangingIndentAllCodeBlocks, false);
+window.addEventListener('load', hangingIndentAllCodeBlocks, false);
+hangingIndentAllCodeBlocks();
+
+// Apply hanging indent CSS to wrapped lines in each div.highlight code block
+function hangingIndentAllCodeBlocks() {
+    var blocks = document.getElementsByClassName('highlight');
+    for (var i = 0; i < blocks.length; i++) {
+        hangingIndentCodeBlock(blocks[i]);
+    }
+}
+
+// Apply hanging indent CSS to wrapped lines in given block
+function hangingIndentCodeBlock(block) {
+    var lineNums = block.querySelectorAll('.lineno');
+    if (lineNums.length == 0) {
+        return;
+    }
+
+    // Calculate actual width of a character in the line numbers column
+    var first = lineNums[0];
+    var text = first.innerText || first.textContent;
+    var charWidth = first.offsetWidth / text.length;
+
+    // Adjustment width is width of line number column plus 1 more character-width
+    // for the trailing space that comes after the span.lineno element
+    var adjustWidth = charWidth * (text.length + 1);
+
+    // Indent the entire block by adjustWidth ...
+    block.firstChild.style.marginLeft = adjustWidth + 'px';
+
+    // ... and correspondingly de-indent just the starting line-number <span> of
+    // each line-of-code, resulting in only wrapped lines of code being indented
+    // past the column of line numbers
+    for (var i = 0; i < lineNums.length; i++) {
+        lineNums[i].style.marginLeft = -adjustWidth + 'px';
+    }
+}
+</script>
+</body>
+</html>
