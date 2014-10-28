@@ -61,22 +61,22 @@ Rep(t) ≡ true ⟺
 Abs: ^(trie(α)) t → dicc(string, α)										{Rep(t)}
 (∀t : ^(trie(α))) Abs(t) =obs d /
 	(∀c : string)
-		def?(c, d) =obs def'?(c, t) ∧
-		def'?(c, t) ⟹ₗ obt'(c, t) =obs obtener(c, d)
+		def?(c, d) =obs def'?(c, t, 0) ∧
+		def'?(c, t, 0) ⟹ₗ obt'(c, t, 0) =obs obtener(c, d)
 
-def?': string × ^(trie(α)) → bool
-def?'(s, t) ≡
-	if vacia?(s) then ¬(t.significado =obs NULL)
+def?': string s × ^(trie(α)) t × nat n → bool
+def?'(s, t, n) ≡
+	if n >= Longitud(s) - 1 then ¬(t.significado =obs NULL)
 	else
-		if t.continuacion[ord(prim(s))] =obs NULL then false
-		else def?(fin(s), t.continuacion[ord(prim(s)]) fi
+		if t.continuacion[ord(s[n])] =obs NULL then false
+		else def?(s, t.continuacion[ord(s[n])], n+1) fi
 	fi
 
-obt': string s × ^(trie(α)) t → α 									{def'?(s, t)}
-obt'(s, t) ≡
-	if vacia?(s) then t.significado
+obt': string s × ^(trie(α)) t × nat n → α 									{def'?(s, t)}
+obt'(s, t, n) ≡
+	if n >= Longitud(s) - 1 then t.significado
 	else
-		obt'(fin(s), t.continuacion[ord(prim(s)]) fi
+		obt'(s, t.continuacion[ord(s[n])], n+1)
 	fi
 
 ********************************************************************************
