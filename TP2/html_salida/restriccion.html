@@ -74,14 +74,14 @@
 </head>
 <body>
 <div class="highlight"><pre>********************************************************************************
-************                         Interfaz                         ************
+************                         Interfaz                       ************
 ********************************************************************************
 
 Se explica con: Restricci&#243;n
 G&#233;neros: restricci&#243;n
 
 ********************************************************************************
-************                       Operaciones                         ************
+************                       Operaciones                      ************
 ********************************************************************************
 
 Var(in s : string) &#8594; res : restricci&#243;n
@@ -116,7 +116,7 @@ Descripcion: Evalua si la restricci&#243;n r evalua a verdadero asumiendo que la
 variables que figuran en tags son verdaderas.
 
 ********************************************************************************
-************                     Representaci&#243;n                        ************
+************                     Representaci&#243;n                     ************
 ********************************************************************************
 
 restricci&#243;n se representa con estr
@@ -199,7 +199,10 @@ conj(string), si esta no es un Var, debe verificar que valga para sus restriccio
 anidadas en op1 y/o op2 (depende si la restriccion es de tipo NOT o no),
 recursivamente, hasta llegar a un Var. Luego, cada restriccion devuelve el
 resultado anidado, por lo que se pasaria por cada nodo 2 veces, ergo, O(2R), y
-por algebra de ordenes, esto es equivalente a O(R)
+por algebra de ordenes, esto es equivalente a O(R).
+Por enunciado, la longitud máxima de un tag esta acotada a 64 caracteres, por lo que
+la comparación entre tags es O(64) ≡ O(1). Por esta misma razón, al ser el Pertenece? de
+conjRapidoString O(long(tag)) ≡ O(64) ≡ O(1).
 </pre></div>
 
 <script>

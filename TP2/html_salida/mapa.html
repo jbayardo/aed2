@@ -74,14 +74,14 @@
 </head>
 <body>
 <div class="highlight"><pre>********************************************************************************
-************                         Interfaz                         ************
+************                         Interfaz                       ************
 ********************************************************************************
 
 Se explica con: Mapa
 G&#233;neros: Mapa
 
 ********************************************************************************
-************                       Operaciones                         ************
+************                       Operaciones                      ************
 ********************************************************************************
 
 Crear() &#8594; res: Mapa
@@ -134,8 +134,15 @@ Complejidad: O(Copiar(m.sendas) + Copiar(m.estaciones) + Copiar(m.conexiones))
 Descripcion: Devuelve una copia del mapa.
 Aliasing: El nuevo mapa comparte las restricciones ya agregadas al mapa original.
 
+
+
+
+
+
+
+
 ********************************************************************************
-************                     Representaci&#243;n                        ************
+************                     Representaci&#243;n                     ************
 ********************************************************************************
 
 Mapa se representa con estr,
@@ -200,6 +207,7 @@ end function
 iConectadas?(in m : estr, in e1 : estacion, in e2 : estacion) &#8594; res : bool
     res &#8592; Definido?(m.conexiones, e1) &#8743;&#8343; Definido?(obtener(m.conexiones, e1), e2)
 end function
+
 
 iidSenda(in m : estr, in e1 : estacion, in e2 : estacion) &#8594; res : nat
     res &#8592; Obtener(Obtener(m.conexiones, e1), e2)
