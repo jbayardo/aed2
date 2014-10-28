@@ -184,8 +184,8 @@ iEntrar(in ts : conjRapidoString, in e : estacion, in/out c : city)
 
 	var it : ItVectorPointer(Restriccion) ← Sendas(c.mapa)
 
-	while HaySiguiente(it) do //cambiar itvector por lo q dice el tad
-		AgregarAtras(rob.infringe_restriccion, ¬Verifica?(ts, Actual(it)))
+	while HayMas?(it) do
+		AgregarAtras(rob.infringe_restriccion, ¬Verifica?(ts, *Actual(it)))
         Avanzar(it)
 	end while
 

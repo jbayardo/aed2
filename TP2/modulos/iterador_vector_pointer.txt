@@ -22,18 +22,11 @@ Post ≡ {res =obs CrearItUni(in)}
 Complejidad: O(1)
 Descripcion: Crea un iterador unidireccional del VectorPointer(α).
 
-HaySiguiente(in it : itVectorPointer(α)) → res : bool
+HayMas?(in it : itVectorPointer(α)) → res : bool
 Pre ≡ {true}
-Post ≡ {res =obs haySiguiente?(it)}
+Post ≡ {res =obs HayMas?(it)}
 Complejidad: O(n)
 Descripcion: Devuelve true si y solo si en el iterador quedan elementos para avanzar.
-
-Siguiente(in it : itVectorPointer(α)) → res : puntero(α)
-Pre ≡ {HaySiguiente(it)}
-Post ≡ {alias(res =obs Siguiente(it))}
-Complejidad: O(n)
-Descripcion: Devuelve el elemento siguiente a la posicion del iterador.
-Aliasing: res y su contenido no son modificables.
 
 Actual(in it: itVectorPointer(α)) → res : puntero(α)
 Pre ≡ {HayMas?(it)}
@@ -43,7 +36,7 @@ Descripcion: Devuelve el elemento actual del iterador.
 Aliasing: res y su contenido no son modificables.
 
 Avanzar(in/out it : itVectorPointer(α))
-Pre ≡ {it = it₀ ∧ HaySiguiente?(it)}
+Pre ≡ {it = it₀ ∧ HayMas?(it)}
 Post ≡ {it =obs Avanzar(it₀)}
 Complejidad: O(n)
 Descripcion: Avanza a la posicion siguiente del iterador.
@@ -70,7 +63,6 @@ Abs: ^(iter(α)) i → IteradorUnidireccional(α)							{Rep(i)}
 ********************************************************************************
 ************					  Algoritmos						************
 ********************************************************************************
-//FIJARSE EN ITERADOR UNIDIRECCIONAL TAD NO MODIFICABLE Y HACERLO EN BASE A ESO
 iCrearIt(in input_vec : VectorPointer(α)) → res: itVectorPointer(α)
 	res ← ⟨actual: 0, len: Longitud(input_vec), vec: &input_vec⟩
 end function
@@ -78,24 +70,14 @@ end function
 iActual(in it: iter(α)) → res: puntero(α)
 	res ← (it.vec)[iter.actual]
 
-iHaySiguiente(in it : iter(α)) → res : bool
-	var next : nat ← it.actual + 1
+iHayMas?(in it : iter(α)) → res : bool
+	var next : nat ← it.actual
 
 	while next < len ∧ (*it.vec)[next] == NULL do
 		next ← next + 1
 	end while
 
 	res ← next != len
-end function
-
-iSiguiente(in it : iter(α)) → res : α
-	var next : nat ← it.actual + 1
-
-	while (*it.vec)[next] == NULL do
-		next ← next + 1
-	end while
-
-	res ← (*it.vec)[next]
 end function
 
 iAvanzar(in/out it : iter(α))
