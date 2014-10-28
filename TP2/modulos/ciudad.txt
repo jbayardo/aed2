@@ -43,7 +43,7 @@ Descripcion: Devuelve el proximo rur disponible.
 Mapa(in c : ciudad) → res : Mapa
 Pre ≡ {true}
 Post ≡ {res =obs Mapa(c)}
-Complejidad: O(1) actualizar
+Complejidad: O(1) 													FALTA ARREGLAR ESTO
 Descripcion: Devuelve el mapa de la ciudad.
 Aliasing: res es una copia de mapa
 
@@ -60,7 +60,7 @@ Post ≡ {res =obs estacion(u, c)}
 Complejidad: O(1)
 Descripcion: Devuelve la estacion donde esta el robot con rur u.
 
-Tags(in c : ciudad, in u : nat) → res : conjRapidoString
+Tags(in c : ciudad, in u : nat) → res : conjRapidoString 			FALTA ARREGLAR ESTO
 Pre ≡ {u ∈ robots(c)}
 Post ≡ {alias(esPermutacion?(SecuSuby(res), tags(u, c)) ∧ vacia?(Anteriores(res)))}
 Complejidad: O(1)
@@ -244,7 +244,7 @@ iEstacion(in c : city, in u : nat) → res : estacion
 end function
 
 iTags(in c : city, in u : nat) → res : conjRapidoString
-	res ← *(c.robots[u])→tags
+	res ← *((c.robots[u])→tags)
 end function
 
 i#Infracciones(in c : city, in u : nat) → res : nat

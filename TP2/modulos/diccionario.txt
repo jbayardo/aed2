@@ -96,7 +96,7 @@ def?'(s, t) ≡
 		else def?(fin(s), t.continuacion[ord(prim(s)]) fi
 	fi
 
-obt': string s × ^(trie(α)) t → α 									{def'?(s, t)}
+obt': string s × ^(trie(α)) t → α 									{def?'(s, t)}
 obt'(s, t) ≡
 	if vacia?(s) then t.significado
 	else obt'(fin(s), t.continuacion[ord(prim(s)]) fi
@@ -184,6 +184,7 @@ iCopia(in d: cabeza(α)) → res : cabeza(α)
 		Definir(c, Siguiente(it), Copiar(Obtener(d, Siguiente(it))))
 		Avanzar(it)
 	end while
+	res ← c
 end function
 
 Al copiar se itera por todas las claves y se definen los significados creando una 
