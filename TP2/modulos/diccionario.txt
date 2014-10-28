@@ -107,9 +107,9 @@ obt'(s, t) ≡
 
 iCrear() → res : cabeza(α)
 	res ← ⟨claves: Vacio(),
-		 significados: ⟨continuacion: arreglo_estatico[256] de puntero(trie(α)),
-			 significado: NULL⟩
-		⟩ 
+		 		significados: ⟨continuacion: arreglo_estatico[256] de puntero(trie(α)),
+			 	significado: NULL⟩
+			⟩ 
 end function
 
 iDefinir(in/out d : cabeza(α), in k : string, in v : α)
