@@ -158,7 +158,7 @@ iCrear(in m : Mapa) → res : city
 
 	Definir(robots_en_estacion, *it, Crear())
 
-	res ← ⟨robots: Vacia(), mapa: m, robotsEnEstacion: robots_en_estacion ⟩
+	res ← ⟨robots: Vacia(), mapa: Copiar(m), robotsEnEstacion: robots_en_estacion ⟩
 end function
 
 Recorrer todas las estaciones en el mapa es O(E). Definir cada entrada en
@@ -232,7 +232,7 @@ iProximoRUR(in c : city) → res : nat
 end function
 
 iMapa(in c : city) → res : Mapa
-	res ← c.mapa
+	res ← Copiar(c.mapa)
 end function
 
 iRobots(in c : city) → res : ItVectorPointer(robot)
