@@ -61,7 +61,7 @@ iVacio() → res: conjRap
 
 iAgregar(in/out c: conjRap, in s: string)
 	if ¬Definido?(c, s)
-		Definir(c, s)
+		Definir(c, s, true)
 	end if
 
 iPertenece?(in c: conjRap, in s: string) → res: bool
