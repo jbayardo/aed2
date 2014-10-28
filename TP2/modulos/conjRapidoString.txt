@@ -42,9 +42,9 @@ conjRapidoString se representa con conjRap, donde conjRap es DiccString(Bool)
 Rep: ^(conjRap) → boolean
 Rep(e) ≡ true ⟺ (∀s : string) Definido?(e, s) ⟹ₗ Obtener(e, s) =obs true
 
-Abs: ^(conjRap) → Conj(String)  										{Rep(e)}
+Abs: ^(conjRap) e → Conj(String)  										{Rep(e)}
 (∀e : ^(conjRap)) Abs(e) =obs c /
-				(∀s : string) (Definido?(e, s) ∧ₗ Obtener(e, s)) =obs s ∈ c
+	(∀s : string) (Definido?(e, s) ∧ₗ Obtener(e, s)) =obs s ∈ c
 
 ********************************************************************************
 ************					  Algoritmos						************
@@ -64,6 +64,6 @@ iPertenece?(in c : conjRap, in s : string) → res : bool
 	res ← Definido?(c, s)
 end function
 
-iCopiar(in c : conjRap) → res: conjRap
+iCopiar(in c : conjRap) → res : conjRap
 	res ← Copiar(c)
 end function

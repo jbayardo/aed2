@@ -47,16 +47,17 @@ Descripcion: Devuelve el id de la senda entre e1 y e2.
 
 Sendas(in m : Mapa) → res : itVectorPointer(restriccion)
 Pre ≡ {true}
-Post ≡ {res =obs IteradorUnidireccional(Puntero(restriccion))} 			VERIFICAR
+Post ≡ {res itera sobre las restricciones de todas las sendas del mapa}
 Complejidad: O(1)
 Descripcion: Devuelve las restricciones de las sendas del mapa
 
-
-Copiar(in m: Mapa) → res : Mapa
+Copiar(in m : Mapa) → res : Mapa
 Pre ≡ {true}
 Post ≡ {res =obs m}
 Complejidad: O(Copiar(m.sendas) + Copiar(m.estaciones) + Copiar(m.conexiones))
 Descripcion: Devuelve una copia del mapa.
+Aliasing: El nuevo mapa comparte las restricciones ya agregadas del mapa con el
+mapa original.
 
 ********************************************************************************
 ************					 Representación						************
@@ -129,11 +130,13 @@ iidSenda(in m : estr, in e1 : estacion, in e2 : estacion) → res : nat
 	res ← Obtener(Obtener(m.conexiones, e1), e2)
 end function
 
-iSendas(in m : estr) → res: itVectorPointer(Restriccion)
+iSendas(in m : estr) → res : itVectorPointer(Restriccion)
 	res ← CrearIt(m.sendas)
 end function
 
-iCopiar(in m : estr) → res: iMapa
-	res ← ⟨sendas: Copiar(m.sendas), conexiones: Copiar(m.conexiones), estaciones: Copiar(m.estaciones)⟩
+iCopiar(in m : estr) → res : estr
+	res ← ⟨	sendas     : Copiar(m.sendas),
+			conexiones : Copiar(m.conexiones),
+			estaciones : Copiar(m.estaciones)⟩
 end function
 

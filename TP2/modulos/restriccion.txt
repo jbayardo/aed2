@@ -2,7 +2,7 @@
 ************						 Interfaz 						************
 ********************************************************************************
 
-Se explica con: RestricciónExtendida
+Se explica con: Restricción
 Géneros: restricción
 
 ********************************************************************************
@@ -54,7 +54,7 @@ restricción se representa con estr
 Rep: ^(estr) → boolean
 Rep(e) ≡ true ⟺
 	No hay ciclos en el arbol ∧ₗ
-	Ningún nodo de más abajo en el arbol tiene punteros a un padre ∧ₗ
+	Ningún nodo de más abajo en el arbol tiene punteros a e ∧ₗ
 	(e.tipo =obs VAR ⟺ (e.op1 =obs NULL ∧ e.op2 =obs NULL)) ∧
 	(e.tipo =obs NOT ⟺ (¬(e.op1 =obs NULL) ∧ e.op2 =obs NULL)) ∧
 	((e.tipo =obs AND ∨ e.tipo =obs OR) ⟺ (¬(e.op1 =obs NULL) ∧ ¬(e.op2 =obs NULL))) ∧
@@ -118,7 +118,7 @@ iVerifica?(in tags : conj(string), in r : estr) → res : bool
 	end case
 end function
 
-La complejidad de iVerifica? es O(#R), siendo #R la cantidad de restricciones
+La complejidad de iVerifica? es O(#r), siendo #r la cantidad de restricciones
 anidadas. Esto se debe a que para verificar una restriccion vale para un
 conj(string), si esta no es un Var, debe verificar que valga para sus restricciones
 anidadas en op1 y/o op2 (depende si la restriccion es de tipo NOT o no),
