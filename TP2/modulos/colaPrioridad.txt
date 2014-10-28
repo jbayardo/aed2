@@ -28,7 +28,7 @@ Pre ≡ {¬(e ∈ t) ∧ t₀ =obs t}
 Post ≡ {t =obs encolar(e, t₀) ∧ alias(Actual(res) =obs e)}
 Complejidad: O(log(Tamaño(t)))
 Descripción: Inserta un elemento en la cola y devuelve un iterador posicionado en el elemento agregado.
-Aliasing: El iterador se invalida sii se borra el elemento utizando Desencolar.
+Aliasing: El iterador se invalida sii se borra el elemento utizando Desencolar o Borrar
 
 Desencolar(in/out t : ColaPrioridad(α)) → res : α
 Pre ≡ {¬vacia?(t) ∧ t =obs t₀}
@@ -42,7 +42,7 @@ Post ≡ {res =obs #t}
 Complejidad: O(1)
 Descripción: Devuelve la cantidad de elementos en la cola.
 
-Borrar(in/out t : ColaPrioridad(α), in i : itCola(α))
+Borrar(in/out t : ColaPrioridad(α), in i : itCola(α)) → res : α
 Pre ≡ {t₀ =obs t}
 Post ≡ {t =obs borrar(Actual(i), t₀)}
 Complejidad: O(log(Tamaño(t)))
@@ -199,13 +199,25 @@ el invariante utilizando Subir. Es decir, haremos 3*log(#t), por lo que en el
 peor de los casos es O(log(#t)).
 
 iDesencolar(in/out t : estr(α)) → res : α
-	res ← t.cabeza→dato
+	res ← Eliminar(t, t.cabeza)
+end function
+
+iBorrar(in/out t : estr(α), in i : itCola(α)) → res : α
+	res ← Eliminar(t, i)
+end function
+
+Pre ≡ {¬(p =obs NULL) ∧ₗ p es un puntero de la estructura de datos ∧ t₀ =obs t}
+Post ≡ {t =obs borrar(p→dato, t₀) ∧ res =obs p→dato}
+Descripcion: Elimina el dato al que apunta el puntero.
+Complejidad: O(log(Tamaño(t)))
+iEliminar(in/out t : estr(α), in p : puntero(nodo(α))) → res : α
+	res ← p→dato
 
 	if Tamaño(t) == 1 then
 		t.ultimo ← NULL
 		t.cabeza ← NULL
 	else
-		t.cabeza→dato ← t.ultimo→dato
+		p→dato ← t.ultimo→dato
 
 		if t.ultimo→arr→izq == t.ultimo then
 			var cur : puntero(nodo(α)) = t.ultimo
@@ -228,7 +240,7 @@ iDesencolar(in/out t : estr(α)) → res : α
 			t.ultimo→arr→der ← NULL
 		end if
 
-		Bajar(t.cabeza)
+		Bajar(p)
 	end if
 
 	t.tamaño--
@@ -244,14 +256,7 @@ absolutamente todos los casos haremos a lo sumo log(#t) pasos para restablecer
 el invariante utilizando Bajar. Es decir, haremos 3*log(#t), por lo que en el
 peor de los casos es O(log(#t)).
 
-iBorrar(in/out t : estr(α), in i : itCola(α))
-	Obtener el puntero subyacente al iterador
-	Swappearlo por el ultimo
-	Borrar el ultimo
-	Reestablecer el invariante
-end function
-
-Pre ≡ {p != NULL}
+Pre ≡ {¬(p =obs NULL)}
 Post ≡ {Se restableció el rep de la estructura de datos}
 Complejidad: O(log(#t))
 Descripción: Restablece el invariante si el nodo al que apunta p está fuera del
@@ -271,7 +276,7 @@ el nodo sea la raiz. Es decir, desde una posición arbitraria la máxima cantida
 de pasos es la altura del árbol, por lo que en el peor caso, la complejidad de
 iSubir es log(#t).
 
-Pre ≡ {p != NULL}
+Pre ≡ {¬(p =obs NULL)}
 Post ≡ {Se restableció el rep de la estructura de datos}
 Complejidad: O(log(#t))
 Descripción: Restablece el invariante si el nodo al que apunta p está fuera del
