@@ -124,6 +124,13 @@ Complejidad: O(log(Tama&#241;o(t)))
 Descripci&#243;n: Borra el elemento al que apunta el iterador.
 Aliasing: Invalida el iterador.
 
+Copiar(in t: ColaPrioridad(&#945;)) &#8594; res : ColaPrioridad(&#945;)
+Pre &#8801; {true}
+Post &#8801; {t =obs res}
+Complejidad: O(#t)
+Descripcion: Realiza una copia de la cola de prioridad.
+
+
 TAD ColaDePrioridadExtendida(&#945;)
     extiende colaPrior(&#945;)
     otras operaciones (exportadas)
@@ -139,7 +146,6 @@ TAD ColaDePrioridadExtendida(&#945;)
                 else desencolar(c) fi
             else encolar(proximo(c), borrar(e, desencolar(c))) fi
 Fin TAD
-
 
 ********************************************************************************
 ************                     Representaci&#243;n                     ************
@@ -278,11 +284,71 @@ iDesencolar(in/out t : estr(&#945;)) &#8594; res : &#945;
     res &#8592; Eliminar(t, t.cabeza)
 end function
 
-
-
 iBorrar(in/out t : estr(&#945;), in i : itCola(&#945;)) &#8594; res : &#945;
     res &#8592; Eliminar(t, i)
 end function
+
+
+iCopiar(in t : estr(&#945;)) &#8594; res : estr(&#945;)
+    res &#8592; &#10216;cabeza: &amp;iCopiarNodo(*t.cabeza), ultimo: NULL, tama&#241;o: t.tama&#241;o&#10217;
+    var camino_ultimo : Pila(&#945;)
+    var tmp : Puntero(Nodo(&#945;)) &#8592; t.ultimo
+    while tmp&#8594;arr != NULL
+        Apilar(camino_ultimo, tmp&#8594;dato)
+    end while
+
+    tmp &#8592; res.cabeza
+
+    while &#172;EsVacia?(camino_ultimo)
+        if tmp&#8594;izq&#8594;dato == Tope(camino_ultimo)
+            tmp &#8592; tmp&#8594;izq
+        else
+            tmp &#8592; tmp&#8594;der
+        end if
+        Desapilar(camino_ultimo)
+    end while
+
+    res.ultimo &#8592; tmp
+end function
+
+
+Pre &#8801; {true}
+Post &#8801; {res =obs n}
+Complejidad: O(Cantidad de nodos subyacentes)
+Descripcion: Devuelve una copia del nodo n.
+iCopiarNodo(in n : nodo(&#945;)) &#8594; res : nodo(&#945;)
+    res &#8592; &#10216;arr: NULL, izq: NULL, der: NULL, dato: e&#10217;
+
+    if n.izq != NULL
+        res.izq &#8592; &amp;iCopiarNodo(*n.izq)
+        res.izq&#8594;arr &#8592; &amp;res
+    end fi
+
+    if n.der != NULL
+        res.der &#8592; &amp;iCopiarNodo(*n.der)
+        res.der&#8594;arr &#8592; &amp;res
+    end fi
+
+    res.e &#8592; Copiar(e)
+
+end function
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Pre &#8801; {&#172;(p =obs NULL) &#8743;&#8343; p es un puntero de la estructura de datos &#8743; t&#8320; =obs t}
 Post &#8801; {t =obs borrar(p&#8594;dato, t&#8320;) &#8743; res =obs p&#8594;dato}
