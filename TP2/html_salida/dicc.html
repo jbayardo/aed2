@@ -142,6 +142,7 @@ Descripcion: Crea un diccionario por copia.
 
 
 
+
 ********************************************************************************
 ************                     Representación                     ************
 ********************************************************************************
@@ -186,6 +187,7 @@ obt'(s, t) ≡
 ********************************************************************************
 ************                      Algoritmos                        ************
 ********************************************************************************
+
 iCrear() → res : cabeza(α)
     res ← ⟨claves: Vacio(),
          significados: ⟨continuacion: arreglo_estatico[256] de puntero(trie(α)),
@@ -208,7 +210,7 @@ iDefinir(in/out d : cabeza(α), in k : string, in v : α)
     t→significado ← &v
     if nuevo then
         AgregarRapido(d.claves, k)
-    end if
+    fi
 end function
 
 Como se puede observar el bucle principal depende exlusivamente de la cantidad de

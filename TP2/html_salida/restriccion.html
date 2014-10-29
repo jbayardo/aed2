@@ -115,6 +115,13 @@ Complejidad: O(#r)
 Descripcion: Evalua si la restricci&#243;n r evalua a verdadero asumiendo que las
 variables que figuran en tags son verdaderas.
 
+
+Copiar(in r: restricci&#243;n) &#8594; res : restricci&#243;n
+Pre &#8801; {true}
+Post &#8801; {res =obs r}
+Complejidad: O(R)
+Descripcion: Devuelve una copia de la restricci&#243;n.
+
 ********************************************************************************
 ************                     Representaci&#243;n                     ************
 ********************************************************************************
@@ -134,7 +141,7 @@ Rep(e) &#8801; true &#10234;
     (e.tipo =obs NOT &#10234; (&#172;(e.op1 =obs NULL) &#8743; e.op2 =obs NULL)) &#8743;
     ((e.tipo =obs AND &#8744; e.tipo =obs OR) &#10234; (&#172;(e.op1 =obs NULL) &#8743; &#172;(e.op2 =obs NULL))) &#8743;
     (&#172;(e.op1 =obs NULL) &#10233;&#8343; Rep(*e.op1)) &#8743;
-    (&#172;(e.op2 =obs NULL) &#10233;&#8343; Rep(*e.op2))
+    (&#172;(e.op2 =obs NULL) &#10233;&#8343; Rep(*e.op2)) ∧ (Long(e.valor) <= 64)
 
 Abs: ^(estr) &#8594; Restricci&#243;n                                                 {Rep(e)}
 Abs(e) &#8801;
@@ -199,10 +206,27 @@ conj(string), si esta no es un Var, debe verificar que valga para sus restriccio
 anidadas en op1 y/o op2 (depende si la restriccion es de tipo NOT o no),
 recursivamente, hasta llegar a un Var. Luego, cada restriccion devuelve el
 resultado anidado, por lo que se pasaria por cada nodo 2 veces, ergo, O(2R), y
-por algebra de ordenes, esto es equivalente a O(R).
-Por enunciado, la longitud máxima de un tag esta acotada a 64 caracteres, por lo que
-la comparación entre tags es O(64) ≡ O(1). Por esta misma razón, al ser el Pertenece? de
-conjRapidoString O(long(tag)) ≡ O(64) ≡ O(1).
+por algebra de ordenes, esto es equivalente a O(R)
+
+
+
+
+
+iCopiar(in r: estr) &#8594; res: estr
+    case
+        [] tipo == AND
+            res &#8592; &#10216;tipo: AND, op1: &amp;Copiar(*r.op1), op2: &amp;Copiar(*r.op2), valor: &quot;&quot;&#10217;
+        [] tipo == OR
+            res &#8592; &#10216;tipo: OR, op1: &amp;Copiar(*r.op1), op2: &amp;Copiar(*r.op2), valor: &quot;&quot;&#10217;
+        [] tipo == NOT
+            res &#8592; &#10216;tipo: Not, op1: &amp;Copiar(*r.op1), op2: NULL, valor: &quot;&quot;&#10217;
+        [] tipo == VAR
+            res &#8592; &#10216;tipo: VAR, op1: NULL, op2: NULL, valor: Copiar(s)&#10217;
+    end case
+end function
+
+La complejidad de este algoritmo es O(R) porque se tienen que copiar todos los nodos.
+Como el valor esta acotado a 64 caracteres por enunciado, O(Copiar(s)) &#8801; O(1)
 </pre></div>
 
 <script>

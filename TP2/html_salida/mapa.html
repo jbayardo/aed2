@@ -141,6 +141,7 @@ Aliasing: El nuevo mapa comparte las restricciones ya agregadas al mapa original
 
 
 
+
 ********************************************************************************
 ************                     Representaci&#243;n                     ************
 ********************************************************************************
@@ -207,7 +208,6 @@ end function
 iConectadas?(in m : estr, in e1 : estacion, in e2 : estacion) &#8594; res : bool
     res &#8592; Definido?(m.conexiones, e1) &#8743;&#8343; Definido?(obtener(m.conexiones, e1), e2)
 end function
-
 
 iidSenda(in m : estr, in e1 : estacion, in e2 : estacion) &#8594; res : nat
     res &#8592; Obtener(Obtener(m.conexiones, e1), e2)
