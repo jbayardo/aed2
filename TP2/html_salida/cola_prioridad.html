@@ -295,6 +295,7 @@ iCopiar(in t : estr(&#945;)) &#8594; res : estr(&#945;)
     var tmp : Puntero(Nodo(&#945;)) &#8592; t.ultimo
     while tmp&#8594;arr != NULL
         Apilar(camino_ultimo, tmp&#8594;dato)
+        tmp ← tmp→arr
     end while
 
     tmp &#8592; res.cabeza

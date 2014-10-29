@@ -220,6 +220,7 @@ iCopiar(in t : estr(α)) → res : estr(α)
 	var tmp : Puntero(Nodo(α)) ← t.ultimo
 	while tmp→arr != NULL
 		Apilar(camino_ultimo, tmp→dato)
+		tmp ← tmp→arr
 	end while
 
 	tmp ← res.cabeza
