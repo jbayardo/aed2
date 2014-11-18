@@ -1,25 +1,37 @@
 #include <WebKit/WebKit.h>
 #include "Restriccion.h"
 
-Restriccion::Restriccion(ArbolSintactico* S) {
-    if (S->raiz == "&" or S->raiz == "|"){
-        type = (S->raiz == "&")? And : Or;
+Restriccion::Restriccion(ArbolSintactico& S) {
+    if (S.raiz == "&" or S.raiz == "|"){
+        type = (S.raiz == "&")? And : Or;
         value = "";
-        left = Restriccion(S->izq);
-        right = Restriccion(S->der);
+        left = new Restriccion(S.izq);
+        right = new Restriccion(S.der);
     }
-    else if (S->raiz == "!"){
+    else if (S.raiz == "!"){
         type = Not;
         value = "";
-        left = Restriccion(S->izq);
+        left = Restriccion(S.izq);
         right = nullptr;
     }
     else{
         type = Var;
-        value = S->raiz;
+        value = S.raiz;
         left = right = nullptr;
     }
 }
+
+Restriccion::Restriccion(Restriccion& r){
+    type = r.type;
+    value = r.value;
+    if (r.left != nullptr){
+        left = Restriccion(r.left);
+    }
+    if(r.right != nullptr){
+        right = Restriccion(r.right);
+    }
+}
+
 
 bool Restriccion::Verifica(ConjRapidoString& tags){
     switch(type){

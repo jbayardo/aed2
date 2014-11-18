@@ -5,8 +5,8 @@
 
 class Restriccion{
 public:
-    Restriccion(ArbolSintactico S);
-    Restriccion(Restriccion r);
+    Restriccion(ArbolSintactico& S);
+    Restriccion(Restriccion& r);
     ~Restriccion();
 
     bool Verifica(ConjRapidoString tags);
