@@ -1,19 +1,23 @@
-#include "ColaDePrioridad.h"
+#include "../include/ColaDePrioridad.h"
 
 template <typename T>
-typename Heap<T>::Iterator Heap<T>::push(const T &data) {
+typename Heap<T>::Iterator Heap<T>::push(const T &data)
+{
     Node *tmp = new Heap<T>::Node(data);
 
     if (this->size() == 0) {
         this->head = tmp;
-    } else if (this->size() == 1) {
+    }
+    else if (this->size() == 1) {
         tmp->parent = this->head;
         this->head->left = tmp;
-    } else {
+    }
+    else {
         if (this->last->parent->left == this->last) {
             tmp->parent = this->last->parent;
             this->last->parent->right = tmp;
-        } else {
+        }
+        else {
             Node *cur = this->last;
 
             while (cur->parent != nullptr && cur->parent->left != cur) {
@@ -42,17 +46,20 @@ typename Heap<T>::Iterator Heap<T>::push(const T &data) {
 }
 
 template <typename T>
-const T &Heap<T>::pop() {
+const T &Heap<T>::pop()
+{
     return remove(this->head);
 }
 
 template <typename T>
-const T &Heap<T>::pop(const Heap<T>::Iterator &i) {
+const T &Heap<T>::pop(const Heap<T>::Iterator &i)
+{
     return remove(i.node);
 }
 
 template <typename T>
-void Heap<T>::up(Heap<T>::Node *node) {
+void Heap<T>::up(Heap<T>::Node *node)
+{
     while (node->parent != nullptr && node->parent->data < node->data) {
         T tmp = node->parent->data;
         node->parent->data = node->data;
@@ -62,15 +69,17 @@ void Heap<T>::up(Heap<T>::Node *node) {
 }
 
 template <typename T>
-void Heap<T>::down(Heap<T>::Node *node) {
+void Heap<T>::down(Heap<T>::Node *node)
+{
     while ((node->left != nullptr && node->data < node->left->data) ||
-        (node->right != nullptr && node->right->data < node->data)) {
+            (node->right != nullptr && node->right->data < node->data)) {
         if (node->left != nullptr) {
             T tmp = node->left->data;
             node->left->data = node->data;
             node->data = tmp;
             node = node->left;
-        } else {
+        }
+        else {
             T tmp = node->right->data;
             node->right->data = node->data;
             node->data = tmp;
@@ -82,13 +91,15 @@ void Heap<T>::down(Heap<T>::Node *node) {
 
 // TODO: limpieza de memoria
 template <typename T>
-const T &Heap<T>::remove(Heap<T>::Node *node) {
+const T &Heap<T>::remove(Heap<T>::Node *node)
+{
     const T &tmp = node->data;
 
     if (this->size() == 1) {
         this->last = nullptr;
         this->head = nullptr;
-    } else {
+    }
+    else {
         node->data = this->last->data;
 
         if (this->last->parent->left == this->last) {
@@ -107,7 +118,8 @@ const T &Heap<T>::remove(Heap<T>::Node *node) {
             }
 
             this->last->parent->left = nullptr;
-        } else {
+        }
+        else {
             this->last = this->last->parent->left;
             this->last->parent->right = nullptr;
         }
@@ -121,6 +133,7 @@ const T &Heap<T>::remove(Heap<T>::Node *node) {
 }
 
 template <typename T>
-unsigned int Heap<T>::size() const {
+unsigned int Heap<T>::size() const
+{
     return this->_size;
 }
