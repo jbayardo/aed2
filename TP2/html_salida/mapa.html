@@ -1,0 +1,273 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<meta charset="UTF-8">
+<html>
+<head>
+<title>/home/izikiel/Algo2/AlgoII/TP2/modulos/mapa.txt</title>
+<style>
+.highlight .hll { background-color: #ffffcc }
+.highlight .c { color: #408080; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #BC7A00 } /* Comment.Preproc */
+.highlight .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #408080; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .gr { color: #FF0000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #00A000 } /* Generic.Inserted */
+.highlight .go { color: #808080 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0040D0 } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #7D9029 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #A0A000 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #BB6688 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
+.highlight * { font-family: monospace; }
+.highlight { font-size: 90%; }
+.highlight { line-height: normal; }
+.highlight .err { border: none !important }
+.highlight > pre { word-wrap: break-word; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<div class="highlight"><pre>********************************************************************************
+************                         Interfaz                       ************
+********************************************************************************
+
+Se explica con: Mapa
+G&#233;neros: Mapa
+
+********************************************************************************
+************                       Operaciones                      ************
+********************************************************************************
+
+Crear() &#8594; res: Mapa
+Pre &#8801; {true}
+Post &#8801; {res =obs vac&#237;o}
+Complejidad: O(1)
+Descripcion: Crea un mapa vac&#237;o
+
+Agregar(in/out m : Mapa, in e : estacion)
+Pre &#8801; {e &#8713; estaciones(m) &#8743; m&#8320; =obs m}
+Post &#8801; {m =obs agregar(e, m&#8320;)}
+Complejidad: O(#estaciones(m) + long(e))
+Descripcion: Agrega una estaci&#243;n al mapa
+
+Conectar(in/out m : Mapa, in e1 : estacion, in e2 : estacion, in r : restriccion)
+Pre &#8801; {e1, e2 &#8712; estaciones(m) &#8743;&#8343; &#172;conectadas?(m, e1, e2) &#8743; m&#8320; =obs m}
+Post &#8801; {m =obs conectar(e1, e2, r, m)}
+Complejidad: O(long(e1) + long(e2) + S)
+Descripcion: Conecta 2 estaciones del mapa entre con una restriccion para ese vinculo.
+
+Estaciones(in m : Mapa) &#8594; res : itConj(string)
+Pre &#8801; {true}
+Post &#8801; {alias(esPermutaci&#243;n?(SecuSuby(res), estaciones(m))) &#8743; vacia?(Anteriores(res))}
+Complejidad: O(1)
+Descripcion: Devuelve un iterador al conjunto de las estaciones del mapa.
+Aliasing: No se pueden modificar los contenidos del iterador.
+
+Conectadas?(in m : Mapa, in e1 : estacion, in e2 : estacion) &#8594; res : bool
+Pre &#8801; {e1, e2 &#8712; estaciones(m)}
+Post &#8801; {res =obs conectadas?(m, e1, e2)}
+Complejidad: O(long(e1) + long(e2))
+Descripcion: Indica si 2 estaciones estan conectadas.
+
+idSenda(in m : Mapa, in e1 : estacion, in e2 : estacion) &#8594; res : nat
+Pre &#8801; {e1, e2 &#8712; estaciones(m) &#8743;&#8343; conectadas?(m, e1, e2)}
+Post &#8801; {res es el id de la senda en nuestra representaci&#243;n}
+Complejidad: O(long(e1) + long(e2))
+Descripcion: Devuelve el id de la senda entre e1 y e2.
+
+Sendas(in m : Mapa) &#8594; res : itVectorPointer(restriccion)
+Pre &#8801; {true}
+Post &#8801; {res itera sobre las restricciones de todas las sendas del mapa}
+Complejidad: O(1)
+Descripcion: Devuelve las restricciones de las sendas del mapa
+
+Copiar(in m : Mapa) &#8594; res : Mapa
+Pre &#8801; {true}
+Post &#8801; {res =obs m}
+Complejidad: O(Copiar(m.sendas) + Copiar(m.estaciones) + Copiar(m.conexiones))
+Descripcion: Devuelve una copia del mapa.
+Aliasing: El nuevo mapa comparte las restricciones ya agregadas al mapa original.
+
+
+
+
+
+
+
+
+
+********************************************************************************
+************                     Representaci&#243;n                     ************
+********************************************************************************
+
+Mapa se representa con estr,
+    donde estr es: tupla(
+                        sendas     : VectorPointer(Restriccion),
+                        conexiones : DiccString(DiccString(Int)),
+                        estaciones : conj(string)
+                        )
+
+Rep: ^(estr) &#8594; boolean
+Rep(e) &#8801; true &#10234;
+    claves(e.conexiones) &#8834; e.estaciones &#8743;&#8343;
+    ((&#8704;e1 : string)
+        e1 &#8712; claves(e.conexiones) &#8743;&#8343;
+        claves(obtener(e1, e.conexiones)) &#8834; e.estaciones &#8743;&#8343;
+        ((&#8704;e2 : string)
+            (e1 &#8712; claves(e.conexiones) &#8743;&#8343; e2 &#8712; claves(obtener(e1, e.conexiones)) &#10234;
+                e2 &#8712; claves(e.conexiones) &#8743;&#8343; e1 &#8712; claves(obtener(e1, e.conexiones))) &#8743;&#8343;
+            (e1 &#8712; claves(e.conexiones) &#8743;&#8343; e2 &#8712; claves(obtener(e1, e.conexiones)) &#10233;&#8343;
+                obtener(e2, obtener(e1, e.conexiones)) &lt; longitud(e.sendas))))
+
+Abs: ^(estr) &#8594; mapa                                                      {Rep(e)}
+(&#8704;e : ^(estr)) Abs(e) =obs m /
+    (e.estaciones =obs estaciones(m)) &#8743;
+    ((&#8704; e1, e2: string)
+        definido?(e.conexiones, e1) &#8743;&#8343;
+        (definido?(obtener(e.conexiones, e1), e2) =obs conectadas?(e1, e2, m)) &#8743;
+        (conectadas?(e1, e2, m) &#10233;&#8343; *(e.sendas)[i] =obs restriccion(e1, e2, m)))
+
+********************************************************************************
+************                      Algoritmos                        ************
+********************************************************************************
+
+iCrear() &#8594; res : estr
+    res &#8592; &#10216;sendas: Vacia(), conexiones: Vacio(), estaciones: Vacio()&#10217;
+end function
+
+iAgregar(in/out m : estr, in e : estacion)
+    Agregar(m.estaciones, e)
+end function
+
+iConectar(in/out m : estr, in e1 : estacion, in e2 : estacion, in r : restriccion)
+    var i : nat &#8592; Longitud(m.sendas)
+    AgregarAtras(m.sendas, &amp;r)
+
+    if &#172;Definido?(m.conexiones, e1) then
+        Definir(m.conexiones, e1, Vacio())
+    end if
+
+    if &#172;Definido?(m.conexiones, e2) then
+        Definir(m.conexiones, e2, Vacio())
+    end if
+
+    Definir(Obtener(m.conexiones, e1), e2, i)
+    Definir(Obtener(m.conexiones, e2), e1, i)
+end function
+
+iEstaciones(in m : estr) &#8594; res : itConj(string)
+    res &#8592; CrearIt(m.estaciones)
+end function
+
+iConectadas?(in m : estr, in e1 : estacion, in e2 : estacion) &#8594; res : bool
+    res &#8592; Definido?(m.conexiones, e1) &#8743;&#8343; Definido?(obtener(m.conexiones, e1), e2)
+end function
+
+iidSenda(in m : estr, in e1 : estacion, in e2 : estacion) &#8594; res : nat
+    res &#8592; Obtener(Obtener(m.conexiones, e1), e2)
+end function
+
+iSendas(in m : estr) &#8594; res : itVectorPointer(Restriccion)
+    res &#8592; CrearIt(m.sendas)
+end function
+
+iCopiar(in m : estr) &#8594; res : estr
+    res &#8592; &#10216;    sendas     : Copiar(m.sendas),
+            conexiones : Copiar(m.conexiones),
+            estaciones : Copiar(m.estaciones)&#10217;
+end function
+</pre></div>
+
+<script>
+// Indent wrapped lines in order to keep them out of the line-numbering column.
+
+// One of these methods should work for a given browser; though this means
+// possibly running the hangingIndent routine 3 times, it also ensures we successfully
+// wrap all code blocks, all the time, on all tested browsers.
+document.addEventListener('DOMContentLoaded', hangingIndentAllCodeBlocks, false);
+window.addEventListener('load', hangingIndentAllCodeBlocks, false);
+hangingIndentAllCodeBlocks();
+
+// Apply hanging indent CSS to wrapped lines in each div.highlight code block
+function hangingIndentAllCodeBlocks() {
+    var blocks = document.getElementsByClassName('highlight');
+    for (var i = 0; i < blocks.length; i++) {
+        hangingIndentCodeBlock(blocks[i]);
+    }
+}
+
+// Apply hanging indent CSS to wrapped lines in given block
+function hangingIndentCodeBlock(block) {
+    var lineNums = block.querySelectorAll('.lineno');
+    if (lineNums.length == 0) {
+        return;
+    }
+
+    // Calculate actual width of a character in the line numbers column
+    var first = lineNums[0];
+    var text = first.innerText || first.textContent;
+    var charWidth = first.offsetWidth / text.length;
+
+    // Adjustment width is width of line number column plus 1 more character-width
+    // for the trailing space that comes after the span.lineno element
+    var adjustWidth = charWidth * (text.length + 1);
+
+    // Indent the entire block by adjustWidth ...
+    block.firstChild.style.marginLeft = adjustWidth + 'px';
+
+    // ... and correspondingly de-indent just the starting line-number <span> of
+    // each line-of-code, resulting in only wrapped lines of code being indented
+    // past the column of line numbers
+    for (var i = 0; i < lineNums.length; i++) {
+        lineNums[i].style.marginLeft = -adjustWidth + 'px';
+    }
+}
+</script>
+</body>
+</html>

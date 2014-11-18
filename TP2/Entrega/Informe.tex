@@ -31,16 +31,22 @@ Grupo 6}
   \texttt{751/13}
 }
 
-\date{2 de Octubre del 2014}
+\date{28 de Octubre del 2014}
 
 \maketitle
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%						Aca empieza el documento
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \section{Aclaraciones}
-
+Como en ciudad se debe devolver una copia de mapa, hubo que implementar Copiar
+en DiccString. Para copiar DiccString, hay que exigir que el parametro ($\alpha$)
+de entrada tenga operacion copiar. Esto fue implementado en Restriccion, DiccString
+y Cola de prioridad. No pudimos implementarlo en robot ya que para Copiar un robot,
+se debe tener un iterador a la cola nueva, pero esto requeriria que Cola de prioridad
+sepa mas cosas de su parametro de las que deberia.
+La otra opcion era realizar una copia de robot con un iterador que no apunte a nada,
+pero que no tendria sentido para robot.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%                Iterador de Vector a Puntero
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -51,7 +57,7 @@ Grupo 6}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%                Conjunto
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Módulo Conjunto Rápido de Strings ($\alpha$)}
+\section{Módulo Conjunto Rápido de Strings}
 
 \includepdf[pages={1-}]{ConjuntoRapidoStrings.pdf}
 

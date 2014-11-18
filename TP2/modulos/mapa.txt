@@ -32,6 +32,7 @@ Pre ≡ {true}
 Post ≡ {alias(esPermutación?(SecuSuby(res), estaciones(m))) ∧ vacia?(Anteriores(res))}
 Complejidad: O(1)
 Descripcion: Devuelve un iterador al conjunto de las estaciones del mapa.
+Aliasing: No se pueden modificar los contenidos del iterador.
 
 Conectadas?(in m : Mapa, in e1 : estacion, in e2 : estacion) → res : bool
 Pre ≡ {e1, e2 ∈ estaciones(m)}
@@ -56,8 +57,7 @@ Pre ≡ {true}
 Post ≡ {res =obs m}
 Complejidad: O(Copiar(m.sendas) + Copiar(m.estaciones) + Copiar(m.conexiones))
 Descripcion: Devuelve una copia del mapa.
-Aliasing: El nuevo mapa comparte las restricciones ya agregadas del mapa con el
-mapa original.
+Aliasing: El nuevo mapa comparte las restricciones ya agregadas al mapa original.
 
 ********************************************************************************
 ************					 Representación						************

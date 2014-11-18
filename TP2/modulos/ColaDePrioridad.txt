@@ -49,6 +49,13 @@ Complejidad: O(log(Tamaño(t)))
 Descripción: Borra el elemento al que apunta el iterador.
 Aliasing: Invalida el iterador.
 
+Copiar(in t: ColaPrioridad(α)) → res : ColaPrioridad(α)
+Pre ≡ {true}
+Post ≡ {t =obs res}
+Complejidad: O(#t)
+Descripcion: Realiza una copia de la cola de prioridad.
+
+
 TAD ColaDePrioridadExtendida(α)
 	extiende colaPrior(α)
 	otras operaciones (exportadas)
@@ -205,6 +212,56 @@ end function
 iBorrar(in/out t : estr(α), in i : itCola(α)) → res : α
 	res ← Eliminar(t, i)
 end function
+
+
+iCopiar(in t : estr(α)) → res : estr(α)
+	res ← ⟨cabeza: &iCopiarNodo(*t.cabeza), ultimo: NULL, tamaño: t.tamaño⟩
+	var camino_ultimo : Pila(α)
+	var tmp : Puntero(Nodo(α)) ← t.ultimo
+	while tmp→arr != NULL
+		Apilar(camino_ultimo, tmp→dato)
+		tmp ← tmp→arr
+	end while
+
+	tmp ← res.cabeza
+
+	while ¬EsVacia?(camino_ultimo)
+		if tmp→izq→dato == Tope(camino_ultimo)
+			tmp ← tmp→izq
+		else
+			tmp ← tmp→der
+		end if
+		Desapilar(camino_ultimo)
+	end while
+
+	res.ultimo ← tmp
+end function
+
+
+Pre ≡ {true}
+Post ≡ {res =obs n}
+Complejidad: O(Cantidad de nodos subyacentes)
+Descripcion: Devuelve una copia del nodo n.
+iCopiarNodo(in n : nodo(α)) → res : nodo(α)
+	res ← ⟨arr: NULL, izq: NULL, der: NULL, dato: e⟩
+
+	if n.izq != NULL
+		res.izq ← &iCopiarNodo(*n.izq)
+		res.izq→arr ← &res
+	end fi
+
+	if n.der != NULL
+		res.der ← &iCopiarNodo(*n.der)
+		res.der→arr ← &res
+	end fi
+
+	res.e ← Copiar(e)
+
+end function
+
+
+
+
 
 Pre ≡ {¬(p =obs NULL) ∧ₗ p es un puntero de la estructura de datos ∧ t₀ =obs t}
 Post ≡ {t =obs borrar(p→dato, t₀) ∧ res =obs p→dato}

@@ -1,0 +1,530 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<meta charset="UTF-8">
+<html>
+<head>
+<title>/home/izikiel/Algo2/AlgoII/TP2/modulos/ColaDePrioridad.txt</title>
+<style>
+.highlight .hll { background-color: #ffffcc }
+.highlight .c { color: #408080; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #BC7A00 } /* Comment.Preproc */
+.highlight .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #408080; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .gr { color: #FF0000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #00A000 } /* Generic.Inserted */
+.highlight .go { color: #808080 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0040D0 } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #7D9029 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #A0A000 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #BB6688 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
+.highlight * { font-family: monospace; }
+.highlight { font-size: 90%; }
+.highlight { line-height: normal; }
+.highlight .err { border: none !important }
+.highlight > pre { word-wrap: break-word; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<div class="highlight"><pre>********************************************************************************
+************                         Interfaz                       ************
+********************************************************************************
+
+Parametros Formales
+    g&#233;neros &#945;
+    funci&#243;n &#8729; &lt; &#8729; (in a1 : &#945;, a2 : &#945;) &#8594; res : bool
+        Pre &#8801; {true}
+        Post &#8801; {res =obs (a1 &lt; a2)}
+        Complejidad: O(lower(a1, a2))
+        Descripci&#243;n: funcion de comparaci&#243;n de &#945;s
+
+Se explica con: ColaDePrioridadExtendida(&#945;), IteradorUnidireccional(&#945;)
+Generos: ColaPrioridad(&#945;), itCola(&#945;)
+
+********************************************************************************
+************                       Operaciones                      ************
+********************************************************************************
+
+Crear() &#8594; res : ColaPrioridad(&#945;)
+Pre &#8801; {true}
+Post &#8801; {res =obs vacia}
+Complejidad: O(1)
+Descripci&#243;n: Crea una cola vacia.
+
+Encolar(in/out t : ColaPrioridad(&#945;), in e : &#945;) &#8594; res : itCola(&#945;)
+Pre &#8801; {&#172;(e &#8712; t) &#8743; t&#8320; =obs t}
+Post &#8801; {t =obs encolar(e, t&#8320;) &#8743; alias(Actual(res) =obs e)}
+Complejidad: O(log(Tama&#241;o(t)))
+Descripci&#243;n: Inserta un elemento en la cola y devuelve un iterador posicionado en el elemento agregado.
+Aliasing: El iterador se invalida sii se borra el elemento utizando Desencolar o Borrar
+
+Desencolar(in/out t : ColaPrioridad(&#945;)) &#8594; res : &#945;
+Pre &#8801; {&#172;vacia?(t) &#8743; t =obs t&#8320;}
+Post &#8801; {t =obs desencolar(t&#8320;) &#8743; res =obs proximo(t&#8320;)}
+Complejidad: O(log(Tama&#241;o(t)))
+Descripci&#243;n: Desencola el elemento con mayor prioridad.
+
+Tama&#241;o(in t : ColaPrioridad(&#945;)) &#8594; res : nat
+Pre &#8801; {true}
+Post &#8801; {res =obs #t}
+Complejidad: O(1)
+Descripci&#243;n: Devuelve la cantidad de elementos en la cola.
+
+Borrar(in/out t : ColaPrioridad(&#945;), in i : itCola(&#945;)) &#8594; res : &#945;
+Pre &#8801; {t&#8320; =obs t}
+Post &#8801; {t =obs borrar(Actual(i), t&#8320;)}
+Complejidad: O(log(Tama&#241;o(t)))
+Descripci&#243;n: Borra el elemento al que apunta el iterador.
+Aliasing: Invalida el iterador.
+
+Copiar(in t: ColaPrioridad(&#945;)) &#8594; res : ColaPrioridad(&#945;)
+Pre &#8801; {true}
+Post &#8801; {t =obs res}
+Complejidad: O(#t)
+Descripcion: Realiza una copia de la cola de prioridad.
+
+
+TAD ColaDePrioridadExtendida(&#945;)
+    extiende colaPrior(&#945;)
+    otras operaciones (exportadas)
+        #&#8729; : colaPrior(&#945;) &#8594; nat
+        &#8729; &#8712; &#8729; : &#945; &#215; colaPrior(&#945;) &#8594; bool
+        borrar : &#945; e &#215; colaPrior(&#945;) c &#8594; colaPrior(&#945;) {e &#8712; c}
+    axiomas
+        #c &#8801; if vacia?(c) then 0 else 1 + #desencolar(c) fi
+        x &#8712; c &#8801; &#172;vacia?(c) &#8743;&#8343; (x =obs proximo(c) &#8744;&#8343; x &#8712; desencolar(c))
+        borrar(e, c) &#8801;
+            if e =obs proximo(c) then
+                if e &#8712; desencolar(c) then borrar(e, desencolar(c))
+                else desencolar(c) fi
+            else encolar(proximo(c), borrar(e, desencolar(c))) fi
+Fin TAD
+
+********************************************************************************
+************                     Representaci&#243;n                     ************
+********************************************************************************
+
+ColaPrioridad(&#945;) se representa con estr(&#945;)
+    donde estr(&#945;) es tupla(
+                        cabeza : puntero(nodo(&#945;)),
+                        ultimo : puntero(nodo(&#945;)),
+                        tama&#241;o : nat)
+    donde nodo(&#945;) es tupla(
+                        arr    : puntero(nodo(&#945;)),
+                        izq    : puntero(nodo(&#945;)),
+                        der    : puntero(nodo(&#945;)),
+                        dato   : &#945;)
+
+Rep: ^(estr(&#945;)) &#8594; boolean
+Rep(e) &#8801; true &#10234;
+    (e.cabeza =obs NULL &#10234; e.ultimo =obs NULL) &#8743;
+    e.tama&#241;o =obs Tama&#241;o(e.cabeza) &#8743;
+    InvPadres(e.cab) &#8743;
+    No hay ciclos en el arbol &#8743;&#8343;
+    MaxHeap(e.cab) &#8743;
+    Balanceado(e.cab) &#8743;
+    Izquierdista(e.cab) &#8743;&#8343;
+    (&#172;(e.cabeza =obs NULL) &#10233;&#8343;
+        e.cabeza&#8594;arr =obs NULL &#8743;
+        e.ultimo ES EL ULTIMO AGREGADO)
+
+InvPadres: puntero(nodo(&#945;)) &#8594; bool
+InvPadres(p) &#8801;
+    if p =obs NULL then true
+    else
+        (&#172;(p&#8594;izq =obs NULL) &#10233;&#8343; p&#8594;izq&#8594;arr =obs p) &#8743;
+        (&#172;(p&#8594;der =obs NULL) &#10233;&#8343; p&#8594;der&#8594;arr =obs p) &#8743;
+        InvPadres(p&#8594;izq) &#8743;
+        InvPadres(p&#8594;der)
+    fi
+
+MaxHeap: puntero(nodo(&#945;)) &#8594; bool
+MaxHeap(p) &#8801;
+    if p =obs NULL then true
+    else
+        (&#172;(p&#8594;izq =obs NULL) &#10233;&#8343; p&#8594;izq&#8594;dato &lt; p&#8594;dato) &#8743;
+        (&#172;(p&#8594;der =obs NULL) &#10233;&#8343; p&#8594;der&#8594;dato &lt; p&#8594;dato) &#8743;
+        MaxHeap(p&#8594;izq) &#8743;
+        MaxHeap(p&#8594;der)
+    fi
+
+Balanceado: puntero(nodo(&#945;)) &#8594; bool
+Balanceado(p) &#8801;
+    (p =obs NULL) &#8744;&#8343; (|Altura(p&#8594;izq) - Altura(p&#8594;der)| &#8804; 1) &#8743;
+    Balanceado(p&#8594;izq) &#8743; Balanceado(p&#8594;der)
+
+Altura: puntero(nodo(&#945;)) &#8594; nat
+Altura(p) &#8801; if p =obs NULL then 0 else 1 + max(Altura(p&#8594;izq), Altura(p&#8594;der)) fi
+
+Izquierdista: puntero(nodo(&#945;)) &#8594; bool
+Izquierdista(p) &#8801;
+    (p =obs NULL) &#8744;&#8343; (&#172;(p&#8594;der =obs NULL) &#10233;&#8343; &#172;(p&#8594;izq =obs NULL)) &#8743;
+    Izquierdista(p&#8594;izq) &#8743; Izquierdista(p&#8594;der)
+
+Tama&#241;o: puntero(nodo(&#945;)) &#8594; nat
+Tama&#241;o(p) &#8801; if p =obs NULL then 0 else 1 + Tama&#241;o(p&#8594;izq) + Tama&#241;o(p&#8594;der) fi
+
+Abs: ^(estr(&#945;)) e &#8594; ColaDePrioridadExtendida(&#945;)                            {Rep(e)}
+(&#8704;e : ^(estr(&#945;))) Abs(e) =obs t /
+    vacia?(t) =obs (e.tam =obs 0) &#8743;
+    &#172;vacia?(t) &#10233;&#8343;
+        proximo(t) =obs e.cab&#8594;dato &#8743;
+        (&#8704;e : &#945;) (((e &#8712; t) &#8743; &#172;(e =obs proximo(t))) &#10234; (e &#8712; desencolar(t)))
+
+********************************************************************************
+************                      Algoritmos                        ************
+********************************************************************************
+
+iCrear() &#8594; res : estr(&#945;)
+    res &#8592; &#10216;cabeza: NULL, ultimo: NULL, tama&#241;o: 0&#10217;
+end function
+
+iTama&#241;o(in t : estr(&#945;)) &#8594; res : nat
+    res &#8592; t.tama&#241;o
+end function
+
+iEncolar(in/out t : estr(&#945;), in e : &#945;) &#8594; res : itCola(&#945;)
+    var tmp : puntero(nodo(&#945;)) &#8592; &amp;&#10216;arr: NULL, izq: NULL, der: NULL, dato: e&#10217;
+
+    if Tama&#241;o(t) == 0 then
+        tmp&#8594;arr &#8592; NULL
+        t.cabeza &#8592; tmp
+    else if Tama&#241;o(t) == 1 then
+        tmp&#8594;arr &#8592; t.cabeza
+        t.cabeza&#8594;izq &#8592; tmp
+    else
+        if t.ultimo&#8594;arr&#8594;izq == t.ultimo then
+            tmp&#8594;arr &#8592; t.ultimo&#8594;arr
+            t.ultimo&#8594;arr&#8594;der &#8592; tmp
+        else
+            var cur : puntero(nodo(&#945;)) &#8592; t.ultimo
+
+            while cur&#8594;arr != NULL &#8743; cur&#8594;arr&#8594;izq != cur do
+                cur &#8592; cur&#8594;arr
+            end while
+
+            if cur&#8594;arr != NULL then
+                cur &#8592; cur&#8594;arr&#8594;der
+            fi
+
+            while cur&#8594;izq != NULL do
+                cur &#8592; cur&#8594;izq
+            end while
+
+            tmp&#8594;arr &#8592; cur
+            cur&#8594;izq &#8592; tmp
+        end if
+    end if
+
+    t.ultimo &#8592; tmp
+    t.tama&#241;o++
+
+    Subir(t.ultimo)
+    res &#8592; crearIter(t, p)
+end function
+
+En el peor caso, tenemos un &#225;rbol con m&#225;s de 1 elemento, en el que el &#250;ltimo nodo
+agregado est&#225; a la derecha de su padre, fundamentalmente el peor es cuando el
+&#225;rbol es completo.
+En este caso, observemos que lo que suceder&#225; es que subiremos hasta la ra&#237;z del
+&#225;rbol, y luego se bajaremos hacia el &#250;ltimo nodo a la izquierda del &#225;rbol. Es
+decir, recorreremos dos veces la altura del &#225;rbol (2*log(#t)). Luego, en
+absolutamente todos los casos haremos a lo sumo log(#t) pasos para restablecer
+el invariante utilizando Subir. Es decir, haremos 3*log(#t), por lo que en el
+peor de los casos es O(log(#t)).
+
+iDesencolar(in/out t : estr(&#945;)) &#8594; res : &#945;
+    res &#8592; Eliminar(t, t.cabeza)
+end function
+
+iBorrar(in/out t : estr(&#945;), in i : itCola(&#945;)) &#8594; res : &#945;
+    res &#8592; Eliminar(t, i)
+end function
+
+
+iCopiar(in t : estr(&#945;)) &#8594; res : estr(&#945;)
+    res &#8592; &#10216;cabeza: &amp;iCopiarNodo(*t.cabeza), ultimo: NULL, tama&#241;o: t.tama&#241;o&#10217;
+    var camino_ultimo : Pila(&#945;)
+    var tmp : Puntero(Nodo(&#945;)) &#8592; t.ultimo
+    while tmp&#8594;arr != NULL
+        Apilar(camino_ultimo, tmp&#8594;dato)
+        tmp ← tmp→arr
+    end while
+
+    tmp &#8592; res.cabeza
+
+    while &#172;EsVacia?(camino_ultimo)
+        if tmp&#8594;izq&#8594;dato == Tope(camino_ultimo)
+            tmp &#8592; tmp&#8594;izq
+        else
+            tmp &#8592; tmp&#8594;der
+        end if
+        Desapilar(camino_ultimo)
+    end while
+
+    res.ultimo &#8592; tmp
+end function
+
+
+Pre &#8801; {true}
+Post &#8801; {res =obs n}
+Complejidad: O(Cantidad de nodos subyacentes)
+Descripcion: Devuelve una copia del nodo n.
+iCopiarNodo(in n : nodo(&#945;)) &#8594; res : nodo(&#945;)
+    res &#8592; &#10216;arr: NULL, izq: NULL, der: NULL, dato: e&#10217;
+
+    if n.izq != NULL
+        res.izq &#8592; &amp;iCopiarNodo(*n.izq)
+        res.izq&#8594;arr &#8592; &amp;res
+    end fi
+
+    if n.der != NULL
+        res.der &#8592; &amp;iCopiarNodo(*n.der)
+        res.der&#8594;arr &#8592; &amp;res
+    end fi
+
+    res.e &#8592; Copiar(e)
+
+end function
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Pre &#8801; {&#172;(p =obs NULL) &#8743;&#8343; p es un puntero de la estructura de datos &#8743; t&#8320; =obs t}
+Post &#8801; {t =obs borrar(p&#8594;dato, t&#8320;) &#8743; res =obs p&#8594;dato}
+Descripcion: Elimina el dato al que apunta el puntero.
+Complejidad: O(log(Tama&#241;o(t)))
+iEliminar(in/out t : estr(&#945;), in p : puntero(nodo(&#945;))) &#8594; res : &#945;
+    res &#8592; p&#8594;dato
+
+    if Tama&#241;o(t) == 1 then
+        t.ultimo &#8592; NULL
+        t.cabeza &#8592; NULL
+    else
+        p&#8594;dato &#8592; t.ultimo&#8594;dato
+
+        if t.ultimo&#8594;arr&#8594;izq == t.ultimo then
+            var cur : puntero(nodo(&#945;)) = t.ultimo
+
+            while cur&#8594;arr != NULL &#8743; cur&#8594;arr&#8594;der != cur do
+                cur &#8592; cur&#8594;arr
+            end while
+
+            if cur&#8594;arr != NULL then
+                cur &#8592; cur&#8594;arr&#8594;izq
+            fi
+
+            while cur&#8594;der != NULL do
+                cur &#8592; cur&#8594;der
+            end while
+
+            t.ultimo&#8594;arr&#8594;izq &#8592; NULL
+        else
+            t.ultimo &#8592; t.ultimo&#8594;arr&#8594;izq
+            t.ultimo&#8594;arr&#8594;der &#8592; NULL
+        end if
+
+        Bajar(p)
+    end if
+
+    t.tama&#241;o--
+end function
+
+En el peor caso, tenemos un &#225;rbol con m&#225;s de 1 elemento, en el que el &#250;ltimo nodo
+agregado est&#225; a la izquierda de su padre, fundamentalmente el peor es cuando el
+&#225;rbol tiene un nodo de m&#225;s para ser completo.
+En este caso, observemos que lo que suceder&#225; es que subiremos hasta la ra&#237;z del
+&#225;rbol, y luego se bajaremos hacia el &#250;ltimo nodo a la derecha del &#225;rbol. Es
+decir, recorreremos dos veces la altura del &#225;rbol (2*log(#t)). Luego, en
+absolutamente todos los casos haremos a lo sumo log(#t) pasos para restablecer
+el invariante utilizando Bajar. Es decir, haremos 3*log(#t), por lo que en el
+peor de los casos es O(log(#t)).
+
+Pre &#8801; {&#172;(p =obs NULL)}
+Post &#8801; {Se restableci&#243; el rep de la estructura de datos}
+Complejidad: O(log(#t))
+Descripci&#243;n: Restablece el invariante si el nodo al que apunta p est&#225; fuera del
+lugar que le corresponde.
+iSubir(in/out p : puntero(nodo(&#945;)))
+    while p&#8594;arr != NULL &#8743; p&#8594;arr&#8594;dato &lt; p&#8594;dato do
+        var tmp : &#945; &#8592; p&#8594;arr&#8594;dato
+        p&#8594;arr&#8594;dato &#8592; p&#8594;dato
+        p&#8594;dato &#8592; tmp
+        p &#8592; p&#8594;arr
+    end while
+end function
+
+Observemos que en el peor caso, se va a iterar hasta que p&#8594;arr sea NULL. Pero el
+invariante de representaci&#243;n asegura que el &#250;nico caso en que esto sucede es que
+el nodo sea la raiz. Es decir, desde una posici&#243;n arbitraria la m&#225;xima cantidad
+de pasos es la altura del &#225;rbol, por lo que en el peor caso, la complejidad de
+iSubir es log(#t).
+
+Pre &#8801; {&#172;(p =obs NULL)}
+Post &#8801; {Se restableci&#243; el rep de la estructura de datos}
+Complejidad: O(log(#t))
+Descripci&#243;n: Restablece el invariante si el nodo al que apunta p est&#225; fuera del
+lugar que le corresponde.
+iBajar(in/out p : puntero(nodo(&#945;)))
+    while    (p&#8594;izq != NULL &#8743; p&#8594;dato &lt; p&#8594;izq&#8594;dato) &#8744;
+            (p&#8594;der != NULL &#8743; p&#8594;der&#8594;dato &lt; p&#8594;dato) do
+        if p&#8594;izq != NULL then
+            var tmp : &#945; &#8592; p&#8594;izq&#8594;dato
+            p&#8594;izq&#8594;dato &#8592; p&#8594;dato
+            p&#8594;dato &#8592; tmp
+        else
+            if p&#8594;der != NULL then
+                var tmp : &#945; &#8592; p&#8594;der&#8594;dato
+                p&#8594;der&#8594;dato &#8592; p&#8594;dato
+                p&#8594;dato &#8592; p&#8594;der&#8594;dato
+            end if
+        end if
+    end while
+end function
+
+Observemos que en el peor caso, se va a iterar hasta que tanto p&#8594;izq como p&#8594;der.
+sean NULL. Pero el invariante de representaci&#243;n asegura que el &#250;nico caso en que
+esto sucede es que el nodo al que se llega sea una hoja. Es decir, desde una
+posici&#243;n arbitraria la m&#225;xima cantidad de pasos es la altura del &#225;rbol, por lo
+que en el peor caso, la complejidad de iBajar es log(#t).
+
+********************************************************************************
+***********                    Operaciones del iterador             ************
+********************************************************************************
+
+Ninguna.
+
+********************************************************************************
+***********                   Representaci&#243;n del iterador           ************
+********************************************************************************
+
+itCola(&#945;) se representa con it(&#945;)
+    donde it(&#945;) es puntero(nodo(&#945;))
+
+Rep: ^(it(&#945;)) &#8594; boolean
+Rep(e) &#8801; true &#10234; &#172;(e =obs NULL)
+
+Abs: ^(it(&#945;)) &#8594; IteradorUnidireccional(&#945;)
+(&#8704;e : ^(it(&#945;))) Abs(e) =obs i / Siguientes(i) =obs *e &#8729; &lt;&gt;
+
+********************************************************************************
+***********                 Algor&#237;tmos del Iterador                 ************
+********************************************************************************
+
+Pre &#8801; {p es un puntero en la estructura de t}
+Post &#8801; {itCola es un iterador posicionado en p}
+Complejidad: O(1)
+Descripci&#243;n: Crea un puntero disfrazado de iterador.
+crearIter(in t : colaPrioridad(&#945;), p : puntero(nodo(&#945;))) &#8594; res : itCola(&#945;)
+    res &#8592; p
+end function
+</pre></div>
+
+<script>
+// Indent wrapped lines in order to keep them out of the line-numbering column.
+
+// One of these methods should work for a given browser; though this means
+// possibly running the hangingIndent routine 3 times, it also ensures we successfully
+// wrap all code blocks, all the time, on all tested browsers.
+document.addEventListener('DOMContentLoaded', hangingIndentAllCodeBlocks, false);
+window.addEventListener('load', hangingIndentAllCodeBlocks, false);
+hangingIndentAllCodeBlocks();
+
+// Apply hanging indent CSS to wrapped lines in each div.highlight code block
+function hangingIndentAllCodeBlocks() {
+    var blocks = document.getElementsByClassName('highlight');
+    for (var i = 0; i < blocks.length; i++) {
+        hangingIndentCodeBlock(blocks[i]);
+    }
+}
+
+// Apply hanging indent CSS to wrapped lines in given block
+function hangingIndentCodeBlock(block) {
+    var lineNums = block.querySelectorAll('.lineno');
+    if (lineNums.length == 0) {
+        return;
+    }
+
+    // Calculate actual width of a character in the line numbers column
+    var first = lineNums[0];
+    var text = first.innerText || first.textContent;
+    var charWidth = first.offsetWidth / text.length;
+
+    // Adjustment width is width of line number column plus 1 more character-width
+    // for the trailing space that comes after the span.lineno element
+    var adjustWidth = charWidth * (text.length + 1);
+
+    // Indent the entire block by adjustWidth ...
+    block.firstChild.style.marginLeft = adjustWidth + 'px';
+
+    // ... and correspondingly de-indent just the starting line-number <span> of
+    // each line-of-code, resulting in only wrapped lines of code being indented
+    // past the column of line numbers
+    for (var i = 0; i < lineNums.length; i++) {
+        lineNums[i].style.marginLeft = -adjustWidth + 'px';
+    }
+}
+</script>
+</body>
+</html>
