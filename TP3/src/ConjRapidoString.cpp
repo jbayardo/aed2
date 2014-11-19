@@ -15,6 +15,12 @@ bool ConjRapidoString::Pertenece(std::string s)
     return values->Definido(s);
 }
 
+Conj<std::string>::Iterador ConjRapidoString::CrearIt()
+{
+    return values->Claves();
+}
+
+
 ConjRapidoString::~ConjRapidoString()
 {
     delete values;
