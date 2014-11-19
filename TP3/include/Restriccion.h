@@ -14,14 +14,14 @@ class Restriccion_
 
         Restriccion_(Op t, std::string v, Restriccion_ *l, Restriccion_ *r);
 
-    public:    	
+    public:
         static Restriccion_ *And(Restriccion_ *left, Restriccion_ *right);
         static Restriccion_ *Or(Restriccion_ *left, Restriccion_ *right);
         static Restriccion_ *Not(Restriccion_ *left);
         static Restriccion_ *Var(std::string v);
-        
-        bool Verifica(ConjRapidoString& tags);
-        
+
+        bool Verifica(ConjRapidoString &tags);
+        Restriccion_(const Restriccion_& r);
         ~Restriccion_();
 
 

@@ -66,3 +66,21 @@ Restriccion_::~Restriccion_()
         delete left;
     }
 }
+
+Restriccion_::Restriccion_(const Restriccion_ &r)
+{
+    switch (r.type) {
+        case Op::AND:
+            And(new Restriccion_(*r.left), new Restriccion_(*r.right));
+            break;
+        case Op::OR:
+            Or(new Restriccion_(*r.left), new Restriccion_(*r.right));
+            break;
+        case Op::NOT:
+            Not(new Restriccion_(*r.left));
+            break;
+        case Op::VAR:
+            Var(r.value);
+            break;
+    }
+}
