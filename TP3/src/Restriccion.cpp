@@ -19,46 +19,50 @@
 //     }
 // }
 
-static Restriccion *Restriccion::And(Restriccion *left, Restriccion *right)
+Restriccion::Restriccion(Op t, std::string v, Restriccion *l, Restriccion *r) :
+    type(t), value(v), left(l), right(r) {}
+
+
+Restriccion *Restriccion::And(Restriccion *left, Restriccion *right)
 {
-    return new Restriccion(And, "", left, right);
+    return new Restriccion(Op::AND, "", left, right);
 }
 
-static Restriccion *Restriccion::Or(Restriccion *left, Restriccion *right)
+Restriccion *Restriccion::Or(Restriccion *left, Restriccion *right)
 {
-    return new Restriccion(Or, "", left, right);
+    return new Restriccion(Op::OR, "", left, right);
 }
 
-static Restriccion *Restriccion::Not(Restriccion *left)
+Restriccion *Restriccion::Not(Restriccion *left)
 {
-    return new Restriccion(Not, "", left, nullptr);
+    return new Restriccion(Op::NOT, "", left, nullptr);
 }
 
-static Restriccion *Restriccion::Var(string v)
+Restriccion *Restriccion::Var(std::string v)
 {
-    return new Restriccion(Var, v, nullptr, nullptr);
+    return new Restriccion(Op::VAR, v, nullptr, nullptr);
 }
 
 bool Restriccion::Verifica(ConjRapidoString &tags)
 {
     switch (type) {
-        case Op::And:
+        case Op::AND:
             return left->Verifica(tags) and right->Verifica(tags);
-        case Op::Or:
+        case Op::OR:
             return left->Verifica(tags) or right->Verifica(tags);
-        case Op::Not:
+        case Op::NOT:
             return not left->Verifica(tags);
-        case Op::Var:
+        case Op::VAR:
             return tags.pertenece(value);
     }
 }
 
 Restriccion::~Restriccion()
 {
-    if (type == Op::And or type == Op::Or) {
+    if (type == Op::AND or type == Op::OR) {
         delete left;
         delete right;
-    } else if (type == Op::Not) {
+    } else if (type == Op::NOT) {
         delete left;
     }
 }

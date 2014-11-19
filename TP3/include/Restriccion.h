@@ -1,30 +1,30 @@
 #ifndef RESTRICCION_H
 #define RESTRICCION_H 1
 
-#include <string>
+#include "Tipos.h"
+#include "ConjRapidoString.h"
 
 class Restriccion
 {
-    public:
+    private:
+        enum Op {AND, OR, NOT, VAR};
+        std::string value;
+        Op type;
+        Restriccion *left, *right;
+
+        Restriccion(Op t, std::string v, Restriccion *l, Restriccion *r);
+
+    public:    	
         static Restriccion *And(Restriccion *left, Restriccion *right);
         static Restriccion *Or(Restriccion *left, Restriccion *right);
         static Restriccion *Not(Restriccion *left);
-        static Restriccion *Var(string v);
+        static Restriccion *Var(std::string v);
+        
+        bool Verifica(ConjRapidoString& tags);
+        
         ~Restriccion();
 
-        bool Verifica(ConjRapidoString tags);
 
-    private:
-        Restriccion(Op t, string v,
-                    Restriccion *l,
-                    Restriccion *r) : value(v), type(t), left(l), right(r) {};
-
-        enum Op {And, Or, Not, Var};
-
-        string value;
-        Op type;
-        Restriccion *left;
-        Restriccion *right;
 };
 
 #endif
