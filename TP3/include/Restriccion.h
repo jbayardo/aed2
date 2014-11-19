@@ -4,25 +4,25 @@
 #include "Tipos.h"
 #include "ConjRapidoString.h"
 
-class Restriccion
+class Restriccion_
 {
     private:
         enum Op {AND, OR, NOT, VAR};
         std::string value;
         Op type;
-        Restriccion *left, *right;
+        Restriccion_ *left, *right;
 
-        Restriccion(Op t, std::string v, Restriccion *l, Restriccion *r);
+        Restriccion_(Op t, std::string v, Restriccion_ *l, Restriccion_ *r);
 
     public:    	
-        static Restriccion *And(Restriccion *left, Restriccion *right);
-        static Restriccion *Or(Restriccion *left, Restriccion *right);
-        static Restriccion *Not(Restriccion *left);
-        static Restriccion *Var(std::string v);
+        static Restriccion_ *And(Restriccion_ *left, Restriccion_ *right);
+        static Restriccion_ *Or(Restriccion_ *left, Restriccion_ *right);
+        static Restriccion_ *Not(Restriccion_ *left);
+        static Restriccion_ *Var(std::string v);
         
         bool Verifica(ConjRapidoString& tags);
         
-        ~Restriccion();
+        ~Restriccion_();
 
 
 };

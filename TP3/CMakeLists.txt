@@ -5,5 +5,6 @@ INCLUDE_DIRECTORIES("include aed2")
 set(CMAKE_CXX_FLAGS "-std=c++11 -ggdb")
 set(SOURCE_FILES src/Test.cpp src/ArbolSintactico.cpp 
 	src/Driver.cpp src/ColaDePrioridad.cpp
-	src/Restriccion.cpp src/ConjRapidoString.cpp)
+	src/Restriccion.cpp src/ConjRapidoString.cpp 
+	src/DiccString.cpp )
 add_executable(TP3 ${SOURCE_FILES})

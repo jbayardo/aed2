@@ -8,8 +8,8 @@ class ConjRapidoString
 {
     public:
         ConjRapidoString();
-        void Agregar(string s);
-        bool Pertenece(string s);
+        void Agregar(std::string s);
+        bool Pertenece(std::string s);
         ~ConjRapidoString();
 
     private:
