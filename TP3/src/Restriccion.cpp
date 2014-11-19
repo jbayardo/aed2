@@ -1,60 +1,64 @@
 #include "../include/Restriccion.h"
 
-Restriccion::Restriccion(ArbolSintactico &S)
+// Restriccion::Restriccion(ArbolSintactico &S)
+// {
+//     if (S.raiz == "&" or S.raiz == "|") {
+//         type = (S.raiz == "&") ? And : Or;
+//         value = "";
+//         left = new Restriccion(S.izq);
+//         right = new Restriccion(S.der);
+//     } else if (S.raiz == "!") {
+//         type = Not;
+//         value = "";
+//         left = Restriccion(S.izq);
+//         right = nullptr;
+//     } else {
+//         type = Var;
+//         value = S.raiz;
+//         left = right = nullptr;
+//     }
+// }
+
+static Restriccion *Restriccion::And(Restriccion *left, Restriccion *right)
 {
-    if (S.raiz == "&" or S.raiz == "|") {
-        type = (S.raiz == "&") ? And : Or;
-        value = "";
-        left = new Restriccion(S.izq);
-        right = new Restriccion(S.der);
-    }
-    else if (S.raiz == "!") {
-        type = Not;
-        value = "";
-        left = Restriccion(S.izq);
-        right = nullptr;
-    }
-    else {
-        type = Var;
-        value = S.raiz;
-        left = right = nullptr;
-    }
+    return new Restriccion(And, "", left, right);
 }
 
-Restriccion::Restriccion(Restriccion &r)
+static Restriccion *Restriccion::Or(Restriccion *left, Restriccion *right)
 {
-    type = r.type;
-    value = r.value;
-    if (r.left != nullptr) {
-        left = Restriccion(r.left);
-    }
-    if (r.right != nullptr) {
-        right = Restriccion(r.right);
-    }
+    return new Restriccion(Or, "", left, right);
 }
 
+static Restriccion *Restriccion::Not(Restriccion *left)
+{
+    return new Restriccion(Not, "", left, nullptr);
+}
+
+static Restriccion *Restriccion::Var(string v)
+{
+    return new Restriccion(Var, v, nullptr, nullptr);
+}
 
 bool Restriccion::Verifica(ConjRapidoString &tags)
 {
     switch (type) {
-        case And:
+        case Op::And:
             return left->Verifica(tags) and right->Verifica(tags);
-        case Or:
+        case Op::Or:
             return left->Verifica(tags) or right->Verifica(tags);
-        case Not:
+        case Op::Not:
             return not left->Verifica(tags);
-        case Var:
+        case Op::Var:
             return tags.pertenece(value);
     }
 }
 
 Restriccion::~Restriccion()
 {
-    if (type == And or type == Or) {
+    if (type == Op::And or type == Op::Or) {
         delete left;
         delete right;
-    }
-    else if (type == Not) {
+    } else if (type == Op::Not) {
         delete left;
     }
 }

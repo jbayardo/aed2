@@ -3,23 +3,28 @@
 
 #include <string>
 
-class Restriccion{
-public:
-    Restriccion(ArbolSintactico& S);
-    Restriccion(Restriccion& r);
-    ~Restriccion();
+class Restriccion
+{
+    public:
+        static Restriccion *And(Restriccion *left, Restriccion *right);
+        static Restriccion *Or(Restriccion *left, Restriccion *right);
+        static Restriccion *Not(Restriccion *left);
+        static Restriccion *Var(string v);
+        ~Restriccion();
 
-    bool Verifica(ConjRapidoString tags);
+        bool Verifica(ConjRapidoString tags);
 
-private:
+    private:
+        Restriccion(Op t, string v,
+                    Restriccion *l,
+                    Restriccion *r) : value(v), type(t), left(l), right(r) {};
 
-    enum Op{And, Or, Not, Var};
+        enum Op {And, Or, Not, Var};
 
-    String value;
-    Op type;
-    Restriccion* right;
-    Restriccion* left;
-
+        string value;
+        Op type;
+        Restriccion *left;
+        Restriccion *right;
 };
 
 #endif
