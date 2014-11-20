@@ -1,4 +1,14 @@
 #include "ColaDePrioridad.h"
+#include <assert.h>
+
+/*
+* TODO: copy constructor. verificar que el algoritmo de borrado esta bien. escribir tests. verificar que bajar esta bien.
+*/
+
+template <typename T>
+Heap<T>::~Heap() {
+    // Usar una lista como stack para borrar.
+}
 
 template <typename T>
 typename Heap<T>::Iterator Heap<T>::push(const T &data) {
@@ -37,7 +47,6 @@ typename Heap<T>::Iterator Heap<T>::push(const T &data) {
     ++this->_size;
 
     up(this->last);
-    // TODO: this should be implemented correctly.
     return Heap<T>::Iterator(this, this->last);
 }
 
@@ -48,6 +57,8 @@ const T &Heap<T>::pop() {
 
 template <typename T>
 const T &Heap<T>::pop(const Heap<T>::Iterator &i) {
+    assert(i.heap == this);
+
     return remove(i.node);
 }
 
@@ -80,16 +91,18 @@ void Heap<T>::down(Heap<T>::Node *node) {
 }
 
 
-// TODO: limpieza de memoria
 template <typename T>
 const T &Heap<T>::remove(Heap<T>::Node *node) {
+    // Pre: node esta en la estructura
     const T &tmp = node->data;
 
     if (this->size() == 1) {
+        delete this->head;
         this->last = nullptr;
         this->head = nullptr;
     } else {
         node->data = this->last->data;
+        Node *tmp = this->last;
 
         if (this->last->parent->left == this->last) {
             Node *cur = this->last;
@@ -107,12 +120,19 @@ const T &Heap<T>::remove(Heap<T>::Node *node) {
             }
 
             this->last->parent->left = nullptr;
+            this->last = cur;
         } else {
             this->last = this->last->parent->left;
             this->last->parent->right = nullptr;
         }
 
-        down(node);
+        if (node->data < node->parent->data) {
+            down(node);
+        } else {
+            up(node);
+        }
+
+        delete tmp;
     }
 
     --this->_size;

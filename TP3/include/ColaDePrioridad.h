@@ -26,12 +26,14 @@ public:
     class Iterator {
         friend class Heap;
     private:
-        Iterator(Node *node) : node(node) { }
+        Iterator(Heap *heap, Node *node) : heap(heap), node(node) { }
 
+        Heap *heap;
         Node *node;
     };
 
     Heap() : _size(0), head(nullptr), last(nullptr) { }
+    ~Heap();
 
     Heap<T>::Iterator push(const T &);
     const T &pop();
