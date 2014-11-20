@@ -23,11 +23,11 @@ class DiccString
             public:
 				~trie(){
 					delete[] this->significado;
-					for (int i = 0, i < 256, i++){
+					for (int i = 0; i < 256; i++){
 						delete[] this->continuacion[i];
 					}
 				}
-				trie() : continuacion(Arreglo(256)), significado(nullptr) {}
+				trie() : continuacion(Arreglo<trie*>(256)), significado(nullptr) {}
                 Arreglo<trie *> continuacion;
                 T *significado;
         };

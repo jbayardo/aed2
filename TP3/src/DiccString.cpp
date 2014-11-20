@@ -9,7 +9,7 @@ template <typename T>
 DiccString<T>::DiccString(const DiccString& otra){
 	Conj<string>::Iterador clv;
 	clv = otra.Claves();
-	while clv.HaySiguiente(){
+	while (clv.HaySiguiente()){
 		this->Definir(clv.Siguiente(), otra.Obtener(clv.Siguiente()));
 		clv.Avanzar();
 	}
@@ -33,7 +33,7 @@ void DiccString<T>::Definir(const string k, const T& v){
 		i++;
 	}
 	t->significado = &v;
-	if nuevo{
+	if (nuevo){
 		this->claves.AgregarRapido(k);
 	}
 }
