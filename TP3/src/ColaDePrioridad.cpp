@@ -2,7 +2,7 @@
 #include <assert.h>
 
 /*
-* TODO: copy constructor. verificar que el algoritmo de borrado esta bien. escribir tests. verificar que bajar esta bien.
+* TODO: escribir tests. verificar que bajar esta bien.
 */
 
 template <typename T>
@@ -27,7 +27,7 @@ ColaDePrioridad<T>::ColaDePrioridad(const ColaDePrioridad<T> &otra) {
         this->ultimo = this->cabeza;
         aed2::Nat camino = this->Tamano();
 
-        while (camino != 0) {
+        while (camino > 1) {
             if (camino % 2 == 0) {
                 this->ultimo = this->ultimo->izq;
             } else {
