@@ -5,34 +5,27 @@
 
 template <typename T>
 class ColaDePrioridad {
-private:
-    class Node {
+public:
+    class Nodo {
+        friend class ColaDePrioridad<T>;
     public:
-        Node(const T &dato) : dato(dato), arr(nullptr), izq(nullptr), der(nullptr)
+        Nodo(const T &dato) : dato(dato), arr(nullptr), izq(nullptr), der(nullptr)
         { };
-        Node(const Node &);
+        Nodo(const Nodo &);
 
         T dato;
-        Node *arr;
-        Node *izq;
-        Node *der;
+        Nodo *arr;
+        Nodo *izq;
+        Nodo *der;
     };
 
-    const T &Eliminar(Node *);
-    void Subir(Node *);
-    void Bajar(Node *);
-
-    Node *cabeza;
-    Node *ultimo;
-    aed2::Nat _tamano;
-public:
     class Iterador {
         friend class ColaDePrioridad<T>;
     private:
-        Iterador(ColaDePrioridad<T> *heap, Node *nodo) : heap(heap), nodo(nodo) { }
+        Iterador(ColaDePrioridad<T> *heap, Nodo *nodo) : heap(heap), nodo(nodo) { }
 
         ColaDePrioridad<T> *heap;
-        Node *nodo;
+        Nodo *nodo;
     };
 
     ColaDePrioridad() : _tamano(0), cabeza(nullptr), ultimo(nullptr) { }
@@ -43,6 +36,14 @@ public:
     const T &Desencolar();
     const T &Desencolar(const Iterador &);
     aed2::Nat Tamano() const;
+private:
+    const T &Eliminar(Nodo *);
+    void Subir(Nodo *);
+    void Bajar(Nodo *);
+
+    Nodo *cabeza;
+    Nodo *ultimo;
+    aed2::Nat _tamano;
 };
 
 #endif

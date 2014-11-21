@@ -1,4 +1,5 @@
 #include "../include/ColaDePrioridad.h"
+#include "../aed2/Lista.h"
 #include <assert.h>
 
 /*
@@ -6,9 +7,9 @@
 */
 
 template <typename T>
-ColaDePrioridad<T>::Node::Node(const ColaDePrioridad<T>::Node &otro) {
-    this->izq = new Node(otro.izq);
-    this->der = new Node(otro.der);
+ColaDePrioridad<T>::Nodo::Nodo(const Nodo &otro) {
+    this->izq = new Nodo(otro.izq);
+    this->der = new Nodo(otro.der);
     this->dato = otro.dato;
     this->izq->arr = this;
     this->der->arr = this;
@@ -21,7 +22,7 @@ ColaDePrioridad<T>::ColaDePrioridad(const ColaDePrioridad<T> &otra) {
     this->_tamano = 0;
 
     if (otra.Tamano() > 0) {
-        this->cabeza = new Node(otra.cabeza);
+        this->cabeza = new Nodo(otra.cabeza);
         this->_tamano = otra._tamano;
 
         this->ultimo = this->cabeza;
@@ -42,11 +43,11 @@ ColaDePrioridad<T>::ColaDePrioridad(const ColaDePrioridad<T> &otra) {
 template <typename T>
 ColaDePrioridad<T>::~ColaDePrioridad() {
     if (Tamano() > 0) {
-        aed2::Lista<ColaDePrioridad<T>::Node*> pila();
+        aed2::Lista<Nodo*> pila;
         pila.AgregarAtras(this->cabeza);
         
         while (!pila.EsVacia()) {
-            Node *actual = pila.Primero();
+            Nodo *actual = pila.Primero();
             pila.Fin();
 
             if (actual->izq != nullptr) {
@@ -63,8 +64,8 @@ ColaDePrioridad<T>::~ColaDePrioridad() {
 }
 
 template <typename T>
-typename ColaDePrioridad<T>::Iterador ColaDePrioridad<T>::Encolar(const T &dato) {
-    Node *tmp = new ColaDePrioridad<T>::Node(dato);
+typename Iterador ColaDePrioridad<T>::Encolar(const T &dato) {
+    Nodo *tmp = new Nodo(dato);
 
     if (this->Tamano() == 0) {
         this->cabeza = tmp;
@@ -76,7 +77,7 @@ typename ColaDePrioridad<T>::Iterador ColaDePrioridad<T>::Encolar(const T &dato)
             tmp->arr = this->ultimo->arr;
             this->ultimo->arr->der = tmp;
         } else {
-            Node *actual = this->ultimo;
+            Nodo *actual = this->ultimo;
 
             while (actual->arr != nullptr && actual->arr->izq != actual) {
                 actual = actual->arr;
@@ -99,7 +100,7 @@ typename ColaDePrioridad<T>::Iterador ColaDePrioridad<T>::Encolar(const T &dato)
     ++this->_tamano;
 
     Subir(this->ultimo);
-    return ColaDePrioridad<T>::Iterador(this, this->ultimo);
+    return Iterador(this, this->ultimo);
 }
 
 template <typename T>
@@ -115,7 +116,7 @@ const T &ColaDePrioridad<T>::Desencolar(const ColaDePrioridad<T>::Iterador &i) {
 }
 
 template <typename T>
-void ColaDePrioridad<T>::Subir(ColaDePrioridad<T>::Node *node) {
+void ColaDePrioridad<T>::Subir(Nodo *node) {
     while (node->arr != nullptr && node->arr->dato < node->dato) {
         T tmp = node->arr->dato;
         node->arr->dato = node->dato;
@@ -125,9 +126,9 @@ void ColaDePrioridad<T>::Subir(ColaDePrioridad<T>::Node *node) {
 }
 
 template <typename T>
-void ColaDePrioridad<T>::Bajar(ColaDePrioridad<T>::Node *node) {
+void ColaDePrioridad<T>::Bajar(Nodo *node) {
     while ((node->izq != nullptr && node->dato < node->izq->dato) ||
-        (node->der != nullptr && node->der->dato < node->dato)) {
+        (node->der != nullptr && node->dato < node->der->dato)) {
         if (node->izq != nullptr) {
             T tmp = node->izq->dato;
             node->izq->dato = node->dato;
@@ -144,7 +145,7 @@ void ColaDePrioridad<T>::Bajar(ColaDePrioridad<T>::Node *node) {
 
 
 template <typename T>
-const T &ColaDePrioridad<T>::Eliminar(ColaDePrioridad<T>::Node *node) {
+const T &ColaDePrioridad<T>::Eliminar(Nodo *node) {
     // Pre: node esta en la estructura
     const T &tmp = node->dato;
 
@@ -154,10 +155,10 @@ const T &ColaDePrioridad<T>::Eliminar(ColaDePrioridad<T>::Node *node) {
         this->cabeza = nullptr;
     } else {
         node->dato = this->ultimo->dato;
-        Node *backup = this->ultimo;
+        Nodo *backup = this->ultimo;
 
         if (this->ultimo->arr->izq == this->ultimo) {
-            Node *actual = this->ultimo;
+            Nodo *actual = this->ultimo;
 
             while (actual->arr != nullptr && actual->arr->der != actual) {
                 actual = actual->arr;

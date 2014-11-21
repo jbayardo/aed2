@@ -57,10 +57,10 @@ T DiccString<T>::Obtener(const string k) const{
 		t = t->continuacion[(int)k[i]];
 		i++;
 	}
-	return *(t->significado)
+	return *(t->significado);
 }
 
 template <typename T>
 Conj<string>::Iterador DiccString<T>::Claves() const{
-	this.claves.CrearIt();
+	return this->claves.CrearIt();
 }
