@@ -1,42 +1,49 @@
-#ifndef HEAP_H
-#define HEAP_H 1
+#ifndef ColaDePrioridad_H
+#define ColaDePrioridad_H 1
+
+#include "../aed2/TiposBasicos.h"
 
 template <typename T>
-class Heap {
-private:
-    class Node {
-    public:
-        Node(const T &data) : data(data), parent(nullptr), left(nullptr), right(nullptr)
-        { };
-
-        T data;
-        Node *parent;
-        Node *left;
-        Node *right;
-    };
-
-    const T &remove(Node *);
-    void up(Node *);
-    void down(Node *);
-
-    Node *head;
-    Node *last;
-    unsigned int _size;
+class ColaDePrioridad {
 public:
-    class Iterator {
-        friend class Heap;
-    private:
-        Iterator(Node *node) : node(node) { }
+    class Nodo {
+        friend class ColaDePrioridad<T>;
+    public:
+        Nodo(const T &dato) : dato(dato), arr(nullptr), izq(nullptr), der(nullptr)
+        { };
+        Nodo(const Nodo &);
 
-        Node *node;
+        T dato;
+        Nodo *arr;
+        Nodo *izq;
+        Nodo *der;
     };
 
-    Heap() : _size(0), head(nullptr), last(nullptr) { }
+    class Iterador {
+        friend class ColaDePrioridad<T>;
+    private:
+        Iterador(ColaDePrioridad<T> *heap, Nodo *nodo) : heap(heap), nodo(nodo) { }
 
-    Heap<T>::Iterator push(const T &);
-    const T &pop();
-    const T &pop(const Iterator &);
-    unsigned int size() const;
+        ColaDePrioridad<T> *heap;
+        Nodo *nodo;
+    };
+
+    ColaDePrioridad() : _tamano(0), cabeza(nullptr), ultimo(nullptr) { }
+    ColaDePrioridad(const ColaDePrioridad<T> &);
+    ~ColaDePrioridad();
+
+    ColaDePrioridad<T>::Iterator Encolar(const T &);
+    const T &Desencolar();
+    const T &Desencolar(const Iterador &);
+    aed2::Nat Tamano() const;
+private:
+    const T &Eliminar(Nodo *);
+    void Subir(Nodo *);
+    void Bajar(Nodo *);
+
+    Nodo *cabeza;
+    Nodo *ultimo;
+    aed2::Nat _tamano;
 };
 
 #endif

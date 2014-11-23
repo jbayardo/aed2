@@ -1,41 +1,44 @@
-#include "Driver.h"
-#include "ArbolSintactico.h"
+#include "../include/Driver.h"
+#include "../include/ArbolSintactico.h"
 
-namespace aed2 {
+namespace aed2
+{
 
-Driver::Driver(const Conj<Estacion> &estacionesIniciales) {
+Driver::Driver(const Conj<Estacion> &estacionesIniciales)
+{
     // TODO
 }
 
-Driver::~Driver() {
+Driver::~Driver()
+{
     // TODO
 }
 
 Nat Driver::CantidadEstaciones() const
 {
- // TODO
+    // TODO
 }
 
 Nat Driver::CantidadDeSendasParaEstacion(const Estacion &e) const
 {
- // TODO
+    // TODO
 }
 
-const Estacion& Driver::IesimaEstacionDeSenda(const Estacion &e, Nat i) const
+const Estacion &Driver::IesimaEstacionDeSenda(const Estacion &e, Nat i) const
 {
- // TODO
+    // TODO
 }
 
-const Restriccion& Driver::IesimaRestriccionDeSenda(const Estacion &e1, Nat i) const
+const Restriccion &Driver::IesimaRestriccionDeSenda(const Estacion &e1, Nat i) const
 {
- // TODO
+    // TODO
 }
 
 void Driver::AgregarSenda(const Estacion &e1, const Estacion &e2, Restriccion r)
 {
     // TODO
     // Ejemplo uso ArbolSintactico:
-    ArbolSintactico* expr = ArbolSintactico::LeerDeString(r);
+    ArbolSintactico *expr = ArbolSintactico::LeerDeString(r);
     std::cout << expr->aString() << std::endl;
 
     delete expr;
@@ -43,42 +46,42 @@ void Driver::AgregarSenda(const Estacion &e1, const Estacion &e2, Restriccion r)
 
 Nat Driver::CantidadRobotsActivos() const
 {
- // TODO
+    // TODO
 }
 
 RUR Driver::IesimoRobotActivo(Nat i) const
 {
- // TODO
+    // TODO
 }
 
-const Estacion& Driver::EstacionActualIesimoRobotActivo(Nat i) const
+const Estacion &Driver::EstacionActualIesimoRobotActivo(Nat i) const
 {
- // TODO
+    // TODO
 }
 
-const Conj<Caracteristica>& Driver::CaracteristicasIesimoRobotActivo(Nat i) const
+const Conj<Caracteristica> &Driver::CaracteristicasIesimoRobotActivo(Nat i) const
 {
- // TODO
+    // TODO
 }
 
 Nat Driver::CantInfraccionesIesimoRobotActivo(Nat i) const
 {
- // TODO
+    // TODO
 }
 
 RUR Driver::ElMasInfractor() const
 {
- // TODO
+    // TODO
 }
 
 void Driver::Entrar(const Conj<Caracteristica> &cs, const Estacion &estacionInicial)
 {
- // TODO
+    // TODO
 }
 
 void Driver::Mover(RUR robot, const Estacion &destino)
 {
- // TODO
+    // TODO
 }
 
 void Driver::Inspeccion(const Estacion &e)

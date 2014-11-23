@@ -1,126 +1,199 @@
-#include "ColaDePrioridad.h"
+#include "../include/ColaDePrioridad.h"
+#include "../aed2/Lista.h"
+#include <assert.h>
+
+/*
+* TODO: escribir tests. verificar que bajar esta bien.
+*/
 
 template <typename T>
-typename Heap<T>::Iterator Heap<T>::push(const T &data) {
-    Node *tmp = new Heap<T>::Node(data);
+ColaDePrioridad<T>::Nodo::Nodo(const Nodo &otro) {
+    this->izq = new Nodo(otro.izq);
+    this->der = new Nodo(otro.der);
+    this->dato = otro.dato;
+    this->izq->arr = this;
+    this->der->arr = this;
+}
 
-    if (this->size() == 0) {
-        this->head = tmp;
-    } else if (this->size() == 1) {
-        tmp->parent = this->head;
-        this->head->left = tmp;
+template<typename T>
+ColaDePrioridad<T>::ColaDePrioridad(const ColaDePrioridad<T> &otra) {
+    this->cabeza = nullptr;
+    this->ultimo = nullptr;
+    this->_tamano = 0;
+
+    if (otra.Tamano() > 0) {
+        this->cabeza = new Nodo(otra.cabeza);
+        this->_tamano = otra._tamano;
+
+        this->ultimo = this->cabeza;
+        aed2::Nat camino = this->Tamano();
+
+        while (camino > 1) {
+            if (camino % 2 == 0) {
+                this->ultimo = this->ultimo->izq;
+            } else {
+                this->ultimo = this->ultimo->der;
+            }
+
+            camino = camino / 2;
+        }
+    }
+}
+
+template <typename T>
+ColaDePrioridad<T>::~ColaDePrioridad() {
+    if (Tamano() > 0) {
+        aed2::Lista<Nodo*> pila;
+        pila.AgregarAtras(this->cabeza);
+        
+        while (!pila.EsVacia()) {
+            Nodo *actual = pila.Primero();
+            pila.Fin();
+
+            if (actual->izq != nullptr) {
+                pila.AgregarAtras(actual->izq);
+            }
+
+            if (actual->der != nullptr) {
+                pila.AgregarAtras(actual->der);
+            }
+
+            delete actual;
+        }
+    }
+}
+
+template <typename T>
+typename Iterador ColaDePrioridad<T>::Encolar(const T &dato) {
+    Nodo *tmp = new Nodo(dato);
+
+    if (this->Tamano() == 0) {
+        this->cabeza = tmp;
+    } else if (this->Tamano() == 1) {
+        tmp->arr = this->cabeza;
+        this->cabeza->izq = tmp;
     } else {
-        if (this->last->parent->left == this->last) {
-            tmp->parent = this->last->parent;
-            this->last->parent->right = tmp;
+        if (this->ultimo->arr->izq == this->ultimo) {
+            tmp->arr = this->ultimo->arr;
+            this->ultimo->arr->der = tmp;
         } else {
-            Node *cur = this->last;
+            Nodo *actual = this->ultimo;
 
-            while (cur->parent != nullptr && cur->parent->left != cur) {
-                cur = cur->parent;
+            while (actual->arr != nullptr && actual->arr->izq != actual) {
+                actual = actual->arr;
             }
 
-            if (cur->parent != nullptr) {
-                cur = cur->parent->right;
+            if (actual->arr != nullptr) {
+                actual = actual->arr->der;
             }
 
-            while (cur->left != nullptr) {
-                cur = cur->left;
+            while (actual->izq != nullptr) {
+                actual = actual->izq;
             }
 
-            tmp->parent = cur;
-            cur->left = tmp;
+            tmp->arr = actual;
+            actual->izq = tmp;
         }
     }
 
-    this->last = tmp;
-    ++this->_size;
+    this->ultimo = tmp;
+    ++this->_tamano;
 
-    up(this->last);
-    // TODO: this should be implemented correctly.
-    return Heap<T>::Iterator(this, this->last);
+    Subir(this->ultimo);
+    return Iterador(this, this->ultimo);
 }
 
 template <typename T>
-const T &Heap<T>::pop() {
-    return remove(this->head);
+const T &ColaDePrioridad<T>::Desencolar() {
+    return Eliminar(this->cabeza);
 }
 
 template <typename T>
-const T &Heap<T>::pop(const Heap<T>::Iterator &i) {
-    return remove(i.node);
+const T &ColaDePrioridad<T>::Desencolar(const ColaDePrioridad<T>::Iterador &i) {
+    assert(i.heap == this);
+
+    return Eliminar(i.nodo);
 }
 
 template <typename T>
-void Heap<T>::up(Heap<T>::Node *node) {
-    while (node->parent != nullptr && node->parent->data < node->data) {
-        T tmp = node->parent->data;
-        node->parent->data = node->data;
-        node->data = tmp;
-        node = node->parent;
+void ColaDePrioridad<T>::Subir(Nodo *node) {
+    while (node->arr != nullptr && node->arr->dato < node->dato) {
+        T tmp = node->arr->dato;
+        node->arr->dato = node->dato;
+        node->dato = tmp;
+        node = node->arr;
     }
 }
 
 template <typename T>
-void Heap<T>::down(Heap<T>::Node *node) {
-    while ((node->left != nullptr && node->data < node->left->data) ||
-        (node->right != nullptr && node->right->data < node->data)) {
-        if (node->left != nullptr) {
-            T tmp = node->left->data;
-            node->left->data = node->data;
-            node->data = tmp;
-            node = node->left;
+void ColaDePrioridad<T>::Bajar(Nodo *node) {
+    while ((node->izq != nullptr && node->dato < node->izq->dato) ||
+        (node->der != nullptr && node->dato < node->der->dato)) {
+        if (node->izq != nullptr) {
+            T tmp = node->izq->dato;
+            node->izq->dato = node->dato;
+            node->dato = tmp;
+            node = node->izq;
         } else {
-            T tmp = node->right->data;
-            node->right->data = node->data;
-            node->data = tmp;
-            node = node->right;
+            T tmp = node->der->dato;
+            node->der->dato = node->dato;
+            node->dato = tmp;
+            node = node->der;
         }
     }
 }
 
 
-// TODO: limpieza de memoria
 template <typename T>
-const T &Heap<T>::remove(Heap<T>::Node *node) {
-    const T &tmp = node->data;
+const T &ColaDePrioridad<T>::Eliminar(Nodo *node) {
+    // Pre: node esta en la estructura
+    const T &tmp = node->dato;
 
-    if (this->size() == 1) {
-        this->last = nullptr;
-        this->head = nullptr;
+    if (this->Tamano() == 1) {
+        delete this->cabeza;
+        this->ultimo = nullptr;
+        this->cabeza = nullptr;
     } else {
-        node->data = this->last->data;
+        node->dato = this->ultimo->dato;
+        Nodo *backup = this->ultimo;
 
-        if (this->last->parent->left == this->last) {
-            Node *cur = this->last;
+        if (this->ultimo->arr->izq == this->ultimo) {
+            Nodo *actual = this->ultimo;
 
-            while (cur->parent != nullptr && cur->parent->right != cur) {
-                cur = cur->parent;
+            while (actual->arr != nullptr && actual->arr->der != actual) {
+                actual = actual->arr;
             }
 
-            if (cur->parent != nullptr) {
-                cur = cur->parent->left;
+            if (actual->arr != nullptr) {
+                actual = actual->arr->izq;
             }
 
-            while (cur->right != nullptr) {
-                cur = cur->right;
+            while (actual->der != nullptr) {
+                actual = actual->der;
             }
 
-            this->last->parent->left = nullptr;
+            this->ultimo->arr->izq = nullptr;
+            this->ultimo = actual;
         } else {
-            this->last = this->last->parent->left;
-            this->last->parent->right = nullptr;
+            this->ultimo = this->ultimo->arr->izq;
+            this->ultimo->arr->der = nullptr;
         }
 
-        down(node);
+        if (node->dato < node->arr->dato) {
+            Bajar(node);
+        } else {
+            Subir(node);
+        }
+
+        delete backup;
     }
 
-    --this->_size;
+    --this->_tamano;
 
     return tmp;
 }
 
 template <typename T>
-unsigned int Heap<T>::size() const {
-    return this->_size;
+unsigned int ColaDePrioridad<T>::Tamano() const {
+    return this->_tamano;
 }
