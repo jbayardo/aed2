@@ -1,3 +1,4 @@
+//PREGUNTAR: Conj<std::string>::Iterador seria Conj<Estacion>::Iterador idem en ciudad!
 #ifndef DICCSTRING_H
 #define DICCSTRING_H
 
@@ -28,7 +29,7 @@ class DiccString
 					}
 				}
 				trie() : continuacion(Arreglo<trie*>(256)), significado(nullptr) {}
-                Arreglo<trie *> continuacion;
+                Arreglo<trie*> continuacion;
                 T *significado;
         };
         Conj<std::string> claves;
