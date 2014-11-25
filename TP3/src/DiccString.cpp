@@ -1,7 +1,6 @@
 // PREGUNTAR: STRING QUE ES? Puedo usar string o son histericas?
 
 #include "../include/DiccString.h"
-#include "../aed2/Conj.h"
 
 template <typename T>
 DiccString<T>::DiccString(){}

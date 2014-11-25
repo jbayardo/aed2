@@ -17,7 +17,36 @@ Ciudad::Ciudad(const Mapa &m){
 Ciudad::~Ciudad(){
 }
 
-void Ciudad::Entrar(const conjRapidoString &ts, const Estacion &e){
+void Ciudad::Entrar(const ConjRapidoString &ts, const Estacion &e){
+//	iEntrar(in ts : conjRapidoString, in e : estacion, in/out c : city)
+//	var rob : robot = 
+//		tags: &ts,
+//		infracciones: 0,
+//		rur: ProximoRUR(city),
+//		infringe_restriccion: Vacia(),
+//		estacion: e,
+//		mi_estacion: Encolar(obtener(robotsEnEstacion, e), rob)
+//
+//	var it : ItVectorPointer(Restriccion) = Sendas(c.mapa)
+//
+//	while HayMas?(it) do
+//		AgregarAtras(rob.infringe_restriccion, no Verifica?(ts, *Actual(it)))
+//        Avanzar(it)
+//	end while
+//
+//	AgregarAtras(c.robots, &rob)
+//end function
+	Nat i = 0;
+	robot* aux = new robot(this->ProximoRUR(), i, &ts, e);
+	aux->mi_estacion = this->robotsEnEstacion.Obtener(e).Encolar(*aux);
+	VectorPointer<Restriccion>::Iterador it = this->Mapa.Sendas;
+
+	while (it.HayMas()){
+		aux->infringe_restriccion.AgregarAtras(!it.Actual()->Verifica(ts));
+		it.Avanzar();
+	}
+
+	this->robots.AgregarAtras(&aux);
 }
 
 void Ciudad::Mover(const RUR rur, const Estacion e){
@@ -26,17 +55,16 @@ void Ciudad::Mover(const RUR rur, const Estacion e){
 void Ciudad::Inspeccion(const Estacion e){
 }
 
-Nat Ciudad::ProximoRUR(){ 
-	return 8; 
+RUR Ciudad::ProximoRUR(){ 
 }
 
 Mapa Ciudad::Mapa(){
 }
 
-VectorPointer::ItVectorPointer<robot> Ciudad::Robots(){
+VectorPointer<robot>::ItVectorPointer Ciudad::Robots(){
 }
 
-Estacion Ciudad::Estacion(const RUR u){
+Estacion Ciudad::iEstacion(const RUR u){
 }
 
 Conj<Restriccion>::Iterador Ciudad::Tags(const RUR u){

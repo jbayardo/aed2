@@ -5,6 +5,7 @@
 #include "../include/DiccString.h"
 #include "../include/Tipos.h"
 #include "../include/ColaDePrioridad.h"
+#include "../include/ConjRapidoString.h"
 
 using namespace aed2;
 using namespace std;
@@ -15,13 +16,13 @@ public:
 
 	Ciudad(const Mapa &m);
 	~Ciudad();
-	void Entrar(const conjRapidoString &ts, const Estacion &e);
+	void Entrar(const ConjRapidoString &ts, const Estacion &e);
 	void Mover(const RUR rur, const Estacion e);
 	void Inspeccion(const Estacion e);
-	Nat ProximoRUR();
+	RUR ProximoRUR();
 	Mapa Mapa();
 	VectorPointer::ItVectorPointer<robot> Robots();
-	Estacion Estacion(const RUR u);
+	Estacion iEstacion(const RUR u);				// Le puse la i porque sino hay que aclarar aed2::Estacion para el tipo Estacion string
 	Conj<Restriccion>::Iterador Tags(const RUR u);  //ATENCION!: Ver bien si es Restriccion o std::string
 	Nat nInfracciones(const RUR u);
 
@@ -46,10 +47,18 @@ private:
 	public:
 		RUR rur;
 		Nat infracciones;
-		DiccString<bool> *tags;
+		ConjRapidoString* tags;
 		Estacion estacion;
 		Vector<bool> infringe_restriccion;
-		itCola<robot> mi_estacion;
+		Cola<robot>::itCola mi_estacion;
+		robot(const RUR rur,
+			const Nat infracciones,
+			const ConjRapidoString *tags,
+			const Estacion estacion)
+				: rur(rur),
+				infracciones(infracciones),	
+				estacion(estacion),
+				tags(tags) {};
 
 	};
 	VectorPointer<robot> robots;
