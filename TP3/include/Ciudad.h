@@ -4,6 +4,7 @@
 #include "../aed2.h"
 #include "../include/DiccString.h"
 #include "../include/Tipos.h"
+#include "../include/ColaDePrioridad.h"
 
 using namespace aed2;
 using namespace std;
