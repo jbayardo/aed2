@@ -1,0 +1,87 @@
+TAD Zoologico
+
+generos zoo
+
+igualdad observacional:
+
+	(∀ z,x : zoo) z =obs x <=> animales(z) = animales(x)
+
+Generadores:
+
+	nuevo: → zoo
+	ingreso: string e x nat c x zoo z → zoo 		{poblacion(ingreso(e,c,a,z)) > poblacion(z)/2}
+
+Observadores:
+
+	poblacion: zoo → nat
+	animales: zoo → dicc(string, nat)
+
+Otras Operaciones:
+	contarAnimales: conj(string) c x zoo z → nat									{c ⊂ claves(animales(z))}
+	comidosPor: string e x conj(string) c x dicc(string, nat) d → conj(string)		{c ⊂ claves(d)} 
+	eliminables: conj(string) c x dicc(string, nat) d → conj(string)				{c ⊂ claves(d)} 
+	sobrevivientes: conj(string) c x dicc(string, nat) d → dicc(string, nat)  		{c ⊂ claves(d)} 
+
+poblacion(z) ≡ contarAnimales(claves(animales(z)), z)
+
+contarAnimales(c, z) ≡ if ϕ?(c) then 0 
+						else
+							obtener(dameUno(c), animales(z)) +
+							contarAnimales(sinUno(c), z)
+						fi
+
+comidosPor(e, c, d) ≡ if ϕ?(c) then ϕ
+						else
+							if agresividad(e) > agresividad(dameUno(c))
+								∧ obtener(e, d) > obtener(dameUno(c), d)
+							then
+								{dameUno(c)}
+							else
+								ϕ
+							fi
+								U comidosPor(e, sinUno(c), d)
+						fi
+
+eliminables(c, d) ≡ if ϕ?(c) then ϕ
+					else
+						comidosPor(dameUno(c), claves(d), d)
+						U eliminables(sinUno(c), d)
+					fi
+
+sobrevivientes(c, d) ≡ if ϕ?(c) then vacio
+				else
+					definir(dameUno(c), obtener(dameUno(c), d), sobrevivientes(sinUno(c), d))
+				fi
+
+animales(nuevo) ≡ vacio
+animales(ingreso(e, c, z)) ≡ sobrevivientes(
+								claves(
+									definir(e, c +  if definido?(e, animales(z)) then obtener(e, animales(z)) else 0)
+								) - 
+									eliminables(
+										claves(
+										 definir(e, c +  if definido?(e, animales(z)) then 
+														  obtener(e, animales(z)) 							   
+														  else 0)
+														  )
+										, definir(e, c +  if definido?(e, animales(z)) then 
+															obtener(e, animales(z)) 
+															else 0)
+										),
+								definir(e, c +  if definido?(e, animales(z)) then obtener(e, animales(z)) else 0))
+								)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

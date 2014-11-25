@@ -1,0 +1,69 @@
+TAD Votacion
+
+generos votacion
+
+igualdad observacional:
+
+	((∀ v, w: votacion) v =obs w <=> camara(v) = camara(w) 
+									∧ₗ (positivos(v) = positivos(w)
+									∧   negativos(v) = negativos(w)
+									∧   abstenciones(v) = abstenciones(w))
+    )
+
+
+Generadores:
+	
+	nueva: conj(conj(nat)) cc → votacion      {(∀ c, d: conj(nat)) (c ∈ cc ∧ d ∈ cc) ∧ₗ (¬(c = d) => c ∩ d = ϕ)}
+	votar: l nat x bool voto x votacion v → votacion  {l ∈ legisladores(v) ∧ (∀n : nat) n ∈ ((positivos(v) U negativos(v)) ∩ 													bloque(v, l)) => n < l}
+
+Observadores:
+	camara: votacion v → conj(conj(nat))
+
+	positivos: votacion v → conj(nat)
+	negativos: votacion v → conj(nat)
+	abstenciones: votacion v → conj(nat)
+
+Otras operaciones:
+	bloque: votacion v x nat l → conj(nat)		{l ∈ legisladores(v)}
+	legisladores: votacion v → conj(nat)
+	voto?: votacion v x nat l → bool
+	conseguirBloque: nat n x conj(conj(nat)) cc → conj(nat)
+	menoresSinVotar: nat l x conj(nat) c x votacion v → conj(nat)
+	unionTodos: conj(conj(nat)) cc → conj(nat)
+
+
+
+axiomas:
+
+	camara(nueva(cc)) ≡ cc
+	camara(votar(l, voto, v)) ≡ camara(v)
+
+	legisladores(v) ≡ unionTodos(camara(v))
+
+	unionTodos(cc) ≡ if ϕ?(cc) then ϕ else dameUno(cc) U unionTodos(sinUno(cc)) fi
+
+	bloque(v, l) ≡ conseguirBloque(l, camara(v))
+
+	conseguirBloque(l, cc) ≡ if l ∈ dameUno(cc) then dameUno(cc) else conseguirBloque(l, sinUno(cc)) fi
+
+	voto?(v, l) ≡ l ∈ (positivos(v) U negativos(v))
+
+	menoresSinVotar(l, c, v) ≡ if ϕ?(c) then ϕ
+								else 
+									if dameUno(c) < l ∧ ¬voto?(dameUno(c)) then
+										{dameUno(c)}
+									else
+										ϕ
+									fi U menoresSinVotar(l, sinUno(c), v)
+								fi
+
+
+	positivos(nueva(cc)) ≡ ϕ
+	positivos(votar(l, voto, v)) ≡ if voto then {l} U menoresSinVotar(l, bloque(v, l), v) else ϕ fi U positivos(v)
+
+	negativos(nueva(cc)) ≡ ϕ
+	negativos(votar(l, voto, v)) ≡ if ¬voto then {l} U menoresSinVotar(l, bloque(v, l), v) else ϕ fi U negativos(v)
+
+	abstenciones(v) ≡ legisladores(v) - (positivos(v) U negativos(v))
+
+
