@@ -12,21 +12,6 @@ using namespace std;
 
 class Ciudad
 {
-public:
-
-	Ciudad(const Mapa &m);
-	~Ciudad();
-	void Entrar(const ConjRapidoString &ts, const Estacion &e);
-	void Mover(const RUR rur, const Estacion e);
-	void Inspeccion(const Estacion e);
-	RUR ProximoRUR();
-	Mapa Mapa();
-	VectorPointer::ItVectorPointer<robot> Robots();
-	Estacion iEstacion(const RUR u);				// Le puse la i porque sino hay que aclarar aed2::Estacion para el tipo Estacion string
-	Conj<Restriccion>::Iterador Tags(const RUR u);  //ATENCION!: Ver bien si es Restriccion o std::string
-	Nat nInfracciones(const RUR u);
-
-
 private:
 	/*Ciudad se representa con city,
 	donde city es: tupla(
@@ -47,23 +32,43 @@ private:
 	public:
 		RUR rur;
 		Nat infracciones;
-		ConjRapidoString* tags;
+		ConjRapidoString *tags;
 		Estacion estacion;
 		Vector<bool> infringe_restriccion;
-		Cola<robot>::itCola mi_estacion;
+		ColaDePrioridad<robot>::Iterador mi_estacion;
 		robot(const RUR rur,
 			const Nat infracciones,
-			const ConjRapidoString *tags,
+			ConjRapidoString *tags,
 			const Estacion estacion)
 				: rur(rur),
 				infracciones(infracciones),	
 				estacion(estacion),
-				tags(tags) {};
+				tags(tags),
+				mi_estacion(ColaDePrioridad<robot>::Iterador(NULL, NULL) ){};	//Tengo un Problema aca que no se como inicializar 
+																				//el iterador este, el problema es que se es un iterador a
+																				//una cola de prioridad que la tengo que encontrar usando
+																				//la ciudad, nose como accederla desde aca, no esta.
+																				//Otra opcion seria hacer un iterador nulo pero tampoco se
+																				//como hacerlo al menos que haga una cola vacia y despues pedirle el iterador
 
 	};
-	VectorPointer<robot> robots;
+	Vector<robot*> robots;
 	Mapa mapa;
 	DiccString<ColaDePrioridad<robot>> robotsEnEstacion;
+
+public:
+	Ciudad(const Mapa &m);
+	~Ciudad();
+	void Entrar(const ConjRapidoString &ts, const Estacion &e);
+	void Mover(const RUR rur, const Estacion e);
+	void Inspeccion(const Estacion e);
+	RUR ProximoRUR();
+	Mapa Mapa();
+	Vector<robot*>::const_Iterador Robots();
+	Estacion iEstacion(const RUR u);				// Le puse la i porque sino hay que aclarar aed2::Estacion para el tipo Estacion string
+	Conj<Restriccion>::Iterador Tags(const RUR u);  //ATENCION!: Ver bien si es Restriccion o std::string
+	Nat nInfracciones(const RUR u);
+
 };
 
 #endif

@@ -37,7 +37,7 @@ void Ciudad::Entrar(const ConjRapidoString &ts, const Estacion &e){
 //	AgregarAtras(c.robots, &rob)
 //end function
 	Nat i = 0;
-	robot* aux = new robot(this->ProximoRUR(), i, &ts, e);
+	robot* aux = new robot(this->ProximoRUR(), i, &ts, e);					//PORQUE ME PUTEA ACA?
 	aux->mi_estacion = this->robotsEnEstacion.Obtener(e).Encolar(*aux);
 	VectorPointer<Restriccion>::Iterador it = this->Mapa.Sendas;
 
