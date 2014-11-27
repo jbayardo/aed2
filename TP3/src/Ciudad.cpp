@@ -2,7 +2,7 @@
 
 Ciudad::Ciudad(const Mapa &m){
 	DiccString<ColaDePrioridad<robot>> robots_en_estacion;
-	Conj<string>::Iterador it = m.estaciones.CrearIt();
+	Conj<aed2::Estacion>::Iterador it = m.estaciones.CrearIt();
 
 	while (it.HaySiguiente()){
 		ColaDePrioridad<robot>* aux = new ColaDePrioridad<robot>;
@@ -17,7 +17,7 @@ Ciudad::Ciudad(const Mapa &m){
 Ciudad::~Ciudad(){
 }
 
-void Ciudad::Entrar(const ConjRapidoString &ts, const Estacion &e){
+void Ciudad::Entrar(const ConjRapidoString &ts, const aed2::Estacion &e){
 //	iEntrar(in ts : conjRapidoString, in e : estacion, in/out c : city)
 //	var rob : robot = 
 //		tags: &ts,
@@ -37,38 +37,38 @@ void Ciudad::Entrar(const ConjRapidoString &ts, const Estacion &e){
 //	AgregarAtras(c.robots, &rob)
 //end function
 	Nat i = 0;
-	robot* aux = new robot(this->ProximoRUR(), i, &ts, e);					//PORQUE ME PUTEA ACA?
-	aux->mi_estacion = this->robotsEnEstacion.Obtener(e).Encolar(*aux);
-	VectorPointer<Restriccion>::Iterador it = this->Mapa.Sendas;
+	robot* aux = new robot(this->ProximoRUR(), i, ts, e);					
+	aux->mi_estacion = &this->robotsEnEstacion.Obtener(e).Encolar(*aux);
+	Vector<Restriccion_*>::const_Iterador it = this->Mapa.Sendas;
 
-	while (it.HayMas()){
-		aux->infringe_restriccion.AgregarAtras(!it.Actual()->Verifica(ts));
+	while (it.HaySiguiente()){
+		aux->infringe_restriccion.AgregarAtras(!it.Siguiente()->Verifica(ts));
 		it.Avanzar();
 	}
 
-	this->robots.AgregarAtras(&aux);
+	this->robots.AgregarAtras(aux);
 }
 
-void Ciudad::Mover(const RUR rur, const Estacion e){
+void Ciudad::Mover(const RUR rur, const aed2::Estacion e){
 }
 
-void Ciudad::Inspeccion(const Estacion e){
+void Ciudad::Inspeccion(const aed2::Estacion e){
 }
 
-RUR Ciudad::ProximoRUR(){ 
+RUR Ciudad::ProximoRUR() const{ 
 }
 
 Mapa Ciudad::Mapa(){
 }
 
-VectorPointer<robot>::ItVectorPointer Ciudad::Robots(){
+Vector<Ciudad::robot*>::const_Iterador Ciudad::Robots() const{
 }
 
-Estacion Ciudad::iEstacion(const RUR u){
+Estacion Ciudad::Estacion(const RUR u) const{
 }
 
-Conj<Restriccion>::Iterador Ciudad::Tags(const RUR u){
+Conj<Restriccion_>::Iterador Ciudad::Tags(const RUR u) const{
 }
 
-Nat Ciudad::nInfracciones(const RUR u){
+Nat Ciudad::nInfracciones(const RUR u) const{
 }

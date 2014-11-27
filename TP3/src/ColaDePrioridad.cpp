@@ -126,7 +126,7 @@ void ColaDePrioridad<T>::Subir(Nodo *node) {
 }
 
 template <typename T>
-void ColaDePrioridad<T>::Bajar(Nodo *node) {
+void ColaDePrioridad<T>::Bajar(Nodo *node) {							//Checkear Correccion en el TP
     while ((node->izq != nullptr && node->dato < node->izq->dato) ||
         (node->der != nullptr && node->dato < node->der->dato)) {
         if (node->izq != nullptr) {

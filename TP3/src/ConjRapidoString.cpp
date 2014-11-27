@@ -10,7 +10,7 @@ void ConjRapidoString::Agregar(std::string s)
     values->Definir(s, true);
 }
 
-bool ConjRapidoString::Pertenece(std::string s)
+bool ConjRapidoString::Pertenece(std::string s) const
 {
     return values->Definido(s);
 }

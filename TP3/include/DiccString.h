@@ -1,11 +1,7 @@
-//PREGUNTAR: Conj<std::string>::Iterador seria Conj<Estacion>::Iterador idem en ciudad!
 #ifndef DICCSTRING_H
-#define DICCSTRING_H
+#define DICCSTRING_H 1
 
 #include "../aed2.h"
-
-using namespace aed2;
-using namespace std;
 
 template <typename T>
 class DiccString
