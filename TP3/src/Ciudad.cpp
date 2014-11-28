@@ -2,16 +2,17 @@
 
 Ciudad::Ciudad(const Mapa &m){
 	DiccString<ColaDePrioridad<robot>> robots_en_estacion;
-	Conj<aed2::Estacion>::Iterador it = m.estaciones.CrearIt();
+	Conj<aed2::Estacion>::const_Iterador it = m.Estaciones();
 
 	while (it.HaySiguiente()){
-		ColaDePrioridad<robot>* aux = new ColaDePrioridad<robot>;
-		robots_en_estacion.Definir(it.Siguiente(), *aux);
+		ColaDePrioridad<robot> aux;
+		robots_en_estacion.Definir(it.Siguiente(), aux);
 		it.Avanzar();
 	}
-	// Definir(robots_en_estacion, *it, Crear()) SAY WAAAAAAAAAAAAAAAAAAAAAAAAT
+	ColaDePrioridad<robot> aux;
+	robots_en_estacion.Definir(it.Siguiente(), aux);
 	this->robotsEnEstacion = robots_en_estacion;
-	// this->mapa = Mapa(m);
+	this->mapa = m;
 }
 
 Ciudad::~Ciudad(){
@@ -36,17 +37,16 @@ void Ciudad::Entrar(const ConjRapidoString &ts, const aed2::Estacion &e){
 //
 //	AgregarAtras(c.robots, &rob)
 //end function
-	Nat i = 0;
-	robot* aux = new robot(this->ProximoRUR(), i, ts, e);					
-	aux->mi_estacion = &this->robotsEnEstacion.Obtener(e).Encolar(*aux);
-	Vector<Restriccion_*>::const_Iterador it = this->Mapa.Sendas;
+	robot* rob = new robot(this->ProximoRUR(), 0, ts, e);				
+	rob->mi_estacion = &this->robotsEnEstacion.Obtener(e).Encolar(*rob);
+	Vector<Restriccion_*>::const_Iterador it = this->mapa.Sendas();
 
 	while (it.HaySiguiente()){
-		aux->infringe_restriccion.AgregarAtras(!it.Siguiente()->Verifica(ts));
+		rob->infringe_restriccion.AgregarAtras(!it.Siguiente()->Verifica(ts));
 		it.Avanzar();
 	}
 
-	this->robots.AgregarAtras(aux);
+	this->robots.AgregarAtras(rob);
 }
 
 void Ciudad::Mover(const RUR rur, const aed2::Estacion e){
@@ -58,7 +58,7 @@ void Ciudad::Inspeccion(const aed2::Estacion e){
 RUR Ciudad::ProximoRUR() const{ 
 }
 
-Mapa Ciudad::Mapa(){
+Mapa Ciudad::iMapa(){
 }
 
 Vector<Ciudad::robot*>::const_Iterador Ciudad::Robots() const{
