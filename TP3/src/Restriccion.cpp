@@ -1,4 +1,4 @@
-#include "../include/Restriccion.h"
+#include "Restriccion.h"
 
 // Restriccion::Restriccion(ArbolSintactico &S)
 // {
@@ -43,15 +43,15 @@ Restriccion_ *Restriccion_::Var(std::string v)
     return new Restriccion_(Op::VAR, v, nullptr, nullptr);
 }
 
-bool Restriccion_::Verifica(ConjRapidoString &tags)
+bool Restriccion_::Verifica(const ConjRapidoString &tags)
 {
     switch (type) {
         case Op::AND:
-            return left->Verifica(tags) and right->Verifica(tags);
+            return left->Verifica(tags) && right->Verifica(tags);
         case Op::OR:
-            return left->Verifica(tags) or right->Verifica(tags);
+            return left->Verifica(tags) || right->Verifica(tags);
         case Op::NOT:
-            return not left->Verifica(tags);
+            return !left->Verifica(tags);
         case Op::VAR:
             return tags.Pertenece(value);
     }
@@ -59,7 +59,7 @@ bool Restriccion_::Verifica(ConjRapidoString &tags)
 
 Restriccion_::~Restriccion_()
 {
-    if (type == Op::AND or type == Op::OR) {
+    if (type == Op::AND || type == Op::OR) {
         delete left;
         delete right;
     } else if (type == Op::NOT) {

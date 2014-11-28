@@ -20,7 +20,7 @@ class Restriccion_
         static Restriccion_ *Not(Restriccion_ *left);
         static Restriccion_ *Var(std::string v);
 
-        bool Verifica(ConjRapidoString &tags);
+        bool Verifica(const ConjRapidoString &tags);
         Restriccion_(const Restriccion_& r);
         ~Restriccion_();
 

@@ -1,8 +1,6 @@
-#include "../include/Driver.h"
-#include "../include/MiniTest.h"
-#include "../aed2/Lista.h"
-#include "../aed2/Conj.h"
-#include "../aed2/Dicc.h"
+#include "aed2/aed2.h"
+#include "Driver.h"
+#include "MiniTest.h"
 
 #include <string>
 #include <iostream>

@@ -1,5 +1,5 @@
-#include "../include/ArbolSintactico.h"
-#include "../aed2/Lista.h"
+#include "ArbolSintactico.h"
+#include "aed2/Lista.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>

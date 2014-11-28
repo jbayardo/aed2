@@ -1,23 +1,24 @@
-#include "../include/Ciudad.h"
+#include "Ciudad.h"
 
 Ciudad::Ciudad(const Mapa &m){
 	DiccString<ColaDePrioridad<robot>> robots_en_estacion;
-	Conj<string>::Iterador it = m.estaciones.CrearIt();
+	Conj<aed2::Estacion>::const_Iterador it = m.Estaciones();
 
 	while (it.HaySiguiente()){
-		ColaDePrioridad<robot>* aux = new ColaDePrioridad<robot>;
-		robots_en_estacion.Definir(it.Siguiente(), *aux);
+		ColaDePrioridad<robot> aux;
+		robots_en_estacion.Definir(it.Siguiente(), aux);
 		it.Avanzar();
 	}
-	// Definir(robots_en_estacion, *it, Crear()) SAY WAAAAAAAAAAAAAAAAAAAAAAAAT
+	ColaDePrioridad<robot> aux;
+	robots_en_estacion.Definir(it.Siguiente(), aux);
 	this->robotsEnEstacion = robots_en_estacion;
-	// this->mapa = Mapa(m);
+	this->mapa = m;
 }
 
 Ciudad::~Ciudad(){
 }
 
-void Ciudad::Entrar(const ConjRapidoString &ts, const Estacion &e){
+void Ciudad::Entrar(const ConjRapidoString &ts, const aed2::Estacion &e){
 //	iEntrar(in ts : conjRapidoString, in e : estacion, in/out c : city)
 //	var rob : robot = 
 //		tags: &ts,
@@ -36,39 +37,38 @@ void Ciudad::Entrar(const ConjRapidoString &ts, const Estacion &e){
 //
 //	AgregarAtras(c.robots, &rob)
 //end function
-	Nat i = 0;
-	robot* aux = new robot(this->ProximoRUR(), i, &ts, e);					//PORQUE ME PUTEA ACA?
-	aux->mi_estacion = this->robotsEnEstacion.Obtener(e).Encolar(*aux);
-	VectorPointer<Restriccion>::Iterador it = this->Mapa.Sendas;
+	robot* rob = new robot(this->ProximoRUR(), 0, ts, e);				
+	rob->mi_estacion = &this->robotsEnEstacion.Obtener(e).Encolar(*rob);
+	Vector<Restriccion_*>::const_Iterador it = this->mapa.Sendas();
 
-	while (it.HayMas()){
-		aux->infringe_restriccion.AgregarAtras(!it.Actual()->Verifica(ts));
+	while (it.HaySiguiente()){
+		rob->infringe_restriccion.AgregarAtras(!it.Siguiente()->Verifica(ts));
 		it.Avanzar();
 	}
 
-	this->robots.AgregarAtras(&aux);
+	this->robots.AgregarAtras(rob);
 }
 
-void Ciudad::Mover(const RUR rur, const Estacion e){
+void Ciudad::Mover(const RUR rur, const aed2::Estacion e){
 }
 
-void Ciudad::Inspeccion(const Estacion e){
+void Ciudad::Inspeccion(const aed2::Estacion e){
 }
 
-RUR Ciudad::ProximoRUR(){ 
+RUR Ciudad::ProximoRUR() const{ 
 }
 
-Mapa Ciudad::Mapa(){
+Mapa Ciudad::iMapa(){
 }
 
-VectorPointer<robot>::ItVectorPointer Ciudad::Robots(){
+Vector<Ciudad::robot*>::const_Iterador Ciudad::Robots() const{
 }
 
-Estacion Ciudad::iEstacion(const RUR u){
+aed2::Estacion Ciudad::Estacion(const RUR u) const{
 }
 
-Conj<Restriccion>::Iterador Ciudad::Tags(const RUR u){
+Conj<Restriccion_>::Iterador Ciudad::Tags(const RUR u) const{
 }
 
-Nat Ciudad::nInfracciones(const RUR u){
+Nat Ciudad::nInfracciones(const RUR u) const{
 }

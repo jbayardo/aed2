@@ -1,7 +1,7 @@
 #ifndef ColaDePrioridad_H
 #define ColaDePrioridad_H 1
 
-#include "../aed2/TiposBasicos.h"
+#include "aed2/aed2.h"
 
 template <typename T>
 class ColaDePrioridad {
@@ -32,7 +32,7 @@ public:
     ColaDePrioridad(const ColaDePrioridad<T> &);
     ~ColaDePrioridad();
 
-    ColaDePrioridad<T>::Iterator Encolar(const T &);
+    ColaDePrioridad<T>::Iterador Encolar(const T &);
     const T &Desencolar();
     const T &Desencolar(const Iterador &);
     aed2::Nat Tamano() const;

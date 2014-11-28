@@ -90,7 +90,7 @@ namespace aed2{
      * Complejidad: O(1)
      */
     bool ConjAcotado::Pertenece(Nat e) const {
-        return EnRango(e) and pertenencia.Definido(Indice(e));
+        return EnRango(e) && pertenencia.Definido(Indice(e));
     }
 
     /**
@@ -357,7 +357,7 @@ namespace aed2{
             c1.Infimo() == c2.Infimo() &&
             c1.Supremo() == c2.Supremo() &&
             c1.Cardinal() == c2.Cardinal();
-        for (ConjAcotado::const_Iterador it = c1.CrearIt(); it.HaySiguiente() and res; it.Avanzar())
+        for (ConjAcotado::const_Iterador it = c1.CrearIt(); it.HaySiguiente() && res; it.Avanzar())
             res &= c2.Pertenece(it.Siguiente());
         return res;
     }

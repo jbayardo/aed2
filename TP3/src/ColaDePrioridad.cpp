@@ -1,5 +1,5 @@
-#include "../include/ColaDePrioridad.h"
-#include "../aed2/Lista.h"
+#include "ColaDePrioridad.h"
+#include "aed2/Lista.h"
 #include <assert.h>
 
 /*
@@ -64,7 +64,7 @@ ColaDePrioridad<T>::~ColaDePrioridad() {
 }
 
 template <typename T>
-typename Iterador ColaDePrioridad<T>::Encolar(const T &dato) {
+Iterador ColaDePrioridad<T>::Encolar(const T &dato) {
     Nodo *tmp = new Nodo(dato);
 
     if (this->Tamano() == 0) {
@@ -109,7 +109,7 @@ const T &ColaDePrioridad<T>::Desencolar() {
 }
 
 template <typename T>
-const T &ColaDePrioridad<T>::Desencolar(const ColaDePrioridad<T>::Iterador &i) {
+const T &ColaDePrioridad<T>::Desencolar(const Iterador &i) {
     assert(i.heap == this);
 
     return Eliminar(i.nodo);
@@ -126,7 +126,7 @@ void ColaDePrioridad<T>::Subir(Nodo *node) {
 }
 
 template <typename T>
-void ColaDePrioridad<T>::Bajar(Nodo *node) {
+void ColaDePrioridad<T>::Bajar(Nodo *node) {							//Checkear Correccion en el TP
     while ((node->izq != nullptr && node->dato < node->izq->dato) ||
         (node->der != nullptr && node->dato < node->der->dato)) {
         if (node->izq != nullptr) {
