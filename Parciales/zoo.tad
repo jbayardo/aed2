@@ -9,25 +9,26 @@ igualdad observacional:
 Generadores:
 
 	nuevo: → zoo
-	ingreso: string e x nat c x zoo z → zoo 		{poblacion(ingreso(e,c,a,z)) > poblacion(z)/2}
+	ingreso: string e x nat c x zoo z → zoo 		{contarAnimales(claves(actualizar(e, c, animales(z))), 
+														actualizar(e, c, animales(z))) > poblacion(z)/2}
 
 Observadores:
-
-	poblacion: zoo → nat
 	animales: zoo → dicc(string, nat)
 
 Otras Operaciones:
-	contarAnimales: conj(string) c x zoo z → nat									{c ⊂ claves(animales(z))}
+	actualizar: string e x nat c x dicc(string, nat) d → dicc(string, nat)
+	poblacion: zoo → nat
+	contarAnimales: conj(string) c x dicc(string, nat) d → nat						{c ⊂ claves(d)}
 	comidosPor: string e x conj(string) c x dicc(string, nat) d → conj(string)		{c ⊂ claves(d)} 
 	eliminables: conj(string) c x dicc(string, nat) d → conj(string)				{c ⊂ claves(d)} 
 	sobrevivientes: conj(string) c x dicc(string, nat) d → dicc(string, nat)  		{c ⊂ claves(d)} 
 
 poblacion(z) ≡ contarAnimales(claves(animales(z)), z)
 
-contarAnimales(c, z) ≡ if ϕ?(c) then 0 
+contarAnimales(c, d) ≡ if ϕ?(c) then 0 
 						else
-							obtener(dameUno(c), animales(z)) +
-							contarAnimales(sinUno(c), z)
+							obtener(dameUno(c), d) +
+							contarAnimales(sinUno(c), d)
 						fi
 
 comidosPor(e, c, d) ≡ if ϕ?(c) then ϕ
@@ -53,23 +54,15 @@ sobrevivientes(c, d) ≡ if ϕ?(c) then vacio
 					definir(dameUno(c), obtener(dameUno(c), d), sobrevivientes(sinUno(c), d))
 				fi
 
+actualizar(e, c, d) ≡ definir(e, c + if definido?(e, d) then obtener(e, d) else 0 fi, d)
+
 animales(nuevo) ≡ vacio
 animales(ingreso(e, c, z)) ≡ sobrevivientes(
-								claves(
-									definir(e, c +  if definido?(e, animales(z)) then obtener(e, animales(z)) else 0)
-								) - 
-									eliminables(
-										claves(
-										 definir(e, c +  if definido?(e, animales(z)) then 
-														  obtener(e, animales(z)) 							   
-														  else 0)
-														  )
-										, definir(e, c +  if definido?(e, animales(z)) then 
-															obtener(e, animales(z)) 
-															else 0)
-										),
-								definir(e, c +  if definido?(e, animales(z)) then obtener(e, animales(z)) else 0))
+								claves( actualizar(e, c, animales(z)) ) - 
+								eliminables(claves(actualizar(e, c, animales(z))), actualizar(e, c, animales(z))),
+								actualizar(e, c, animales(z))
 								)
+
 
 
 
