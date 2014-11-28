@@ -2,8 +2,8 @@
 #define CIUDAD_H 1
 
 #include "aed2/aed2.h"
-#include "DiccString.h"
 #include "Tipos.h"
+#include "DiccString.h"
 #include "ColaDePrioridad.h"
 #include "ConjRapidoString.h"
 #include "Restriccion.h"
@@ -39,7 +39,7 @@ private:
 		robot(const RUR rur,
 			const Nat infracciones,
 			const ConjRapidoString &tags,
-			const Estacion estacion)
+			const aed2::Estacion estacion)
 				: rur(rur),
 				infracciones(infracciones),	
 				estacion(estacion),
@@ -53,13 +53,13 @@ private:
 public:
 	Ciudad(const Mapa &m);
 	~Ciudad();
-	void Entrar(const ConjRapidoString &ts, const Estacion &e);
-	void Mover(const RUR rur, const Estacion e);
-	void Inspeccion(const Estacion e);
+	void Entrar(const ConjRapidoString &ts, const aed2::Estacion &e);
+	void Mover(const RUR rur, const aed2::Estacion e);
+	void Inspeccion(const aed2::Estacion e);
 	RUR ProximoRUR() const;
 	Mapa iMapa();
 	Vector<robot*>::const_Iterador Robots() const;
-	Estacion Estacion(const RUR u) const;
+	aed2::Estacion Estacion(const RUR u) const;
 	Conj<Restriccion_>::Iterador Tags(const RUR u) const;  //ATENCION!: Ver bien si es Restriccion o std::string
 	Nat nInfracciones(const RUR u) const;
 

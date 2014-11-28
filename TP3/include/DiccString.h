@@ -4,32 +4,32 @@
 #include "aed2/aed2.h"
 
 template <typename T>
-class DiccString
-{
+class DiccString {
     public:
-        DiccString();
+        DiccString() : claves(Conj<std::string>()), significados(Nodo()) {};
         DiccString(const DiccString &otra);
-        ~DiccString();
         void Definir(const std::string k, const T &v);
         bool Definido(const std::string k) const;
         T Obtener(const std::string k) const;
         Conj<std::string>::Iterador Claves() const;
     private:
-		struct trie
-        {
+		struct Nodo {
             public:
-				~trie(){
+				~Nodo() {
 					delete[] this->significado;
-					for (int i = 0; i < 256; i++){
-						delete[] this->continuacion[i];
+
+					for (int i = 0; i < 256; i++) {
+						delete this->continuacion[i];
 					}
 				}
-				trie() : continuacion(Arreglo<trie*>(256)), significado(nullptr) {}
-                Arreglo<trie*> continuacion;
+
+				Nodo() : continuacion(Arreglo<Nodo*>(256)), significado(nullptr) {}
+                Arreglo<Nodo*> continuacion;
                 T *significado;
         };
+
         Conj<std::string> claves;
-        trie significados;
+        Nodo significados;
 };
 
 #endif

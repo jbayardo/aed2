@@ -32,7 +32,7 @@ public:
     ColaDePrioridad(const ColaDePrioridad<T> &);
     ~ColaDePrioridad();
 
-    ColaDePrioridad<T>::Iterator Encolar(const T &);
+    ColaDePrioridad<T>::Iterador Encolar(const T &);
     const T &Desencolar();
     const T &Desencolar(const Iterador &);
     aed2::Nat Tamano() const;

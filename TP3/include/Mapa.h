@@ -5,20 +5,7 @@
 #include "Restriccion.h"
 #include "DiccString.h"
 
-class Mapa
-{
-private:
-	//Mapa se representa con estr,
-	//donde estr es: tupla
-	//					sendas     : VectorPointer(Restriccion),
-	//					conexiones : DiccString(DiccString(Int)),
-	//					estaciones : conj(string)
-	//					
-
-	Vector<Restriccion_*> sendas;
-	DiccString<DiccString<Nat>> conexiones;
-	Conj<Estacion> estaciones;
-
+class Mapa {
 public:
 	//Crear() res: Mapa
 	Mapa();
@@ -32,12 +19,15 @@ public:
 	//Estaciones(in m : Mapa)  res : itConj(string)
 	Conj<Estacion>::const_Iterador Estaciones() const;
 	//Conectadas?(in m : Mapa, in e1 : estacion, in e2 : estacion)  res : bool
-	bool Conectadas(const Estacion e1, const Estacion e2);
+	bool Conectadas(const Estacion e1, const Estacion e2) const;
 	//idSenda(in m : Mapa, in e1 : estacion, in e2 : estacion) res : nat
 	Nat idSenda(const Estacion e1, const Estacion e2) const;
 	//Sendas(in m : Mapa)  res : itVectorPointer(restriccion)
 	Vector<Restriccion_*>::const_Iterador Sendas() const;
-
+private:
+	Vector<Restriccion_*> sendas;
+	DiccString<DiccString<Nat>> conexiones;
+	Conj<Estacion> estaciones;
 };
 
 #endif

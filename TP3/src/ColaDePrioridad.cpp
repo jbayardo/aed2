@@ -64,7 +64,7 @@ ColaDePrioridad<T>::~ColaDePrioridad() {
 }
 
 template <typename T>
-typename Iterador ColaDePrioridad<T>::Encolar(const T &dato) {
+Iterador ColaDePrioridad<T>::Encolar(const T &dato) {
     Nodo *tmp = new Nodo(dato);
 
     if (this->Tamano() == 0) {
@@ -109,7 +109,7 @@ const T &ColaDePrioridad<T>::Desencolar() {
 }
 
 template <typename T>
-const T &ColaDePrioridad<T>::Desencolar(const ColaDePrioridad<T>::Iterador &i) {
+const T &ColaDePrioridad<T>::Desencolar(const Iterador &i) {
     assert(i.heap == this);
 
     return Eliminar(i.nodo);

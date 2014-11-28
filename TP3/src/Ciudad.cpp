@@ -64,7 +64,7 @@ Mapa Ciudad::iMapa(){
 Vector<Ciudad::robot*>::const_Iterador Ciudad::Robots() const{
 }
 
-Estacion Ciudad::Estacion(const RUR u) const{
+aed2::Estacion Ciudad::Estacion(const RUR u) const{
 }
 
 Conj<Restriccion_>::Iterador Ciudad::Tags(const RUR u) const{
