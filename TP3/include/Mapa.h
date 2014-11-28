@@ -1,9 +1,9 @@
 #ifndef MAPA_H
 #define MAPA_H 1
 
-#include "../aed2.h"
-#include "../include/Restriccion.h"
-#include "../include/DiccString.h"
+#include "aed2/aed2.h"
+#include "Restriccion.h"
+#include "DiccString.h"
 
 class Mapa
 {

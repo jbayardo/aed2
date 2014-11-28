@@ -1,4 +1,4 @@
-#include "../include/Ciudad.h"
+#include "Ciudad.h"
 
 Ciudad::Ciudad(const Mapa &m){
 	DiccString<ColaDePrioridad<robot>> robots_en_estacion;

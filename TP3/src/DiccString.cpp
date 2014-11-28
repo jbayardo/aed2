@@ -1,13 +1,13 @@
 // PREGUNTAR: STRING QUE ES? Puedo usar string o son histericas?
 
-#include "../include/DiccString.h"
+#include "DiccString.h"
 
 template <typename T>
 DiccString<T>::DiccString(){}
 
 template <typename T>
 DiccString<T>::DiccString(const DiccString& otra){
-	Conj<string>::Iterador clv;
+	Conj<std::string>::Iterador clv;
 	clv = otra.Claves();
 	while (clv.HaySiguiente()){
 		this->Definir(clv.Siguiente(), otra.Obtener(clv.Siguiente()));
@@ -19,7 +19,7 @@ template <typename T>
 DiccString<T>::~DiccString(){}
 
 template <typename T>
-void DiccString<T>::Definir(const string k, const T& v){
+void DiccString<T>::Definir(const std::string k, const T& v){
 	int i = 0;
 	trie* t = &(this->significados);
 	bool nuevo = false;
@@ -39,7 +39,7 @@ void DiccString<T>::Definir(const string k, const T& v){
 }
 
 template <typename T>
-bool DiccString<T>::Definido(const string k) const{
+bool DiccString<T>::Definido(const std::string k) const{
 	int i = 0;
 	trie* t = &(this->significados);
 	while ((i < k.length()) && (t->continuacion[(int)k[i]] != nullptr)){
@@ -50,7 +50,7 @@ bool DiccString<T>::Definido(const string k) const{
 }
 
 template <typename T>
-T DiccString<T>::Obtener(const string k) const{
+T DiccString<T>::Obtener(const std::string k) const{
 	int i = 0;
 	trie* t = &(this->significados);
 	while (i < k.length()){
@@ -61,6 +61,6 @@ T DiccString<T>::Obtener(const string k) const{
 }
 
 template <typename T>
-Conj<string>::Iterador DiccString<T>::Claves() const{
+Conj<std::string>::Iterador DiccString<T>::Claves() const{
 	return this->claves.CrearIt();
 }

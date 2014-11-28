@@ -1,8 +1,8 @@
 #ifndef DRIVER_H_
 #define DRIVER_H_
 
+#include "aed2/aed2.h"
 #include "Tipos.h"
-#include "../aed2/TiposBasicos.h"
 
 //#include ...
 

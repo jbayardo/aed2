@@ -1,4 +1,4 @@
-#include "../include/ConjRapidoString.h"
+#include "ConjRapidoString.h"
 
 ConjRapidoString::ConjRapidoString()
 {

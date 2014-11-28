@@ -1,4 +1,4 @@
-#include "../include/Mapa.h"
+#include "Mapa.h"
 
 //Mapa se representa con estr,
 //donde estr es: tupla
@@ -47,7 +47,7 @@ Nat Mapa::idSenda(const Estacion e1, const Estacion e2) const{
 }
 
 Vector<Restriccion_*>::const_Iterador Mapa::Sendas() const{
-	return this->sendas.CrearIt;
+	return this->sendas.CrearIt();
 }
 
 

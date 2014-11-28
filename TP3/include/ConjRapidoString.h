@@ -1,7 +1,7 @@
 #ifndef CONJRAPIDSTRING_H
 #define CONJRAPIDSTRING_H 1
 
-#include "Tipos.h"
+#include "aed2/aed2.h"
 #include "DiccString.h"
 
 class ConjRapidoString

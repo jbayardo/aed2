@@ -1,5 +1,5 @@
-#include "../include/ColaDePrioridad.h"
-#include "../aed2/Lista.h"
+#include "ColaDePrioridad.h"
+#include "aed2/Lista.h"
 #include <assert.h>
 
 /*

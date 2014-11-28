@@ -1,7 +1,7 @@
 #ifndef ColaDePrioridad_H
 #define ColaDePrioridad_H 1
 
-#include "../aed2/TiposBasicos.h"
+#include "aed2/aed2.h"
 
 template <typename T>
 class ColaDePrioridad {

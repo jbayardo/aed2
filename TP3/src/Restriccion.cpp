@@ -1,4 +1,4 @@
-#include "../include/Restriccion.h"
+#include "Restriccion.h"
 
 // Restriccion::Restriccion(ArbolSintactico &S)
 // {

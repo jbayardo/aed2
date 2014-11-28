@@ -1,7 +1,7 @@
 #ifndef DICCSTRING_H
 #define DICCSTRING_H 1
 
-#include "../aed2.h"
+#include "aed2/aed2.h"
 
 template <typename T>
 class DiccString

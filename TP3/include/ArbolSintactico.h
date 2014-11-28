@@ -3,8 +3,7 @@
 
 /// NO MODIFICAR ESTE ARCHIVO ///
 
-#include "Tipos.h"
-#include "../aed2/TiposBasicos.h"
+#include "aed2/aed2.h"
 
 #include<stdlib.h>
 #include<stdio.h>

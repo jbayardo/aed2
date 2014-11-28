@@ -1,13 +1,13 @@
 #ifndef CIUDAD_H
 #define CIUDAD_H 1
 
-#include "../aed2.h"
-#include "../include/DiccString.h"
-#include "../include/Tipos.h"
-#include "../include/ColaDePrioridad.h"
-#include "../include/ConjRapidoString.h"
-#include "../include/Restriccion.h"
-#include "../include/Mapa.h"
+#include "aed2/aed2.h"
+#include "DiccString.h"
+#include "Tipos.h"
+#include "ColaDePrioridad.h"
+#include "ConjRapidoString.h"
+#include "Restriccion.h"
+#include "Mapa.h"
 
 
 class Ciudad

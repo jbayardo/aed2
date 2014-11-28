@@ -1,8 +1,8 @@
 #ifndef AED2_TIPOS_H_
 #define AED2_TIPOS_H_
 
-#include "../aed2/TiposBasicos.h"
-#include "../aed2/Conj.h"
+#include "TiposBasicos.h"
+#include "Conj.h"
 
 namespace aed2
 {
