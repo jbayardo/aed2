@@ -25,44 +25,44 @@ Restriccion_::Restriccion_(Op t, std::string v, Restriccion_ *l, Restriccion_ *r
 
 Restriccion_ *Restriccion_::And(Restriccion_ *left, Restriccion_ *right)
 {
-    return new Restriccion_(Op::AND, "", left, right);
+    return new Restriccion_(AND, "", left, right);
 }
 
 Restriccion_ *Restriccion_::Or(Restriccion_ *left, Restriccion_ *right)
 {
-    return new Restriccion_(Op::OR, "", left, right);
+    return new Restriccion_(OR, "", left, right);
 }
 
 Restriccion_ *Restriccion_::Not(Restriccion_ *left)
 {
-    return new Restriccion_(Op::NOT, "", left, NULL);
+    return new Restriccion_(NOT, "", left, NULL);
 }
 
 Restriccion_ *Restriccion_::Var(std::string v)
 {
-    return new Restriccion_(Op::VAR, v, NULL, NULL);
+    return new Restriccion_(VAR, v, NULL, NULL);
 }
 
 bool Restriccion_::Verifica(const ConjRapidoString &tags)
 {
     switch (type) {
-        case Op::AND:
+        case AND:
             return left->Verifica(tags) && right->Verifica(tags);
-        case Op::OR:
+        case OR:
             return left->Verifica(tags) || right->Verifica(tags);
-        case Op::NOT:
+        case NOT:
             return !left->Verifica(tags);
-        case Op::VAR:
+        case VAR:
             return tags.Pertenece(value);
     }
 }
 
 Restriccion_::~Restriccion_()
 {
-    if (type == Op::AND || type == Op::OR) {
+    if (type == AND || type == OR) {
         delete left;
         delete right;
-    } else if (type == Op::NOT) {
+    } else if (type == NOT) {
         delete left;
     }
 }
@@ -70,16 +70,16 @@ Restriccion_::~Restriccion_()
 Restriccion_::Restriccion_(const Restriccion_ &r)
 {
     switch (r.type) {
-        case Op::AND:
+        case AND:
             And(new Restriccion_(*r.left), new Restriccion_(*r.right));
             break;
-        case Op::OR:
+        case OR:
             Or(new Restriccion_(*r.left), new Restriccion_(*r.right));
             break;
-        case Op::NOT:
+        case NOT:
             Not(new Restriccion_(*r.left));
             break;
-        case Op::VAR:
+        case VAR:
             Var(r.value);
             break;
     }
