@@ -1,0 +1,78 @@
+TAD Peaje
+
+generos peaje
+
+
+Generadores:
+
+	nuevo: nat → peaje
+	encolar: vehiculo x peaje p → peaje 
+    atender: nat c x peaje p → peaje   {c ∈ claves(colas(p)) ∧ ¬vacia?(obtener(c, colas(p)))}
+
+Observadores:
+	cabinas: peaje p → nat
+	colas: peaje p → dicc(nat, cola(vehiculo))
+	liberaciones: peaje p → nat
+
+otras operaciones:
+	liberable: peaje p → bool
+	superaTope: nat n x peaje p → bool  {n <= cabinas(p)}
+	tamañoCola: nat n x peaje p → nat
+	colaMinima: peaje p → nat
+	minimos: nat n x peaje p → conj(nat)
+
+
+colaMinima(p) ≡ dameUno(minimos(cabinas(p), colas(p)))
+
+tamañoCola(n, p) ≡ if ¬definido(n, colas(p)) then 0
+					else tamaño(obtener(n, colas(p)))
+					fi
+
+minimos(n, p) ≡ if n = 0 then ϕ
+				else
+					if tamañoCola(n, p) < tamañoCola(dameUno(minimos(n-1, p)))
+						then 
+							{n}
+					else
+						if tamañoCola(n, p) = tamañoCola(dameUno(minimos(n-1, p)))
+							{n} U minimos(n-1,p)
+						else
+							minimos(n-1, p)
+						fi
+					fi
+				fi
+
+
+cabinas(nuevo(n)) ≡ n
+cabinas(encolar(v, c, p)) ≡ cabinas(p)
+cabinas(atender(c, p)) ≡ cabinas(p)
+
+liberaciones(nuevo(n)) ≡ 0
+liberaciones(encolar(v, c, p)) ≡ β(liberable(encolar(v, c, p))) + liberaciones(p)
+liberaciones(atender(c, p)) ≡ liberaciones(p)
+
+colas(nuevo(n)) ≡ vacio
+colas(encolar(v, p)) ≡ if ¬liberable(encolar(v, p)) then
+							definir(colaMinima(p), 
+									if definido(colaMinima(p), colas(p)) then 
+										encolar(v, obtener(colaMinima(p), colas(p)))
+									 else
+									 	encolar(v, vacia)
+									 fi)
+							else
+								vacio
+							fi
+
+colas(atender(c, p)) ≡ definir(c, desencolar(obtener(c, colas(p)), colas(p)) 
+
+
+liberable(p) ≡ superaTope(cabinas(p), p)
+
+superaTope(n, p) ≡ if n = 0 then True
+					else 
+						if ¬definido(n, colas(p)) ∨ₗ tamaño(obtener(n, colas(p))) < 10 then 
+							False
+						else 
+							superaTope(n-1, p)
+						fi
+					fi

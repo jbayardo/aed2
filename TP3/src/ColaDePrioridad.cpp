@@ -7,7 +7,8 @@
 */
 
 template <typename T>
-ColaDePrioridad<T>::Nodo::Nodo(const Nodo &otro) {
+ColaDePrioridad<T>::Nodo::Nodo(const Nodo &otro)
+{
     this->izq = new Nodo(otro.izq);
     this->der = new Nodo(otro.der);
     this->dato = otro.dato;
@@ -31,7 +32,8 @@ ColaDePrioridad<T>::ColaDePrioridad(const ColaDePrioridad<T> &otra) {
         while (camino > 1) {
             if (camino % 2 == 0) {
                 this->ultimo = this->ultimo->izq;
-            } else {
+            }
+            else {
                 this->ultimo = this->ultimo->der;
             }
 
@@ -43,9 +45,9 @@ ColaDePrioridad<T>::ColaDePrioridad(const ColaDePrioridad<T> &otra) {
 template <typename T>
 ColaDePrioridad<T>::~ColaDePrioridad() {
     if (Tamano() > 0) {
-        aed2::Lista<Nodo*> pila;
+        aed2::Lista<Nodo *> pila;
         pila.AgregarAtras(this->cabeza);
-        
+
         while (!pila.EsVacia()) {
             Nodo *actual = pila.Primero();
             pila.Fin();
@@ -69,14 +71,17 @@ typename ColaDePrioridad<T>::Iterador ColaDePrioridad<T>::Encolar(const T &dato)
 
     if (this->Tamano() == 0) {
         this->cabeza = tmp;
-    } else if (this->Tamano() == 1) {
+    }
+    else if (this->Tamano() == 1) {
         tmp->arr = this->cabeza;
         this->cabeza->izq = tmp;
-    } else {
+    }
+    else {
         if (this->ultimo->arr->izq == this->ultimo) {
             tmp->arr = this->ultimo->arr;
             this->ultimo->arr->der = tmp;
-        } else {
+        }
+        else {
             Nodo *actual = this->ultimo;
 
             while (actual->arr != NULL && actual->arr->izq != actual) {
@@ -134,7 +139,8 @@ void ColaDePrioridad<T>::Bajar(Nodo *node) {							//Checkear Correccion en el T
             node->izq->dato = node->dato;
             node->dato = tmp;
             node = node->izq;
-        } else {
+        }
+        else {
             T tmp = node->der->dato;
             node->der->dato = node->dato;
             node->dato = tmp;
@@ -145,7 +151,8 @@ void ColaDePrioridad<T>::Bajar(Nodo *node) {							//Checkear Correccion en el T
 
 
 template <typename T>
-const T &ColaDePrioridad<T>::Eliminar(Nodo *node) {
+const T &ColaDePrioridad<T>::Eliminar(Nodo *node)
+{
     // Pre: node esta en la estructura
     const T &tmp = node->dato;
 
@@ -174,14 +181,16 @@ const T &ColaDePrioridad<T>::Eliminar(Nodo *node) {
 
             this->ultimo->arr->izq = NULL;
             this->ultimo = actual;
-        } else {
+        }
+        else {
             this->ultimo = this->ultimo->arr->izq;
             this->ultimo->arr->der = NULL;
         }
 
         if (node->dato < node->arr->dato) {
             Bajar(node);
-        } else {
+        }
+        else {
             Subir(node);
         }
 

@@ -14,7 +14,8 @@ igualdad observacional:
 Generadores:
 	
 	nueva: conj(conj(nat)) cc → votacion      {(∀ c, d: conj(nat)) (c ∈ cc ∧ d ∈ cc) ∧ₗ (¬(c = d) => c ∩ d = ϕ)}
-	votar: l nat x bool voto x votacion v → votacion  {l ∈ legisladores(v) ∧ (∀n : nat) n ∈ ((positivos(v) U negativos(v)) ∩ 													bloque(v, l)) => n < l}
+	votar: l nat x bool voto x votacion v → votacion  {l ∈ legisladores(v) ∧ ¬voto?(l,v) ∧ 
+														(∀n : nat) n ∈ ((positivos(v) U negativos(v)) ∩ bloque(v, l)) => n < l}
 
 Observadores:
 	camara: votacion v → conj(conj(nat))
