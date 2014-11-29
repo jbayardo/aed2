@@ -48,7 +48,7 @@ private:
 	};
 	Vector<robot*> robots;
 	Mapa mapa;
-	DiccString<ColaDePrioridad<robot>> robotsEnEstacion;
+	DiccString<ColaDePrioridad<robot> > robotsEnEstacion;
 
 public:
 	Ciudad(const Mapa &m);

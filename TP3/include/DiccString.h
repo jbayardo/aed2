@@ -23,7 +23,7 @@ class DiccString {
 					}
 				}
 
-				Nodo() : continuacion(Arreglo<Nodo*>(256)), significado(nullptr) {}
+				Nodo() : continuacion(Arreglo<Nodo*>(256)), significado(NULL) {}
                 Arreglo<Nodo*> continuacion;
                 T *significado;
         };

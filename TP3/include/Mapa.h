@@ -10,7 +10,7 @@ public:
 	//Crear() res: Mapa
 	Mapa();
 	//Copiar(in m : Mapa)  res : Mapa
-	Mapa(Mapa &m);
+	Mapa(const Mapa &m);
 	~Mapa();
 	//Agregar(in/out m : Mapa, in e : estacion)
 	void Agregar(const Estacion e);
@@ -26,7 +26,7 @@ public:
 	Vector<Restriccion_*>::const_Iterador Sendas() const;
 private:
 	Vector<Restriccion_*> sendas;
-	DiccString<DiccString<Nat>> conexiones;
+	DiccString<DiccString<Nat> > conexiones;
 	Conj<Estacion> estaciones;
 };
 

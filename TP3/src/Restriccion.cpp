@@ -11,11 +11,11 @@
 //         type = Not;
 //         value = "";
 //         left = Restriccion(S.izq);
-//         right = nullptr;
+//         right = NULL;
 //     } else {
 //         type = Var;
 //         value = S.raiz;
-//         left = right = nullptr;
+//         left = right = NULL;
 //     }
 // }
 
@@ -35,12 +35,12 @@ Restriccion_ *Restriccion_::Or(Restriccion_ *left, Restriccion_ *right)
 
 Restriccion_ *Restriccion_::Not(Restriccion_ *left)
 {
-    return new Restriccion_(Op::NOT, "", left, nullptr);
+    return new Restriccion_(Op::NOT, "", left, NULL);
 }
 
 Restriccion_ *Restriccion_::Var(std::string v)
 {
-    return new Restriccion_(Op::VAR, v, nullptr, nullptr);
+    return new Restriccion_(Op::VAR, v, NULL, NULL);
 }
 
 bool Restriccion_::Verifica(const ConjRapidoString &tags)

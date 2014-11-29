@@ -9,7 +9,7 @@ public:
     class Nodo {
         friend class ColaDePrioridad<T>;
     public:
-        Nodo(const T &dato) : dato(dato), arr(nullptr), izq(nullptr), der(nullptr)
+        Nodo(const T &dato) : dato(dato), arr(NULL), izq(NULL), der(NULL)
         { };
         Nodo(const Nodo &);
 
@@ -28,7 +28,7 @@ public:
         Nodo *nodo;
     };
 
-    ColaDePrioridad() : _tamano(0), cabeza(nullptr), ultimo(nullptr) { }
+    ColaDePrioridad() : _tamano(0), cabeza(NULL), ultimo(NULL) { }
     ColaDePrioridad(const ColaDePrioridad<T> &);
     ~ColaDePrioridad();
 

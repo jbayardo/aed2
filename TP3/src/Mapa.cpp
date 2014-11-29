@@ -1,16 +1,10 @@
 #include "Mapa.h"
 
-//Mapa se representa con estr,
-//donde estr es: tupla
-//					sendas     : VectorPointer(Restriccion),
-//					conexiones : DiccString(DiccString(Int)),
-//					estaciones : conj(string)
+Mapa::Mapa() { }
 
-Mapa::Mapa(){}
+Mapa::~Mapa() { }
 
-Mapa::~Mapa(){}
-
-Mapa::Mapa(Mapa &m) : sendas(m.sendas), conexiones(m.conexiones), estaciones(m.estaciones){}
+Mapa::Mapa(const Mapa &m) : sendas(m.sendas), conexiones(m.conexiones), estaciones(m.estaciones) { }
 
 void Mapa::Agregar(const Estacion e){
 	this->estaciones.Agregar(e);
@@ -20,13 +14,13 @@ void Mapa::Conectar(const Estacion e1, const Estacion e2, Restriccion_ &r) {   /
 	Nat i = this->sendas.Longitud();
 	this->sendas.AgregarAtras(&r);
 
-	DiccString<Nat> aux = DiccString<Nat>();
-
 	if (!this->conexiones.Definido(e1)) {
+		DiccString<Nat> aux = DiccString<Nat>();
 		this->conexiones.Definir(e1, aux);
 	}
 
 	if (!this->conexiones.Definido(e2)) {
+		DiccString<Nat> aux = DiccString<Nat>();
 		this->conexiones.Definir(e2, aux);
 	}
 

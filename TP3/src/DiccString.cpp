@@ -20,7 +20,7 @@ void DiccString<T>::Definir(const std::string k, const T &v) {
 	bool nuevo = false;
 
 	while (k.length() > i){
-		if (t->continuacion[(int)k[i]] == nullptr) {
+		if (t->continuacion[(int)k[i]] == NULL) {
 			Nodo * tr = new Nodo();
 			t->continuacion[(int)k[i]] = tr;
 			nuevo = true;
@@ -42,12 +42,12 @@ bool DiccString<T>::Definido(const std::string k) const {
 	int i = 0;
 	Nodo * t = &(this->significados);
 
-	while ((i < k.length()) && (t->continuacion[(int)k[i]] != nullptr)) {
+	while ((i < k.length()) && (t->continuacion[(int)k[i]] != NULL)) {
 		t = t->continuacion[(int)k[i]];
 		i++;
 	}
 
-	return (t->significado != nullptr && i == k.length());
+	return (t->significado != NULL && i == k.length());
 }
 
 template <typename T>

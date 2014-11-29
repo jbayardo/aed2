@@ -17,8 +17,8 @@ ColaDePrioridad<T>::Nodo::Nodo(const Nodo &otro) {
 
 template<typename T>
 ColaDePrioridad<T>::ColaDePrioridad(const ColaDePrioridad<T> &otra) {
-    this->cabeza = nullptr;
-    this->ultimo = nullptr;
+    this->cabeza = NULL;
+    this->ultimo = NULL;
     this->_tamano = 0;
 
     if (otra.Tamano() > 0) {
@@ -50,11 +50,11 @@ ColaDePrioridad<T>::~ColaDePrioridad() {
             Nodo *actual = pila.Primero();
             pila.Fin();
 
-            if (actual->izq != nullptr) {
+            if (actual->izq != NULL) {
                 pila.AgregarAtras(actual->izq);
             }
 
-            if (actual->der != nullptr) {
+            if (actual->der != NULL) {
                 pila.AgregarAtras(actual->der);
             }
 
@@ -64,7 +64,7 @@ ColaDePrioridad<T>::~ColaDePrioridad() {
 }
 
 template <typename T>
-Iterador ColaDePrioridad<T>::Encolar(const T &dato) {
+typename ColaDePrioridad<T>::Iterador ColaDePrioridad<T>::Encolar(const T &dato) {
     Nodo *tmp = new Nodo(dato);
 
     if (this->Tamano() == 0) {
@@ -79,15 +79,15 @@ Iterador ColaDePrioridad<T>::Encolar(const T &dato) {
         } else {
             Nodo *actual = this->ultimo;
 
-            while (actual->arr != nullptr && actual->arr->izq != actual) {
+            while (actual->arr != NULL && actual->arr->izq != actual) {
                 actual = actual->arr;
             }
 
-            if (actual->arr != nullptr) {
+            if (actual->arr != NULL) {
                 actual = actual->arr->der;
             }
 
-            while (actual->izq != nullptr) {
+            while (actual->izq != NULL) {
                 actual = actual->izq;
             }
 
@@ -117,7 +117,7 @@ const T &ColaDePrioridad<T>::Desencolar(const Iterador &i) {
 
 template <typename T>
 void ColaDePrioridad<T>::Subir(Nodo *node) {
-    while (node->arr != nullptr && node->arr->dato < node->dato) {
+    while (node->arr != NULL && node->arr->dato < node->dato) {
         T tmp = node->arr->dato;
         node->arr->dato = node->dato;
         node->dato = tmp;
@@ -127,9 +127,9 @@ void ColaDePrioridad<T>::Subir(Nodo *node) {
 
 template <typename T>
 void ColaDePrioridad<T>::Bajar(Nodo *node) {							//Checkear Correccion en el TP
-    while ((node->izq != nullptr && node->dato < node->izq->dato) ||
-        (node->der != nullptr && node->dato < node->der->dato)) {
-        if (node->izq != nullptr) {
+    while ((node->izq != NULL && node->dato < node->izq->dato) ||
+        (node->der != NULL && node->dato < node->der->dato)) {
+        if (node->izq != NULL) {
             T tmp = node->izq->dato;
             node->izq->dato = node->dato;
             node->dato = tmp;
@@ -151,8 +151,8 @@ const T &ColaDePrioridad<T>::Eliminar(Nodo *node) {
 
     if (this->Tamano() == 1) {
         delete this->cabeza;
-        this->ultimo = nullptr;
-        this->cabeza = nullptr;
+        this->ultimo = NULL;
+        this->cabeza = NULL;
     } else {
         node->dato = this->ultimo->dato;
         Nodo *backup = this->ultimo;
@@ -160,23 +160,23 @@ const T &ColaDePrioridad<T>::Eliminar(Nodo *node) {
         if (this->ultimo->arr->izq == this->ultimo) {
             Nodo *actual = this->ultimo;
 
-            while (actual->arr != nullptr && actual->arr->der != actual) {
+            while (actual->arr != NULL && actual->arr->der != actual) {
                 actual = actual->arr;
             }
 
-            if (actual->arr != nullptr) {
+            if (actual->arr != NULL) {
                 actual = actual->arr->izq;
             }
 
-            while (actual->der != nullptr) {
+            while (actual->der != NULL) {
                 actual = actual->der;
             }
 
-            this->ultimo->arr->izq = nullptr;
+            this->ultimo->arr->izq = NULL;
             this->ultimo = actual;
         } else {
             this->ultimo = this->ultimo->arr->izq;
-            this->ultimo->arr->der = nullptr;
+            this->ultimo->arr->der = NULL;
         }
 
         if (node->dato < node->arr->dato) {

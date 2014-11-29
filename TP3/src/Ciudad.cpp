@@ -1,7 +1,7 @@
 #include "Ciudad.h"
 
 Ciudad::Ciudad(const Mapa &m){
-	DiccString<ColaDePrioridad<robot>> robots_en_estacion;
+	DiccString<ColaDePrioridad<robot> > robots_en_estacion;
 	Conj<aed2::Estacion>::const_Iterador it = m.Estaciones();
 
 	while (it.HaySiguiente()){
