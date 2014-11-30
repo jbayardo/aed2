@@ -29,8 +29,10 @@ void DiccString<T>::Definir(const std::string k, const T &v) {
 		t = t->continuacion[(int)k[i]];
 		i++;
 	}
-
-	t->significado = &v;
+	if (t->significado != NULL){
+		delete t->significado;
+	}
+	t->significado = new T(v);
 
 	if (nuevo) {
 		this->claves.AgregarRapido(k);

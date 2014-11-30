@@ -15,13 +15,11 @@ void Mapa::Conectar(const Estacion e1, const Estacion e2, Restriccion_ &r) {   /
 	this->sendas.AgregarAtras(&r);
 
 	if (!this->conexiones.Definido(e1)) {
-		DiccString<Nat> aux = DiccString<Nat>();
-		this->conexiones.Definir(e1, aux);
+		this->conexiones.Definir(e1, DiccString<Nat>());
 	}
 
 	if (!this->conexiones.Definido(e2)) {
-		DiccString<Nat> aux = DiccString<Nat>();
-		this->conexiones.Definir(e2, aux);
+		this->conexiones.Definir(e2, DiccString<Nat>());
 	}
 
 	this->conexiones.Obtener(e1).Definir(e2, i);
