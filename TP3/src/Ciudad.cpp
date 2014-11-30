@@ -38,7 +38,8 @@ void Ciudad::Entrar(const ConjRapidoString &ts, const aed2::Estacion &e){
 //	AgregarAtras(c.robots, &rob)
 //end function
 	robot* rob = new robot(this->ProximoRUR(), 0, ts, e);				
-	rob->mi_estacion = &this->robotsEnEstacion.Obtener(e).Encolar(*rob);
+	ColaDePrioridad<robot>::Iterador me = this->robotsEnEstacion.Obtener(e).Encolar(*rob);
+	rob->mi_estacion = &me;
 	Vector<Restriccion_*>::const_Iterador it = this->mapa.Sendas();
 
 	while (it.HaySiguiente()){
