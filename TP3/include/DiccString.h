@@ -11,7 +11,7 @@ class DiccString {
         void Definir(const std::string k, const T &v);
         bool Definido(const std::string k) const;
         T Obtener(const std::string k) const;
-        Conj<std::string>::Iterador Claves() const;
+        Conj<std::string>::const_Iterador Claves() const;
     private:
 		struct Nodo {
             public:
@@ -31,5 +31,73 @@ class DiccString {
         Conj<std::string> claves;
         Nodo significados;
 };
+
+template <typename T>
+DiccString<T>::DiccString(const DiccString &otra) {
+    Conj<std::string>::const_Iterador clv;
+    clv = otra.Claves();
+
+    while (clv.HaySiguiente()) {
+        this->Definir(clv.Siguiente(), otra.Obtener(clv.Siguiente()));
+        clv.Avanzar();
+    }
+}
+
+template <typename T>
+void DiccString<T>::Definir(const std::string k, const T &v) {
+    int i = 0;
+    Nodo *t = &(this->significados);
+    bool nuevo = false;
+
+    while (k.length() > i){
+        if (t->continuacion[(int)k[i]] == NULL) {
+            Nodo * tr = new Nodo();
+            t->continuacion[(int)k[i]] = tr;
+            nuevo = true;
+        }
+
+        t = t->continuacion[(int)k[i]];
+        i++;
+    }
+    if (t->significado != NULL){
+        delete t->significado;
+    }
+    t->significado = new T(v);
+
+    if (nuevo) {
+        this->claves.AgregarRapido(k);
+    }
+}
+
+template <typename T>
+bool DiccString<T>::Definido(const std::string k) const {
+    int i = 0;
+    const Nodo * t = &(this->significados);
+
+    while ((i < k.length()) && (t->continuacion[(int)k[i]] != NULL)) {
+        t = t->continuacion[(int)k[i]];
+        i++;
+    }
+
+    return (t->significado != NULL && i == k.length());
+}
+
+template <typename T>
+T DiccString<T>::Obtener(const std::string k) const {
+    int i = 0;
+    const Nodo *t = &(this->significados);
+
+    while (i < k.length()) {
+        t = t->continuacion[(int)k[i]];
+        i++;
+    }
+
+    return *(t->significado);
+}
+
+template <typename T>
+Conj<std::string>::const_Iterador DiccString<T>::Claves() const {
+    return this->claves.CrearIt();
+}
 
 #endif

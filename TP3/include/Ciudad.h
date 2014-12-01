@@ -35,7 +35,7 @@ private:
 		const ConjRapidoString &tags;
 		aed2::Estacion estacion;
 		Vector<bool> infringe_restriccion;
-		ColaDePrioridad<robot>::Iterador *mi_estacion;
+		ColaDePrioridad<robot*>::Iterador* mi_estacion;
 		robot(const RUR rur,
 			const Nat infracciones,
 			const ConjRapidoString &tags,
@@ -48,7 +48,7 @@ private:
 	};
 	Vector<robot*> robots;
 	Mapa mapa;
-	DiccString<ColaDePrioridad<robot> > robotsEnEstacion;
+	DiccString<ColaDePrioridad<robot*> > robotsEnEstacion;
 
 public:
 	Ciudad(const Mapa &m);

@@ -1,18 +1,14 @@
 #include "Ciudad.h"
 
 Ciudad::Ciudad(const Mapa &m){
-	DiccString<ColaDePrioridad<robot> > robots_en_estacion;
 	Conj<aed2::Estacion>::const_Iterador it = m.Estaciones();
 
 	while (it.HaySiguiente()){
-		ColaDePrioridad<robot> aux;
-		robots_en_estacion.Definir(it.Siguiente(), aux);
+		robotsEnEstacion.Definir(it.Siguiente(), ColaDePrioridad<robot*>());
 		it.Avanzar();
 	}
-	ColaDePrioridad<robot> aux;
-	robots_en_estacion.Definir(it.Siguiente(), aux);
-	this->robotsEnEstacion = robots_en_estacion;
-	this->mapa = m;
+	robotsEnEstacion.Definir(it.Siguiente(), ColaDePrioridad<robot*>());
+	mapa = m;
 }
 
 Ciudad::~Ciudad(){
@@ -37,9 +33,9 @@ void Ciudad::Entrar(const ConjRapidoString &ts, const aed2::Estacion &e){
 //
 //	AgregarAtras(c.robots, &rob)
 //end function
-	robot* rob = new robot(this->ProximoRUR(), 0, ts, e);				
-	ColaDePrioridad<robot>::Iterador me = this->robotsEnEstacion.Obtener(e).Encolar(*rob);
-	rob->mi_estacion = &me;
+	robot* rob = new robot(this->ProximoRUR(), 0, ts, e);
+	rob->mi_estacion = this->robotsEnEstacion.Obtener(e).Encolar(rob);
+
 	Vector<Restriccion_*>::const_Iterador it = this->mapa.Sendas();
 
 	while (it.HaySiguiente()){

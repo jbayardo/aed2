@@ -3,8 +3,14 @@ project(TP3)
 
 INCLUDE_DIRECTORIES(include)
 set(CMAKE_CXX_FLAGS "-g")
-set(SOURCE_FILES src/Test.cpp src/ArbolSintactico.cpp 
-	src/Driver.cpp src/ColaDePrioridad.cpp
-	src/Restriccion.cpp src/ConjRapidoString.cpp 
-	src/DiccString.cpp src/Mapa.cpp src/Ciudad.cpp)
+set(SOURCE_FILES
+	src/DiccString.cpp
+	src/Test.cpp
+	src/ArbolSintactico.cpp
+	src/Driver.cpp
+	src/ColaDePrioridad.cpp
+	src/Restriccion.cpp
+	src/ConjRapidoString.cpp
+	src/Mapa.cpp
+	src/Ciudad.cpp)
 add_executable(TP3 ${SOURCE_FILES})

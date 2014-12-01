@@ -9,7 +9,7 @@ class ConjRapidoString
     public:
         void Agregar(std::string s);
         bool Pertenece(std::string s) const;
-        Conj<std::string>::Iterador CrearIt();
+        Conj<std::string>::const_Iterador CrearIt();
     private:
         DiccString<bool> values;
 
