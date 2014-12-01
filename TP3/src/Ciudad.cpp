@@ -4,10 +4,10 @@ Ciudad::Ciudad(const Mapa &m){
 	Conj<aed2::Estacion>::const_Iterador it = m.Estaciones();
 
 	while (it.HaySiguiente()){
-		robotsEnEstacion.Definir(it.Siguiente(), ColaDePrioridad<robot*>());
+		robotsEnEstacion.Definir(it.Siguiente(), new ColaDePrioridad<robot*>());
 		it.Avanzar();
 	}
-	robotsEnEstacion.Definir(it.Siguiente(), ColaDePrioridad<robot*>());
+	robotsEnEstacion.Definir(it.Siguiente(), new ColaDePrioridad<robot*>());
 	mapa = m;
 }
 
@@ -33,8 +33,8 @@ void Ciudad::Entrar(const ConjRapidoString &ts, const aed2::Estacion &e){
 //
 //	AgregarAtras(c.robots, &rob)
 //end function
-	robot* rob = new robot(this->ProximoRUR(), 0, ts, e);
-	rob->mi_estacion = this->robotsEnEstacion.Obtener(e).Encolar(rob);
+	robot* rob = new robot(ProximoRUR(), 0, ts, e);
+	rob->mi_estacion = robotsEnEstacion.Obtener(e).Encolar(rob);
 
 	Vector<Restriccion_*>::const_Iterador it = this->mapa.Sendas();
 
