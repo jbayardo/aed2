@@ -12,7 +12,6 @@
 
 class Ciudad
 {
-private:
 	/*Ciudad se representa con city,
 	donde city es: tupla(
 						robots           : VectorPointer(robot),
@@ -27,25 +26,11 @@ private:
 						mi_estacion          : itCola(robot)
 	)*/
 
+public:
 	struct robot
 	{
+	friend class Ciudad;
 	public:
-		RUR rur;
-		Nat infracciones;
-		ConjRapidoString &tags;
-		aed2::Estacion estacion;
-		Vector<bool> infringe_restriccion;
-		ColaDePrioridad<robot>::Iterador* mi_estacion;
-
-		robot(const RUR rur,
-			const Nat infracciones, ConjRapidoString &tags,
-			const aed2::Estacion estacion)
-				: rur(rur),
-				infracciones(infracciones),
-				estacion(estacion),
-				tags(tags),
-				mi_estacion(NULL){};
-
 		~robot(){
 			delete mi_estacion;
 		}
@@ -86,12 +71,24 @@ private:
 			}
 		}
 
-	};
-	Vector<robot*> robots;
-	Mapa mapa;
-	DiccString<ColaDePrioridad<robot> > robotsEnEstacion;
+	private:
+		RUR rur;
+		Nat infracciones;
+		ConjRapidoString &tags;
+		aed2::Estacion estacion;
+		Vector<bool> infringe_restriccion;
+		ColaDePrioridad<robot>::Iterador* mi_estacion;
 
-public:
+		robot(const RUR rur,
+				const Nat infracciones, ConjRapidoString &tags,
+				const aed2::Estacion estacion)
+				: rur(rur),
+				  infracciones(infracciones),
+				  estacion(estacion),
+				  tags(tags),
+				  mi_estacion(NULL){};
+	} ;
+
 	Ciudad(const Mapa &m);
 	~Ciudad();
 	void Entrar(ConjRapidoString &ts, const aed2::Estacion &e);
@@ -103,6 +100,11 @@ public:
 	aed2::Estacion Estacion(const RUR u) const;
 	Conj<Restriccion>::const_Iterador Tags(const RUR u) const;
 	Nat nInfracciones(const RUR u) const;
+
+private:
+	Vector<robot*> robots;
+	Mapa mapa;
+	DiccString<ColaDePrioridad<robot> > robotsEnEstacion;
 
 };
 
