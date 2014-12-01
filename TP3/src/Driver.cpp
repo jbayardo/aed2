@@ -113,6 +113,7 @@ RUR Driver::ElMasInfractor() const {
 			imax = it.Siguiente()->infracciones_();
 			rmax = it.Siguiente();
 		}
+		it.Avanzar();
 	}
 	return rmax->rur_;
 }
