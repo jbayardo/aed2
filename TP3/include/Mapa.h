@@ -24,6 +24,7 @@ public:
 	Nat idSenda(const Estacion e1, const Estacion e2) const;
 	//Sendas(in m : Mapa)  res : itVectorPointer(restriccion)
 	Vector<Restriccion_*>::const_Iterador Sendas() const;
+
 private:
 	Vector<Restriccion_*> sendas;
 	DiccString<DiccString<Nat> > conexiones;

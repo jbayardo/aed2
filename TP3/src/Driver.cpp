@@ -22,7 +22,7 @@ Nat Driver::CantidadEstaciones() const {
     Conj<Estacion>::const_Iterador it = this->mapa->Estaciones();
     Nat output = 0;
 
-    while (it.haySiguiente()) {
+    while (it.HaySiguiente()) {
         output++;
         it.Avanzar();
     }
@@ -34,8 +34,8 @@ Estacion Driver::IesimaEstacion(Nat i) const {
     Conj<Estacion>::const_Iterador it = this->mapa->Estaciones();
     Nat j = 0;
 
-    while (it.haySiguiente() && j < i) {
-        j++
+    while (it.HaySiguiente() && j < i) {
+        j++;
         it.Avanzar();
     }
 
@@ -47,8 +47,8 @@ Nat Driver::CantidadDeSendasParaEstacion(const Estacion &e) const {
     Conj<Estacion>::const_Iterador it = this->mapa->Estaciones();
     Nat output = 0;
 
-    while (it.haySiguiente()) {
-        if (this->mapa->conectadas(e, it.Siguiente())) {
+    while (it.HaySiguiente()) {
+        if (this->mapa->Conectadas(e, it.Siguiente())) {
             ++output;
         }
 

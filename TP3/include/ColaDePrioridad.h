@@ -180,9 +180,8 @@ void ColaDePrioridad<T>::Subir(Nodo *node) {
 
 template <typename T>
 void ColaDePrioridad<T>::Bajar(Nodo *node) {
-    while (node->izq != NULL && node->der != NULL &&
-        node->dato < max(node->izq->dato, node->der->dato)) {
-        if (node->izq->dato >= node->der>dato) {
+    while (node->izq != NULL && node->der != NULL && node->dato < max(node->izq->dato, node->der->dato)) {
+        if (node->izq->dato >= node->der->dato) {
             T tmp = node->izq->dato;
             node->izq->dato = node->dato;
             node->dato = tmp;

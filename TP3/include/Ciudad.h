@@ -61,35 +61,32 @@ private:
 			return *this;
 		}
 
-		bool operator>=(const robot& other){
-			return (*this > other || *this == other);
+
+		bool operator>=(const robot& rhs) const{
+			return !(rhs < *this);
 		}
 
-		bool operator<=(const robot& other){
-			return (*this < other || *this == other);
+		bool operator<=(const robot& rhs) const{
+			return !(*this < rhs);
 		}
 
-		bool operator==(const robot& other){
-			return rur == other.rur;
+		bool operator==(const robot& rhs) const{
+			return rur == rhs.rur;
 		}
 
-		bool operator>(const robot& other){
-			if (infracciones > other.infracciones){
+		bool operator>(const robot& rhs) const{
+			return rhs < *this;
+		}
+
+		bool operator<(const robot& rhs) const{
+			if (infracciones < rhs.infracciones){
 				return true;
 			}
-			else if (infracciones == other.infracciones){
-				return rur < other.rur;
+			else if (infracciones == rhs.infracciones){
+				return rur > rhs.rur;
 			}
 		}
 
-		bool operator<(const robot& other){
-			if (infracciones < other.infracciones){
-				return true;
-			}
-			else if (infracciones == other.infracciones){
-				return rur > other.rur;
-			}
-		}
 	};
 	Vector<robot*> robots;
 	Mapa mapa;
