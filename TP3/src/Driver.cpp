@@ -59,7 +59,15 @@ Nat Driver::CantidadDeSendasParaEstacion(const Estacion &e) const {
 }
 
 Estacion Driver::IesimaEstacionDeSenda(const Estacion &e, Nat i) const {
- // TODO
+    Conj<Estacion>::const_Iterador it = this->mapa->Estaciones();
+    Nat j = 0;
+
+    while (it.haySiguiente() && j < i) {
+        ++j;
+        it.Avanzar();
+    }
+
+    return it.Siguiente();
 }
 
 Restriccion Driver::IesimaRestriccionDeSenda(const Estacion &e1, Nat i) const {
