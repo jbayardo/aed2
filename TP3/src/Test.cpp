@@ -2,6 +2,8 @@
 #include "Driver.h"
 #include "MiniTest.h"
 
+#include "DiccString.h"
+
 #include <string>
 #include <iostream>
 
@@ -139,7 +141,7 @@ void test_ciudad_simple()
 
 int main(int argc, char **argv)
 {
-    RUN_TEST(test_ciudad_simple);
+    //RUN_TEST(test_ciudad_simple);
 
     /******************************************************************
      * TODO: escribir casos de test exhaustivos para todas            *
@@ -147,6 +149,9 @@ int main(int argc, char **argv)
      * La interacción con el TAD Ciudad se debe hacer exclusivamente  *
      * a través de la interfaz del driver.                            *
      ******************************************************************/
-
+	DiccString<int> dictest;
+	dictest.Definir("tu vieja", new int(2));
+	ASSERT(dictest.Definido("tu vieja"));
+	ASSERT_EQ(dictest.Obtener("tu vieja"), 2);
     return 0;
 }
