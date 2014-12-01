@@ -1,3 +1,4 @@
+#include <fcgimisc.h>
 #include "Driver.h"
 #include "ArbolSintactico.h"
 
@@ -105,7 +106,16 @@ Nat Driver::CantInfraccionesIesimoRobotActivo(Nat i) const {
 
 RUR Driver::ElMasInfractor() const {
  // TODO
-	Vector<robot*>::con it = this->ciudad->Robots()
+	Ciudad::const_Iterador r = this->ciudad->Robots();
+    RUR max = -1;
+    Nat inf = 0;
+    while (r.HaySiguiente()){
+        if (r.Siguiente()->infracciones_() > inf){
+            max = r.Siguiente()->rur_();
+        }
+        r.Avanzar();
+    }
+    return max;
 }
 
 void Driver::Entrar(const Conj<Caracteristica> &cs, const Estacion &estacionInicial) {
@@ -113,8 +123,8 @@ void Driver::Entrar(const Conj<Caracteristica> &cs, const Estacion &estacionInic
 	Conj<Caracteristica>::const_Iterador it = cs.CrearIt();
 	ConjRapidoString adapt;
 
-	while (it.HaySiguiente){
-		adapt.Agregar(it.Siguiente);
+	while (it.HaySiguiente()){
+		adapt.Agregar(it.Siguiente());
 	}	
 	this->ciudad->Entrar(adapt, estacionInicial);
 }

@@ -115,8 +115,8 @@ Mapa Ciudad::iMapa(){ //referencia constante?
 	return mapa;
 }
 
-Vector<Ciudad::robot*>::const_Iterador Ciudad::Robots() const{
-	return robots.CrearIt();
+Ciudad::const_Iterador Ciudad::Robots() const{
+	return const_Iterador(robots.CrearIt());
 }
 
 aed2::Estacion Ciudad::Estacion(const RUR u) const{
