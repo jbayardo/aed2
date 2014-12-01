@@ -10,7 +10,7 @@ class DiccString {
         DiccString(const DiccString &otra);
         void Definir(const std::string k, const T &v);
         bool Definido(const std::string k) const;
-        T Obtener(const std::string k) const;
+        T& Obtener(const std::string k) const;
         Conj<std::string>::const_Iterador Claves() const;
     private:
 		struct Nodo {
@@ -83,7 +83,7 @@ bool DiccString<T>::Definido(const std::string k) const {
 }
 
 template <typename T>
-T DiccString<T>::Obtener(const std::string k) const {
+T& DiccString<T>::Obtener(const std::string k) const {
     int i = 0;
     const Nodo *t = &(this->significados);
 
