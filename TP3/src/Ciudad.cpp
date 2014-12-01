@@ -51,20 +51,26 @@ void Ciudad::Mover(const RUR rur, const aed2::Estacion e){
 void Ciudad::Inspeccion(const aed2::Estacion e){
 }
 
-RUR Ciudad::ProximoRUR() const{ 
+RUR Ciudad::ProximoRUR() const{
+	return robots.Longitud();
 }
 
-Mapa Ciudad::iMapa(){
+Mapa Ciudad::iMapa(){ //referencia constante?
+	return mapa;
 }
 
 Vector<Ciudad::robot*>::const_Iterador Ciudad::Robots() const{
+	return robots.CrearIt();
 }
 
 aed2::Estacion Ciudad::Estacion(const RUR u) const{
+	return robots[u]->estacion;
 }
 
-Conj<Restriccion_>::Iterador Ciudad::Tags(const RUR u) const{
+Conj<Restriccion>::const_Iterador Ciudad::Tags(const RUR u) const{
+	return robots[u]->tags.CrearIt();
 }
 
 Nat Ciudad::nInfracciones(const RUR u) const{
+	return robots[u]->infracciones;
 }

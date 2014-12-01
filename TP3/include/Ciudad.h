@@ -60,7 +60,7 @@ public:
 	Mapa iMapa();
 	Vector<robot*>::const_Iterador Robots() const;
 	aed2::Estacion Estacion(const RUR u) const;
-	Conj<Restriccion_>::Iterador Tags(const RUR u) const;  //ATENCION!: Ver bien si es Restriccion o std::string
+	Conj<Restriccion>::const_Iterador Tags(const RUR u) const;
 	Nat nInfracciones(const RUR u) const;
 
 };
