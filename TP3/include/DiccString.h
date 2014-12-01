@@ -8,7 +8,7 @@ class DiccString {
     public:
         DiccString() : claves(Conj<std::string>()), significados(Nodo()) {};
         DiccString(const DiccString &otra);
-        void Definir(const std::string k, const T &v);
+        void Definir(const std::string k, T *v);
         bool Definido(const std::string k) const;
         T& Obtener(const std::string k) const;
         Conj<std::string>::const_Iterador Claves() const;
@@ -38,13 +38,13 @@ DiccString<T>::DiccString(const DiccString &otra) {
     clv = otra.Claves();
 
     while (clv.HaySiguiente()) {
-        this->Definir(clv.Siguiente(), otra.Obtener(clv.Siguiente()));
+        this->Definir(clv.Siguiente(), new T(otra.Obtener(clv.Siguiente())));
         clv.Avanzar();
     }
 }
 
 template <typename T>
-void DiccString<T>::Definir(const std::string k, const T &v) {
+void DiccString<T>::Definir(const std::string k, T* v) {
     int i = 0;
     Nodo *t = &(this->significados);
     bool nuevo = false;
@@ -59,10 +59,7 @@ void DiccString<T>::Definir(const std::string k, const T &v) {
         t = t->continuacion[(int)k[i]];
         i++;
     }
-    if (t->significado != NULL){
-        delete t->significado;
-    }
-    t->significado = new T(v);
+    t->significado = v;
 
     if (nuevo) {
         this->claves.AgregarRapido(k);
