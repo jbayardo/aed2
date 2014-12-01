@@ -97,10 +97,29 @@ Estacion Driver::EstacionActualIesimoRobotActivo(Nat i) const {
 
 Conj<Caracteristica> Driver::CaracteristicasIesimoRobotActivo(Nat i) const {
  // TODO
+	Vector<Ciudad::robot*>::const_Iterador it = this->ciudad->Robots();
+	for (int x = 0; x < i; x++){
+		it.Avanzar();
+	}
+
+	Conj<Caracteristica>::const_Iterador cars = it.Siguiente()->tags_().CrearIt();
+	Conj<Caracteristica> ret;
+
+	while (cars.HaySiguiente()){
+		ret.Agregar(cars.Siguiente());
+		cars.Avanzar();
+	}
+
+	return ret;
 }
 
 Nat Driver::CantInfraccionesIesimoRobotActivo(Nat i) const {
  // TODO
+	Vector<Ciudad::robot*>::const_Iterador it = this->ciudad->Robots();
+	for (int x = 0; x < i; x++){
+		it.Avanzar();
+	}
+	return it.Siguiente()->infracciones_();
 }
 
 RUR Driver::ElMasInfractor() const {
@@ -115,7 +134,7 @@ RUR Driver::ElMasInfractor() const {
 		}
 		it.Avanzar();
 	}
-	return rmax->rur_;
+	return rmax->rur_();
 }
 
 void Driver::Entrar(const Conj<Caracteristica> &cs, const Estacion &estacionInicial) {
@@ -125,6 +144,7 @@ void Driver::Entrar(const Conj<Caracteristica> &cs, const Estacion &estacionInic
 
 	while (it.HaySiguiente){
 		adapt.Agregar(it.Siguiente);
+		it.Avanzar();
 	}	
 	this->ciudad->Entrar(adapt, estacionInicial);
 }
