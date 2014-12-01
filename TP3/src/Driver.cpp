@@ -122,7 +122,7 @@ Estacion Driver::EstacionActualIesimoRobotActivo(Nat i) const {
 
 Conj<Caracteristica> Driver::CaracteristicasIesimoRobotActivo(Nat i) const {
  // TODO
-	Vector<Ciudad::robot*>::const_Iterador it = this->ciudad->Robots();
+    Ciudad::const_Iterador it = this->ciudad->Robots();
 	for (int x = 0; x < i; x++){
 		it.Avanzar();
 	}
@@ -140,7 +140,7 @@ Conj<Caracteristica> Driver::CaracteristicasIesimoRobotActivo(Nat i) const {
 
 Nat Driver::CantInfraccionesIesimoRobotActivo(Nat i) const {
  // TODO
-	Vector<Ciudad::robot*>::const_Iterador it = this->ciudad->Robots();
+    Ciudad::const_Iterador it = this->ciudad->Robots();
 	for (int x = 0; x < i; x++){
 		it.Avanzar();
 	}
@@ -149,17 +149,16 @@ Nat Driver::CantInfraccionesIesimoRobotActivo(Nat i) const {
 
 RUR Driver::ElMasInfractor() const {
  // TODO
-	Vector<Ciudad::robot*>::const_Iterador it = this->ciudad->Robots();
-	Nat imax = 0;
-	Ciudad::robot *rmax = it.Siguiente();
-	while (it.HaySiguiente()){
-		if (it.Siguiente()->infracciones_() >= imax){
-			imax = it.Siguiente()->infracciones_();
-			rmax = it.Siguiente();
-		}
-		it.Avanzar();
-	}
-	return rmax->rur_();
+	Ciudad::const_Iterador r = this->ciudad->Robots();
+    RUR max = -1;
+    Nat inf = 0;
+    while (r.HaySiguiente()){
+        if (r.Siguiente()->infracciones_() > inf){
+            max = r.Siguiente()->rur_();
+        }
+        r.Avanzar();
+    }
+    return max;
 }
 
 void Driver::Entrar(const Conj<Caracteristica> &cs, const Estacion &estacionInicial) {
@@ -167,8 +166,8 @@ void Driver::Entrar(const Conj<Caracteristica> &cs, const Estacion &estacionInic
 	Conj<Caracteristica>::const_Iterador it = cs.CrearIt();
 	ConjRapidoString adapt;
 
-	while (it.HaySiguiente){
-		adapt.Agregar(it.Siguiente);
+	while (it.HaySiguiente()){
+		adapt.Agregar(it.Siguiente());
 		it.Avanzar();
 	}	
 	this->ciudad->Entrar(adapt, estacionInicial);

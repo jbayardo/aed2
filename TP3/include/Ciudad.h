@@ -27,6 +27,9 @@ class Ciudad
 	)*/
 
 public:
+
+	class const_Iterador;
+
 	struct robot
 	{
 	friend class Ciudad;
@@ -108,10 +111,43 @@ public:
 	void Inspeccion(const aed2::Estacion e);
 	RUR ProximoRUR() const;
 	Mapa iMapa();
-	Vector<robot*>::const_Iterador Robots() const;
+	Ciudad::const_Iterador Robots() const;
 	aed2::Estacion Estacion(const RUR u) const;
 	Conj<Restriccion>::const_Iterador Tags(const RUR u) const;
 	Nat nInfracciones(const RUR u) const;
+
+
+	class const_Iterador
+	{
+	public:
+
+		const_Iterador(const const_Iterador& o): it(o.it) {};
+
+		const_Iterador& operator = (const const_Iterador& otra){
+			it = otra.it;
+		}
+
+		bool HaySiguiente()const{
+			return it.HaySiguiente();
+		}
+
+		const robot* Siguiente()const{
+			return it.Siguiente();
+		}
+
+		void Avanzar(){
+			while(it.HaySiguiente() && it.Siguiente() == NULL){
+				it.Avanzar();
+			}
+		}
+
+	private:
+		Vector<robot*>::const_Iterador it;
+		const_Iterador(Vector<robot*>::const_Iterador i) : it(i){};
+
+		friend Ciudad::const_Iterador Ciudad::Robots() const;
+	};
+
 
 private:
 	Vector<robot*> robots;
