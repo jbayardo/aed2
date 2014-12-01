@@ -1,6 +1,7 @@
 #ifndef CIUDAD_H
 #define CIUDAD_H 1
 
+#include <Python/Python.h>
 #include "aed2/aed2.h"
 #include "Tipos.h"
 #include "DiccString.h"
@@ -32,28 +33,72 @@ private:
 	public:
 		RUR rur;
 		Nat infracciones;
-		const ConjRapidoString &tags;
+		ConjRapidoString &tags;
 		aed2::Estacion estacion;
 		Vector<bool> infringe_restriccion;
-		ColaDePrioridad<robot*>::Iterador* mi_estacion;
+		ColaDePrioridad<robot>::Iterador* mi_estacion;
+
 		robot(const RUR rur,
-			const Nat infracciones,
-			const ConjRapidoString &tags,
+			const Nat infracciones, ConjRapidoString &tags,
 			const aed2::Estacion estacion)
 				: rur(rur),
 				infracciones(infracciones),	
 				estacion(estacion),
 				tags(tags),
 				mi_estacion(NULL){};
+
+		~robot(){
+			delete mi_estacion;
+		}
+
+		robot& operator=(const robot& other){
+			rur = other.rur;
+			infracciones = other.infracciones;
+			estacion = other.estacion;
+			tags = other.tags;
+			mi_estacion = other.mi_estacion;
+
+			return *this;
+		}
+
+		bool operator>=(const robot& other){
+			return (*this > other || *this == other);
+		}
+
+		bool operator<=(const robot& other){
+			return (*this < other || *this == other);
+		}
+
+		bool operator==(const robot& other){
+			return rur == other.rur;
+		}
+
+		bool operator>(const robot& other){
+			if (infracciones > other.infracciones){
+				return true;
+			}
+			else if (infracciones == other.infracciones){
+				return rur < other.rur;
+			}
+		}
+
+		bool operator<(const robot& other){
+			if (infracciones < other.infracciones){
+				return true;
+			}
+			else if (infracciones == other.infracciones){
+				return rur > other.rur;
+			}
+		}
 	};
 	Vector<robot*> robots;
 	Mapa mapa;
-	DiccString<ColaDePrioridad<robot*> > robotsEnEstacion;
+	DiccString<ColaDePrioridad<robot> > robotsEnEstacion;
 
 public:
 	Ciudad(const Mapa &m);
 	~Ciudad();
-	void Entrar(const ConjRapidoString &ts, const aed2::Estacion &e);
+	void Entrar(ConjRapidoString &ts, const aed2::Estacion &e);
 	void Mover(const RUR rur, const aed2::Estacion e);
 	void Inspeccion(const aed2::Estacion e);
 	RUR ProximoRUR() const;

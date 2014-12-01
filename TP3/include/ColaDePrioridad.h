@@ -34,7 +34,7 @@ public:
 
     Iterador* Encolar(const T &);
     const T &Desencolar();
-    const T &Desencolar(const Iterador &);
+    const T &Desencolar(const Iterador *);
     aed2::Nat Tamano() const;
 private:
     const T &Eliminar(Nodo *);
@@ -159,10 +159,10 @@ const T &ColaDePrioridad<T>::Desencolar() {
 }
 
 template <typename T>
-const T &ColaDePrioridad<T>::Desencolar(const Iterador &i) {
-    assert(i.heap == this);
+const T &ColaDePrioridad<T>::Desencolar(const Iterador *i) {
+    assert(i->heap == this);
 
-    return Eliminar(i.nodo);
+    return Eliminar(i->nodo);
 }
 
 template <typename T>
