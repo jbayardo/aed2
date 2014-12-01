@@ -142,7 +142,7 @@ void Driver::Entrar(const Conj<Caracteristica> &cs, const Estacion &estacionInic
 	ConjRapidoString adapt;
 
 	while (it.HaySiguiente){
-		adapt.Agregar(it.Siguiente);
+		adapt.Agregar(it.Siguiente());
 		it.Avanzar();
 	}	
 	this->ciudad->Entrar(adapt, estacionInicial);
