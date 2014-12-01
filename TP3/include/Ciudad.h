@@ -79,7 +79,7 @@ public:
 			return infracciones;
 		}
 
-		ConjRapidoString tags_() const{
+		const ConjRapidoString& tags_() const{
 			return tags;
 		}
 

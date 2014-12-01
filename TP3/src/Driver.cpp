@@ -72,27 +72,52 @@ Estacion Driver::IesimaEstacionDeSenda(const Estacion &e, Nat i) const {
 
 Restriccion Driver::IesimaRestriccionDeSenda(const Estacion &e1, Nat i) const {
  // TODO
+
 }
 
 void Driver::AgregarSenda(const Estacion &e1, const Estacion &e2, Restriccion r) {
     // TODO
-    // Ejemplo uso ArbolSintactico:
     ArbolSintactico* expr = ArbolSintactico::LeerDeString(r);
-    std::cout << expr->aString() << std::endl;
+
 
     delete expr;
 }
 
+Restriccion_ ArboltoRestr(ArbolSintactico* a){
+	return auxUnirNodos(a->izq, a->der, a->raiz);
+}
+
+Restriccion_ auxUnirNodos(ArbolSintactico* izq, ArbolSintactico* der, String cond){
+	if ()
+}
+
 Nat Driver::CantidadRobotsActivos() const {
  // TODO
+	Vector<Ciudad::robot*>::const_Iterador it = this->ciudad->Robots();
+	Nat ret = 0;
+	while (it.HaySiguiente()){
+		it.Avanzar();
+		ret++;
+	}
+	return ret;
 }
 
 RUR Driver::IesimoRobotActivo(Nat i) const {
  // TODO
+	Vector<Ciudad::robot*>::const_Iterador it = this->ciudad->Robots();
+	for (int x = 0; x < i; x++){
+		it.Avanzar();
+	}
+	return it.Siguiente()->rur_();
 }
 
 Estacion Driver::EstacionActualIesimoRobotActivo(Nat i) const {
  // TODO
+	Vector<Ciudad::robot*>::const_Iterador it = this->ciudad->Robots();
+	for (int x = 0; x < i; x++){
+		it.Avanzar();
+	}
+	return this->ciudad->Estacion(it.Siguiente()->rur_());
 }
 
 Conj<Caracteristica> Driver::CaracteristicasIesimoRobotActivo(Nat i) const {
