@@ -105,7 +105,13 @@ Nat Driver::CantInfraccionesIesimoRobotActivo(Nat i) const {
 
 RUR Driver::ElMasInfractor() const {
  // TODO
-	Vector<robot*>::con it = this->ciudad->Robots()
+	Vector<Ciudad::robot*>::const_Iterador it = this->ciudad->Robots();
+	int imax = 0;
+	while (it.HaySiguiente){
+		if (it.Siguiente()->infracciones_()){
+
+		}
+	}
 }
 
 void Driver::Entrar(const Conj<Caracteristica> &cs, const Estacion &estacionInicial) {
