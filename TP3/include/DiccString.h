@@ -25,7 +25,7 @@ class DiccString {
 
 				Nodo() : continuacion(Arreglo<Nodo*>(256)), significado(NULL) {}
                 Arreglo<Nodo*> continuacion;
-            T *significado;
+                T *significado;
         };
 
         Conj<std::string> claves;
