@@ -62,7 +62,7 @@ Estacion Driver::IesimaEstacionDeSenda(const Estacion &e, Nat i) const {
     Conj<Estacion>::const_Iterador it = this->mapa->Estaciones();
     Nat j = 0;
 
-    while (it.haySiguiente() && j < i) {
+    while (it.HaySiguiente() && j < i) {
         ++j;
         it.Avanzar();
     }

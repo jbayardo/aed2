@@ -175,12 +175,13 @@ void ColaDePrioridad<T>::Subir(Nodo *node) {
     }
 }
 
-#define max(a, b) (a >= b)? a:b
-#define min(a, b) (a <= b)? a:b
-
 template <typename T>
 void ColaDePrioridad<T>::Bajar(Nodo *node) {
-    while (node->izq != NULL && node->der != NULL && node->dato < max(node->izq->dato, node->der->dato)) {
+    while (node->izq != NULL
+            && node->der != NULL
+            && node->dato <
+            (node->izq->dato >= node->der->dato ? node->izq->dato : node->der->dato)
+            ) {
         if (node->izq->dato >= node->der->dato) {
             T tmp = node->izq->dato;
             node->izq->dato = node->dato;
