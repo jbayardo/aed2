@@ -78,22 +78,29 @@ Restriccion Driver::IesimaRestriccionDeSenda(const Estacion &e1, Nat i) const {
 void Driver::AgregarSenda(const Estacion &e1, const Estacion &e2, Restriccion r) {
     // TODO
     ArbolSintactico* expr = ArbolSintactico::LeerDeString(r);
-
-
-    delete expr;
+	this->mapa->Conectar(e1, e2, *ArboltoRestr(expr));
+	delete expr;
 }
 
-Restriccion_ ArboltoRestr(ArbolSintactico* a){
-	return auxUnirNodos(a->izq, a->der, a->raiz);
+Restriccion_* ArboltoRestr(ArbolSintactico* a){
+	if (a->raiz == "|") {
+		return Restriccion_::Or(ArboltoRestr(a->izq), ArboltoRestr(a->der));
+	}
+	else if (a->raiz == "&") {
+		return Restriccion_::And(ArboltoRestr(a->izq), ArboltoRestr(a->der));
+	}
+	else if (a->raiz == "!") {
+		return Restriccion_::Not(ArboltoRestr(a->izq));
+	}
+	else {
+		return Restriccion_::Var(a->raiz);
+	}
 }
 
-Restriccion_ auxUnirNodos(ArbolSintactico* izq, ArbolSintactico* der, String cond){
-	if ()
-}
 
 Nat Driver::CantidadRobotsActivos() const {
  // TODO
-	Vector<Ciudad::robot*>::const_Iterador it = this->ciudad->Robots();
+	Ciudad::const_Iterador it = this->ciudad->Robots();
 	Nat ret = 0;
 	while (it.HaySiguiente()){
 		it.Avanzar();
@@ -104,7 +111,7 @@ Nat Driver::CantidadRobotsActivos() const {
 
 RUR Driver::IesimoRobotActivo(Nat i) const {
  // TODO
-	Vector<Ciudad::robot*>::const_Iterador it = this->ciudad->Robots();
+	Ciudad::const_Iterador it = this->ciudad->Robots();
 	for (int x = 0; x < i; x++){
 		it.Avanzar();
 	}
@@ -113,7 +120,7 @@ RUR Driver::IesimoRobotActivo(Nat i) const {
 
 Estacion Driver::EstacionActualIesimoRobotActivo(Nat i) const {
  // TODO
-	Vector<Ciudad::robot*>::const_Iterador it = this->ciudad->Robots();
+	Ciudad::const_Iterador it = this->ciudad->Robots();
 	for (int x = 0; x < i; x++){
 		it.Avanzar();
 	}
