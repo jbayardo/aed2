@@ -6,6 +6,7 @@
 
 #include <string>
 #include <iostream>
+#include <Tipos.h>
 
 using namespace aed2;
 
@@ -87,7 +88,7 @@ bool Comparar(const T &t, const S &s)
  */
 void test_ciudad_simple()
 {
-    Conj<Estacion> estaciones;
+    Conj<aed2::Estacion> estaciones;
     estaciones.Agregar("Belgrano");
     estaciones.Agregar("Retiro");
     estaciones.Agregar("Martinez");

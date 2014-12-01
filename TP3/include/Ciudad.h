@@ -12,7 +12,6 @@
 
 class Ciudad
 {
-private:
 	/*Ciudad se representa con city,
 	donde city es: tupla(
 						robots           : VectorPointer(robot),
@@ -27,25 +26,14 @@ private:
 						mi_estacion          : itCola(robot)
 	)*/
 
+public:
+
+	class const_Iterador;
+
 	struct robot
 	{
+	friend class Ciudad;
 	public:
-		RUR rur;
-		Nat infracciones;
-		ConjRapidoString &tags;
-		aed2::Estacion estacion;
-		Vector<bool> infringe_restriccion;
-		ColaDePrioridad<robot>::Iterador* mi_estacion;
-
-		robot(const RUR rur,
-			const Nat infracciones, ConjRapidoString &tags,
-			const aed2::Estacion estacion)
-				: rur(rur),
-				infracciones(infracciones),
-				estacion(estacion),
-				tags(tags),
-				mi_estacion(NULL){};
-
 		~robot(){
 			delete mi_estacion;
 		}
@@ -60,41 +48,62 @@ private:
 			return *this;
 		}
 
-		bool operator>=(const robot& other){
-			return (*this > other || *this == other);
+
+		bool operator>=(const robot& rhs) const{
+			return !(rhs < *this);
 		}
 
-		bool operator<=(const robot& other){
-			return (*this < other || *this == other);
+		bool operator<=(const robot& rhs) const{
+			return !(*this < rhs);
 		}
 
-		bool operator==(const robot& other){
-			return rur == other.rur;
+		bool operator==(const robot& rhs) const{
+			return rur == rhs.rur;
 		}
 
-		bool operator>(const robot& other){
-			if (infracciones > other.infracciones){
+		bool operator>(const robot& rhs) const{
+			return rhs < *this;
+		}
+
+		bool operator<(const robot& rhs) const{
+			if (infracciones < rhs.infracciones){
 				return true;
 			}
-			else if (infracciones == other.infracciones){
-				return rur < other.rur;
+			else if (infracciones == rhs.infracciones){
+				return rur > rhs.rur;
 			}
 		}
 
-		bool operator<(const robot& other){
-			if (infracciones < other.infracciones){
-				return true;
-			}
-			else if (infracciones == other.infracciones){
-				return rur > other.rur;
-			}
+		RUR rur_() const{
+			return rur;
 		}
-	};
-	Vector<robot*> robots;
-	Mapa mapa;
-	DiccString<ColaDePrioridad<robot> > robotsEnEstacion;
 
-public:
+		Nat infracciones_() const{
+			return infracciones;
+		}
+
+		ConjRapidoString tags_() const{
+			return tags;
+		}
+
+	private:
+		RUR rur;
+		Nat infracciones;
+		ConjRapidoString &tags;
+		aed2::Estacion estacion;
+		Vector<bool> infringe_restriccion;
+		ColaDePrioridad<robot>::Iterador* mi_estacion;
+
+		robot(const RUR rur,
+				const Nat infracciones, ConjRapidoString &tags,
+				const aed2::Estacion estacion)
+				: rur(rur),
+				  infracciones(infracciones),
+				  estacion(estacion),
+				  tags(tags),
+				  mi_estacion(NULL){};
+	} ;
+
 	Ciudad(const Mapa &m);
 	~Ciudad();
 	void Entrar(ConjRapidoString &ts, const aed2::Estacion &e);
@@ -102,10 +111,48 @@ public:
 	void Inspeccion(const aed2::Estacion e);
 	RUR ProximoRUR() const;
 	Mapa iMapa();
-	Vector<robot*>::const_Iterador Robots() const;
+	Ciudad::const_Iterador Robots() const;
 	aed2::Estacion Estacion(const RUR u) const;
 	Conj<Restriccion>::const_Iterador Tags(const RUR u) const;
 	Nat nInfracciones(const RUR u) const;
+
+
+	class const_Iterador
+	{
+	public:
+
+		const_Iterador(const const_Iterador& o): it(o.it) {};
+
+		const_Iterador& operator = (const const_Iterador& otra){
+			it = otra.it;
+		}
+
+		bool HaySiguiente()const{
+			return it.HaySiguiente();
+		}
+
+		const robot* Siguiente()const{
+			return it.Siguiente();
+		}
+
+		void Avanzar(){
+			while(it.HaySiguiente() && it.Siguiente() == NULL){
+				it.Avanzar();
+			}
+		}
+
+	private:
+		Vector<robot*>::const_Iterador it;
+		const_Iterador(Vector<robot*>::const_Iterador i) : it(i){};
+
+		friend Ciudad::const_Iterador Ciudad::Robots() const;
+	};
+
+
+private:
+	Vector<robot*> robots;
+	Mapa mapa;
+	DiccString<ColaDePrioridad<robot> > robotsEnEstacion;
 
 };
 
