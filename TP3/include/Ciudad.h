@@ -82,6 +82,10 @@ public:
 			return infracciones;
 		}
 
+		ConjRapidoString tags_() const{
+			return tags;
+		}
+
 	private:
 		RUR rur;
 		Nat infracciones;
