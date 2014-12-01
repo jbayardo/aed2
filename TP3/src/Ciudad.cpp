@@ -7,7 +7,6 @@ Ciudad::Ciudad(const Mapa &m){
 		robotsEnEstacion.Definir(it.Siguiente(), new ColaDePrioridad<robot>());
 		it.Avanzar();
 	}
-	robotsEnEstacion.Definir(it.Siguiente(), new ColaDePrioridad<robot>());
 	mapa = m;
 }
 

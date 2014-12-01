@@ -4,41 +4,69 @@
 namespace aed2 {
 
 Driver::Driver(const Conj<Estacion> &estacionesIniciales) {
-    // TODO
+    this->mapa = new Mapa();
+    this->ciudad = NULL;
 }
 
 Driver::~Driver() {
-    // TODO
+    if (this->mapa != NULL) {
+        delete this->mapa;
+    }
+
+    if (this->ciudad != NULL) {
+        delete this->ciudad;
+    }
 }
 
-Nat Driver::CantidadEstaciones() const
-{
+Nat Driver::CantidadEstaciones() const {
+    Conj<Estacion>::const_Iterador it = this->mapa->Estaciones();
+    Nat output = 0;
+
+    while (it.haySiguiente()) {
+        output++;
+        it.Avanzar();
+    }
+
+    return output;
+}
+
+Estacion Driver::IesimaEstacion(Nat i) const {
+    Conj<Estacion>::const_Iterador it = this->mapa->Estaciones();
+    Nat j = 0;
+
+    while (it.haySiguiente() && j < i) {
+        j++
+        it.Avanzar();
+    }
+
+    return it.Siguiente();
+}
+
+
+Nat Driver::CantidadDeSendasParaEstacion(const Estacion &e) const {
+    Conj<Estacion>::const_Iterador it = this->mapa->Estaciones();
+    Nat output = 0;
+
+    while (it.haySiguiente()) {
+        if (this->mapa->conectadas(e, it.Siguiente())) {
+            ++output;
+        }
+
+        it.Avanzar();
+    }
+
+    return output;
+}
+
+Estacion Driver::IesimaEstacionDeSenda(const Estacion &e, Nat i) const {
  // TODO
 }
 
-Estacion Driver::IesimaEstacion(Nat i) const
-{
+Restriccion Driver::IesimaRestriccionDeSenda(const Estacion &e1, Nat i) const {
  // TODO
 }
 
-
-Nat Driver::CantidadDeSendasParaEstacion(const Estacion &e) const
-{
- // TODO
-}
-
-Estacion Driver::IesimaEstacionDeSenda(const Estacion &e, Nat i) const
-{
- // TODO
-}
-
-Restriccion Driver::IesimaRestriccionDeSenda(const Estacion &e1, Nat i) const
-{
- // TODO
-}
-
-void Driver::AgregarSenda(const Estacion &e1, const Estacion &e2, Restriccion r)
-{
+void Driver::AgregarSenda(const Estacion &e1, const Estacion &e2, Restriccion r) {
     // TODO
     // Ejemplo uso ArbolSintactico:
     ArbolSintactico* expr = ArbolSintactico::LeerDeString(r);
@@ -47,48 +75,39 @@ void Driver::AgregarSenda(const Estacion &e1, const Estacion &e2, Restriccion r)
     delete expr;
 }
 
-Nat Driver::CantidadRobotsActivos() const
-{
+Nat Driver::CantidadRobotsActivos() const {
  // TODO
 }
 
-RUR Driver::IesimoRobotActivo(Nat i) const
-{
+RUR Driver::IesimoRobotActivo(Nat i) const {
  // TODO
 }
 
-Estacion Driver::EstacionActualIesimoRobotActivo(Nat i) const
-{
+Estacion Driver::EstacionActualIesimoRobotActivo(Nat i) const {
  // TODO
 }
 
-Conj<Caracteristica> Driver::CaracteristicasIesimoRobotActivo(Nat i) const
-{
+Conj<Caracteristica> Driver::CaracteristicasIesimoRobotActivo(Nat i) const {
  // TODO
 }
 
-Nat Driver::CantInfraccionesIesimoRobotActivo(Nat i) const
-{
+Nat Driver::CantInfraccionesIesimoRobotActivo(Nat i) const {
  // TODO
 }
 
-RUR Driver::ElMasInfractor() const
-{
+RUR Driver::ElMasInfractor() const {
  // TODO
 }
 
-void Driver::Entrar(const Conj<Caracteristica> &cs, const Estacion &estacionInicial)
-{
+void Driver::Entrar(const Conj<Caracteristica> &cs, const Estacion &estacionInicial) {
  // TODO
 }
 
-void Driver::Mover(RUR robot, const Estacion &destino)
-{
+void Driver::Mover(RUR robot, const Estacion &destino) {
  // TODO
 }
 
-void Driver::Inspeccion(const Estacion &e)
-{
+void Driver::Inspeccion(const Estacion &e) {
     // TODO
 }
 

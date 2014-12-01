@@ -175,29 +175,43 @@ void ColaDePrioridad<T>::Subir(Nodo *node) {
     }
 }
 
+#define max(a, b) (a >= b)? a:b
+#define min(a, b) (a <= b)? a:b
+
 template <typename T>
-void ColaDePrioridad<T>::Bajar(Nodo *node) {							//Checkear Correccion en el TP
-    while ((node->izq != NULL && node->dato < node->izq->dato) ||
-            (node->der != NULL && node->dato < node->der->dato)) {
-        if (node->izq != NULL) {
+void ColaDePrioridad<T>::Bajar(Nodo *node) {
+    while (node->izq != NULL && node->der != NULL &&
+        node->dato < max(node->izq->dato, node->der->dato)) {
+        if (node->izq->dato >= node->der>dato) {
             T tmp = node->izq->dato;
             node->izq->dato = node->dato;
             node->dato = tmp;
             node = node->izq;
-        }
-        else {
+        } else {
             T tmp = node->der->dato;
             node->der->dato = node->dato;
             node->dato = tmp;
             node = node->der;
         }
     }
+
+    while (node->izq != NULL && node->izq->dato > node->dato) {
+        T tmp = node->izq->dato;
+        node->izq->dato = node->dato;
+        node->dato = tmp;
+        node = node->izq;
+    }
+
+    while (node->der != NULL && node->der->dato > node->dato) {
+        T tmp = node->der->dato;
+        node->der->dato = node->dato;
+        node->dato = tmp;
+        node = node->der;
+    }
 }
 
-
 template <typename T>
-const T &ColaDePrioridad<T>::Eliminar(Nodo *node)
-{
+const T &ColaDePrioridad<T>::Eliminar(Nodo *node) {
     // Pre: node esta en la estructura
     const T &tmp = node->dato;
 

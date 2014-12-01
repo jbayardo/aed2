@@ -2,6 +2,8 @@
 #define DRIVER_H_
 
 #include "Tipos.h"
+#include "Ciudad.h"
+#include "Mapa.h"
 #include "aed2/TiposBasicos.h"
 
 //#include ...
@@ -73,13 +75,8 @@ class Driver
         void Inspeccion(const Estacion & e);
 
 	private:
-
-    /*********************************************************************
-     * TODO: Va a ser necesario instanciar privadamente un Modulo Ciudad *
-     * con el cuál interactuar. Además, pueden declarar todas las        *
-     * funciones auxiliares que les hagan falta.                         *
-     *********************************************************************/
-
+        Mapa *mapa;
+        Ciudad *ciudad;
 }; // class Driver
 
 
