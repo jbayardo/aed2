@@ -71,6 +71,14 @@ public:
 			}
 		}
 
+		RUR rur_() const{
+			return rur;
+		}
+
+		Nat infracciones_() const{
+			return infracciones;
+		}
+
 	private:
 		RUR rur;
 		Nat infracciones;
