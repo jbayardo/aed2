@@ -97,7 +97,7 @@ Estacion Driver::EstacionActualIesimoRobotActivo(Nat i) const {
 
 Conj<Caracteristica> Driver::CaracteristicasIesimoRobotActivo(Nat i) const {
  // TODO
-	Vector<Ciudad::robot*>::const_Iterador it = this->ciudad->Robots();
+    Ciudad::const_Iterador it = this->ciudad->Robots();
 	for (int x = 0; x < i; x++){
 		it.Avanzar();
 	}
@@ -115,7 +115,7 @@ Conj<Caracteristica> Driver::CaracteristicasIesimoRobotActivo(Nat i) const {
 
 Nat Driver::CantInfraccionesIesimoRobotActivo(Nat i) const {
  // TODO
-	Vector<Ciudad::robot*>::const_Iterador it = this->ciudad->Robots();
+    Ciudad::const_Iterador it = this->ciudad->Robots();
 	for (int x = 0; x < i; x++){
 		it.Avanzar();
 	}
@@ -141,7 +141,7 @@ void Driver::Entrar(const Conj<Caracteristica> &cs, const Estacion &estacionInic
 	Conj<Caracteristica>::const_Iterador it = cs.CrearIt();
 	ConjRapidoString adapt;
 
-	while (it.HaySiguiente){
+	while (it.HaySiguiente()){
 		adapt.Agregar(it.Siguiente());
 		it.Avanzar();
 	}	
