@@ -57,6 +57,19 @@ bool Restriccion_::Verifica(const ConjRapidoString &tags)
     }
 }
 
+Restriccion Restriccion_::toRestriccion() {
+    switch (type) {
+        case AND:
+            return left->toRestriccion() + " && " + right->toRestriccion();
+        case OR:
+            return left->toRestriccion() + " || " + right->toRestriccion();
+        case NOT:
+            return "!" + left->toRestriccion();
+        case VAR:
+            return value;
+    }
+}
+
 Restriccion_::~Restriccion_()
 {
     if (type == AND || type == OR) {

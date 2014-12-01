@@ -21,6 +21,7 @@ class Restriccion_
         static Restriccion_ *Var(std::string v);
 
         bool Verifica(const ConjRapidoString &tags);
+        Restriccion toRestriccion();
         Restriccion_(const Restriccion_& r);
         ~Restriccion_();
 
