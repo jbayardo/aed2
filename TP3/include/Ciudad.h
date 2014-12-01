@@ -1,7 +1,6 @@
 #ifndef CIUDAD_H
 #define CIUDAD_H 1
 
-#include <Python/Python.h>
 #include "aed2/aed2.h"
 #include "Tipos.h"
 #include "DiccString.h"
@@ -42,7 +41,7 @@ private:
 			const Nat infracciones, ConjRapidoString &tags,
 			const aed2::Estacion estacion)
 				: rur(rur),
-				infracciones(infracciones),	
+				infracciones(infracciones),
 				estacion(estacion),
 				tags(tags),
 				mi_estacion(NULL){};
