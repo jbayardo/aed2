@@ -105,17 +105,27 @@ Nat Driver::CantInfraccionesIesimoRobotActivo(Nat i) const {
 
 RUR Driver::ElMasInfractor() const {
  // TODO
+	Vector<robot*>::con it = this->ciudad->Robots()
 }
 
 void Driver::Entrar(const Conj<Caracteristica> &cs, const Estacion &estacionInicial) {
  // TODO
+	Conj<Caracteristica>::const_Iterador it = cs.CrearIt();
+	ConjRapidoString adapt;
+
+	while (it.HaySiguiente){
+		adapt.Agregar(it.Siguiente);
+	}	
+	this->ciudad->Entrar(adapt, estacionInicial);
 }
 
 void Driver::Mover(RUR robot, const Estacion &destino) {
  // TODO
+	this->ciudad->Mover(robot, destino);
 }
 
 void Driver::Inspeccion(const Estacion &e) {
+	this->ciudad->Inspeccion(e);
     // TODO
 }
 
