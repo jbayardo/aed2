@@ -28,7 +28,7 @@ public:
 
 private:
 	Vector<Restriccion_*> sendas;
-	DiccString<DiccString<Nat>> conexiones;
+	DiccString<DiccString<Nat> > conexiones;
 	Conj<Estacion> estaciones;
 };
 
