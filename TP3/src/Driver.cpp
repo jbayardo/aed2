@@ -75,13 +75,6 @@ Restriccion Driver::IesimaRestriccionDeSenda(const Estacion &e1, Nat i) const {
 
 }
 
-void Driver::AgregarSenda(const Estacion &e1, const Estacion &e2, Restriccion r) {
-    // TODO
-    ArbolSintactico* expr = ArbolSintactico::LeerDeString(r);
-	this->mapa->Conectar(e1, e2, *ArboltoRestr(expr));
-	delete expr;
-}
-
 Restriccion_* ArboltoRestr(ArbolSintactico* a){
 	if (a->raiz == "|") {
 		return Restriccion_::Or(ArboltoRestr(a->izq), ArboltoRestr(a->der));
@@ -95,6 +88,13 @@ Restriccion_* ArboltoRestr(ArbolSintactico* a){
 	else {
 		return Restriccion_::Var(a->raiz);
 	}
+}
+
+void Driver::AgregarSenda(const Estacion &e1, const Estacion &e2, Restriccion r) {
+    // TODO
+    ArbolSintactico* expr = ArbolSintactico::LeerDeString(r);
+	this->mapa->Conectar(e1, e2, *ArboltoRestr(expr));
+	delete expr;
 }
 
 
