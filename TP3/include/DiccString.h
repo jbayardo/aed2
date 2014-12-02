@@ -6,8 +6,9 @@
 template <typename T>
 class DiccString {
     public:
-        DiccString() : claves(Conj<std::string>()), significados(Nodo()) {};
+        DiccString() {};
         DiccString(const DiccString &otra);
+        ~DiccString(){};
         void Definir(const std::string k, T *v);
         bool Definido(const std::string k) const;
         T& Obtener(const std::string k) const;
@@ -16,14 +17,17 @@ class DiccString {
 		struct Nodo {
             public:
 				~Nodo() {
-					delete[] this->significado;
-
 					for (int i = 0; i < 256; i++) {
-						delete this->continuacion[i];
+                        if (this->continuacion.Definido(i)){                           
+						  delete this->continuacion[i];
+                        }
 					}
 				}
 
-				Nodo() : continuacion(Arreglo<Nodo*>(256)), significado(NULL) {}
+				Nodo(){
+                    continuacion = Arreglo<Nodo*>(256);          
+                    significado = NULL;
+                }
                 Arreglo<Nodo*> continuacion;
                 T *significado;
         };
@@ -50,9 +54,8 @@ void DiccString<T>::Definir(const std::string k, T* v) {
     bool nuevo = false;
 
     while (k.length() > i){
-        if (t->continuacion[(int)k[i]] == NULL) {
-            Nodo * tr = new Nodo();
-            t->continuacion[(int)k[i]] = tr;
+        if (!t->continuacion.Definido((int)k[i])) {
+            t->continuacion.Definir((int)k[i], new Nodo());
             nuevo = true;
         }
 
@@ -71,7 +74,7 @@ bool DiccString<T>::Definido(const std::string k) const {
     int i = 0;
     const Nodo * t = &(this->significados);
 
-    while ((i < k.length()) && (t->continuacion[(int)k[i]] != NULL)) {
+    while ((i < k.length()) && t->continuacion.Definido((int)k[i])) {
         t = t->continuacion[(int)k[i]];
         i++;
     }

@@ -6,7 +6,6 @@
 
 #include <string>
 #include <iostream>
-#include <Tipos.h>
 
 using namespace aed2;
 
@@ -88,7 +87,7 @@ bool Comparar(const T &t, const S &s)
  */
 void test_ciudad_simple()
 {
-    Conj<aed2::Estacion> estaciones;
+    Conj<Estacion> estaciones;
     estaciones.Agregar("Belgrano");
     estaciones.Agregar("Retiro");
     estaciones.Agregar("Martinez");
@@ -150,9 +149,12 @@ int main(int argc, char **argv)
      * La interacción con el TAD Ciudad se debe hacer exclusivamente  *
      * a través de la interfaz del driver.                            *
      ******************************************************************/
-	DiccString<int> dictest;
-	dictest.Definir("tu vieja", new int(2));
-	ASSERT(dictest.Definido("tu vieja"));
-	ASSERT_EQ(dictest.Obtener("tu vieja"), 2);
+    DiccString<int>* dictest = new DiccString<int>();
+    int* p = new int(2);
+    dictest->Definir("tu vieja", p);
+    ASSERT(dictest->Definido("tu vieja"));
+    ASSERT_EQ(dictest->Obtener("tu vieja"), 2);
+    delete dictest;
+    delete p;
     return 0;
 }
