@@ -72,7 +72,26 @@ Estacion Driver::IesimaEstacionDeSenda(const Estacion &e, Nat i) const {
 
 Restriccion Driver::IesimaRestriccionDeSenda(const Estacion &e1, Nat i) const {
  // TODO
-
+	//Encuentro la senda iesima de una estacion
+	Conj<Estacion>::const_Iterador itE = this->mapa->Estaciones();
+	Nat x = 0;
+	Estacion e2;
+	while (x < i){
+		if (this->mapa->Conectadas(itE.Siguiente(), e1)){
+			x++;
+			e2 = itE.Siguiente();
+		}
+		if (itE.HaySiguiente()) { itE.Avanzar(); }
+	}
+	
+	//Busco el id de esa senda y itero hasta su restriccion
+	Nat idS = this->mapa->idSenda(e1, e2);
+	Vector<Restriccion_*>::const_Iterador sendas = this->mapa->Sendas();
+	for (Nat x = 0; x < idS; x++){
+		sendas.Avanzar();
+	}
+	
+	return sendas.Siguiente()->toRestriccion();
 }
 
 Restriccion_* ArboltoRestr(ArbolSintactico* a){
