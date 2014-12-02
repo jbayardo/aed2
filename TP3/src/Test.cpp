@@ -141,7 +141,7 @@ void test_ciudad_simple()
 
 int main(int argc, char **argv)
 {
-    //RUN_TEST(test_ciudad_simple);
+    RUN_TEST(test_ciudad_simple);
 
     /******************************************************************
      * TODO: escribir casos de test exhaustivos para todas            *
