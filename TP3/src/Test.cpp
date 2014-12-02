@@ -150,11 +150,9 @@ int main(int argc, char **argv)
      * a través de la interfaz del driver.                            *
      ******************************************************************/
     DiccString<int>* dictest = new DiccString<int>();
-    int* p = new int(2);
-    dictest->Definir("tu vieja", p);
+    dictest->Definir("tu vieja", 2);
     ASSERT(dictest->Definido("tu vieja"));
     ASSERT_EQ(dictest->Obtener("tu vieja"), 2);
     delete dictest;
-    delete p;
     return 0;
 }

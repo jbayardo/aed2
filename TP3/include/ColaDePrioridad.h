@@ -67,7 +67,7 @@ ColaDePrioridad<T>::ColaDePrioridad(const ColaDePrioridad<T> &otra) {
     this->ultimo = NULL;
     this->_tamano = 0;
 
-    if (otra.Tamano() > 0) {
+    if (otra._tamano) {
         this->cabeza = new Nodo(otra.cabeza);
         this->_tamano = otra._tamano;
 

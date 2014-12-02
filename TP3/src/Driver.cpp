@@ -3,192 +3,194 @@
 
 namespace aed2 {
 
-Driver::Driver(const Conj<Estacion> &estacionesIniciales) {
-    this->mapa = new Mapa();
-    this->ciudad = NULL;
-}
-
-Driver::~Driver() {
-    if (this->mapa != NULL) {
-        delete this->mapa;
-    }
-
-    if (this->ciudad != NULL) {
-        delete this->ciudad;
-    }
-}
-
-Nat Driver::CantidadEstaciones() const {
-    Conj<Estacion>::const_Iterador it = this->mapa->Estaciones();
-    Nat output = 0;
-
-    while (it.HaySiguiente()) {
-        output++;
-        it.Avanzar();
-    }
-
-    return output;
-}
-
-Estacion Driver::IesimaEstacion(Nat i) const {
-    Conj<Estacion>::const_Iterador it = this->mapa->Estaciones();
-    Nat j = 0;
-
-    while (it.HaySiguiente() && j < i) {
-        j++;
-        it.Avanzar();
-    }
-
-    return it.Siguiente();
-}
-
-
-Nat Driver::CantidadDeSendasParaEstacion(const Estacion &e) const {
-    Conj<Estacion>::const_Iterador it = this->mapa->Estaciones();
-    Nat output = 0;
-
-    while (it.HaySiguiente()) {
-        if (this->mapa->Conectadas(e, it.Siguiente())) {
-            ++output;
-        }
-
-        it.Avanzar();
-    }
-
-    return output;
-}
-
-Estacion Driver::IesimaEstacionDeSenda(const Estacion &e, Nat i) const {
-    Conj<Estacion>::const_Iterador it = this->mapa->Estaciones();
-    Nat j = 0;
-
-    while (it.HaySiguiente() && j < i) {
-        ++j;
-        it.Avanzar();
-    }
-
-    return it.Siguiente();
-}
-
-Restriccion Driver::IesimaRestriccionDeSenda(const Estacion &e1, Nat i) const {
- // TODO
-
-}
-
-void Driver::AgregarSenda(const Estacion &e1, const Estacion &e2, Restriccion r) {
-    // TODO
-    ArbolSintactico* expr = ArbolSintactico::LeerDeString(r);
-	this->mapa->Conectar(e1, e2, *ArboltoRestr(expr));
-	delete expr;
-}
-
-Restriccion_* ArboltoRestr(ArbolSintactico* a){
-	if (a->raiz == "|") {
-		return Restriccion_::Or(ArboltoRestr(a->izq), ArboltoRestr(a->der));
-	}
-	else if (a->raiz == "&") {
-		return Restriccion_::And(ArboltoRestr(a->izq), ArboltoRestr(a->der));
-	}
-	else if (a->raiz == "!") {
-		return Restriccion_::Not(ArboltoRestr(a->izq));
-	}
-	else {
-		return Restriccion_::Var(a->raiz);
-	}
-}
-
-
-Nat Driver::CantidadRobotsActivos() const {
- // TODO
-	Ciudad::const_Iterador it = this->ciudad->Robots();
-	Nat ret = 0;
-	while (it.HaySiguiente()){
-		it.Avanzar();
-		ret++;
-	}
-	return ret;
-}
-
-RUR Driver::IesimoRobotActivo(Nat i) const {
- // TODO
-	Ciudad::const_Iterador it = this->ciudad->Robots();
-	for (int x = 0; x < i; x++){
-		it.Avanzar();
-	}
-	return it.Siguiente()->rur_();
-}
-
-Estacion Driver::EstacionActualIesimoRobotActivo(Nat i) const {
- // TODO
-	Ciudad::const_Iterador it = this->ciudad->Robots();
-	for (int x = 0; x < i; x++){
-		it.Avanzar();
-	}
-	return this->ciudad->Estacion(it.Siguiente()->rur_());
-}
-
-Conj<Caracteristica> Driver::CaracteristicasIesimoRobotActivo(Nat i) const {
- // TODO
-    Ciudad::const_Iterador it = this->ciudad->Robots();
-	for (int x = 0; x < i; x++){
-		it.Avanzar();
+	Driver::Driver(const Conj<Estacion> &estacionesIniciales) {
+		this->mapa = new Mapa();
+		this->ciudad = NULL;
 	}
 
-	Conj<Caracteristica>::const_Iterador cars = it.Siguiente()->tags_().CrearIt();
-	Conj<Caracteristica> ret;
+	Driver::~Driver() {
+		if (this->mapa != NULL) {
+			delete this->mapa;
+		}
 
-	while (cars.HaySiguiente()){
-		ret.Agregar(cars.Siguiente());
-		cars.Avanzar();
+		if (this->ciudad != NULL) {
+			delete this->ciudad;
+		}
 	}
 
-	return ret;
-}
+	Nat Driver::CantidadEstaciones() const {
+		Conj<Estacion>::const_Iterador it = this->mapa->Estaciones();
+		Nat output = 0;
 
-Nat Driver::CantInfraccionesIesimoRobotActivo(Nat i) const {
- // TODO
-    Ciudad::const_Iterador it = this->ciudad->Robots();
-	for (int x = 0; x < i; x++){
-		it.Avanzar();
+		while (it.HaySiguiente()) {
+			output++;
+			it.Avanzar();
+		}
+
+		return output;
 	}
-	return it.Siguiente()->infracciones_();
-}
 
-RUR Driver::ElMasInfractor() const {
- // TODO
-	Ciudad::const_Iterador r = this->ciudad->Robots();
-    RUR max = -1;
-    Nat inf = 0;
-    while (r.HaySiguiente()){
-        if (r.Siguiente()->infracciones_() > inf){
-            max = r.Siguiente()->rur_();
-        }
-        r.Avanzar();
-    }
-    return max;
-}
+	Estacion Driver::IesimaEstacion(Nat i) const {
+		Conj<Estacion>::const_Iterador it = this->mapa->Estaciones();
+		Nat j = 0;
 
-void Driver::Entrar(const Conj<Caracteristica> &cs, const Estacion &estacionInicial) {
- // TODO
-	Conj<Caracteristica>::const_Iterador it = cs.CrearIt();
-	ConjRapidoString adapt;
+		while (it.HaySiguiente() && j < i) {
+			j++;
+			it.Avanzar();
+		}
 
-	while (it.HaySiguiente()){
-		adapt.Agregar(it.Siguiente());
-		it.Avanzar();
-	}	
-	this->ciudad->Entrar(adapt, estacionInicial);
-}
+		return it.Siguiente();
+	}
 
-void Driver::Mover(RUR robot, const Estacion &destino) {
- // TODO
-	this->ciudad->Mover(robot, destino);
-}
 
-void Driver::Inspeccion(const Estacion &e) {
-	this->ciudad->Inspeccion(e);
-    // TODO
-}
+	Nat Driver::CantidadDeSendasParaEstacion(const Estacion &e) const {
+		Conj<Estacion>::const_Iterador it = this->mapa->Estaciones();
+		Nat output = 0;
+
+		while (it.HaySiguiente()) {
+			if (this->mapa->Conectadas(e, it.Siguiente())) {
+				++output;
+			}
+
+			it.Avanzar();
+		}
+
+		return output;
+	}
+
+	Estacion Driver::IesimaEstacionDeSenda(const Estacion &e, Nat i) const {
+		Conj<Estacion>::const_Iterador it = this->mapa->Estaciones();
+		Nat j = 0;
+
+		while (it.HaySiguiente() && j < i) {
+			++j;
+			it.Avanzar();
+		}
+
+		return it.Siguiente();
+	}
+
+	Restriccion Driver::IesimaRestriccionDeSenda(const Estacion &e1, Nat i) const {
+	 // TODO
+
+	}
+
+	void Driver::AgregarSenda(const Estacion &e1, const Estacion &e2, Restriccion r) {
+		// TODO
+		ArbolSintactico* expr = ArbolSintactico::LeerDeString(r);
+		this->mapa->Conectar(e1, e2, ArboltoRestr(expr));
+		delete expr;
+	}
+
+
+
+	Nat Driver::CantidadRobotsActivos() const {
+	 // TODO
+		Ciudad::const_Iterador it = this->ciudad->Robots();
+		Nat ret = 0;
+		while (it.HaySiguiente()){
+			it.Avanzar();
+			ret++;
+		}
+		return ret;
+	}
+
+	RUR Driver::IesimoRobotActivo(Nat i) const {
+	 // TODO
+		Ciudad::const_Iterador it = this->ciudad->Robots();
+		for (int x = 0; x < i; x++){
+			it.Avanzar();
+		}
+		return it.Siguiente()->rur_();
+	}
+
+	Estacion Driver::EstacionActualIesimoRobotActivo(Nat i) const {
+	 // TODO
+		Ciudad::const_Iterador it = this->ciudad->Robots();
+		for (int x = 0; x < i; x++){
+			it.Avanzar();
+		}
+		return this->ciudad->Estacion(it.Siguiente()->rur_());
+	}
+
+	Conj<Caracteristica> Driver::CaracteristicasIesimoRobotActivo(Nat i) const {
+	 // TODO
+		Ciudad::const_Iterador it = this->ciudad->Robots();
+		for (int x = 0; x < i; x++){
+			it.Avanzar();
+		}
+
+		Conj<Caracteristica>::const_Iterador cars = it.Siguiente()->tags_().CrearIt();
+		Conj<Caracteristica> ret;
+
+		while (cars.HaySiguiente()){
+			ret.Agregar(cars.Siguiente());
+			cars.Avanzar();
+		}
+
+		return ret;
+	}
+
+	Nat Driver::CantInfraccionesIesimoRobotActivo(Nat i) const {
+	 // TODO
+		Ciudad::const_Iterador it = this->ciudad->Robots();
+		for (int x = 0; x < i; x++){
+			it.Avanzar();
+		}
+		return it.Siguiente()->infracciones_();
+	}
+
+	RUR Driver::ElMasInfractor() const {
+	 // TODO
+		Ciudad::const_Iterador r = this->ciudad->Robots();
+		RUR max = -1;
+		Nat inf = 0;
+		while (r.HaySiguiente()){
+			if (r.Siguiente()->infracciones_() > inf){
+				max = r.Siguiente()->rur_();
+			}
+			r.Avanzar();
+		}
+		return max;
+	}
+
+	void Driver::Entrar(const Conj<Caracteristica> &cs, const Estacion &estacionInicial) {
+	 // TODO
+		Conj<Caracteristica>::const_Iterador it = cs.CrearIt();
+		ConjRapidoString adapt;
+
+		while (it.HaySiguiente()){
+			adapt.Agregar(it.Siguiente());
+			it.Avanzar();
+		}
+		this->ciudad->Entrar(adapt, estacionInicial);
+	}
+
+	void Driver::Mover(RUR robot, const Estacion &destino) {
+	 // TODO
+		this->ciudad->Mover(robot, destino);
+	}
+
+	void Driver::Inspeccion(const Estacion &e) {
+		this->ciudad->Inspeccion(e);
+		// TODO
+	}
+
+
+	 Restriccion_ *Driver::ArboltoRestr(ArbolSintactico *a) {
+		if (a->raiz == "|") {
+			return Restriccion_::Or(ArboltoRestr(a->izq), ArboltoRestr(a->der));
+		}
+		else if (a->raiz == "&") {
+			return Restriccion_::And(ArboltoRestr(a->izq), ArboltoRestr(a->der));
+		}
+		else if (a->raiz == "!") {
+			return Restriccion_::Not(ArboltoRestr(a->izq));
+		}
+		else {
+			return Restriccion_::Var(a->raiz);
+		}
+	}
 
 } // namespace aed2
 

@@ -38,6 +38,8 @@ public:
 			delete mi_estacion;
 		}
 
+		robot(){};
+
 		robot& operator=(const robot& other){
 			rur = other.rur;
 			infracciones = other.infracciones;
@@ -83,19 +85,20 @@ public:
 		}
 
 		const ConjRapidoString& tags_() const{
-			return tags;
+			return *tags;
 		}
 
 	private:
 		RUR rur;
 		Nat infracciones;
-		ConjRapidoString &tags;
+		ConjRapidoString* tags;
 		aed2::Estacion estacion;
 		Vector<bool> infringe_restriccion;
 		ColaDePrioridad<robot>::Iterador* mi_estacion;
 
 		robot(const RUR rur,
-				const Nat infracciones, ConjRapidoString &tags,
+				const Nat infracciones,
+				ConjRapidoString* tags,
 				const aed2::Estacion estacion)
 				: rur(rur),
 				  infracciones(infracciones),
