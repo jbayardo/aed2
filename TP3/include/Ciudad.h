@@ -35,7 +35,9 @@ public:
 	friend class Ciudad;
 	public:
 		~robot(){
-			delete mi_estacion;
+			if (mi_estacion != NULL){
+				delete mi_estacion;
+			}
 		}
 
 		robot(){};

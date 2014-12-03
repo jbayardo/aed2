@@ -38,7 +38,7 @@ void Ciudad::Entrar(ConjRapidoString* ts, const aed2::Estacion &e){
 
 
 	assert(robotsEnEstacion.Definido(e));
-	
+
 	robot* rob = new robot(ProximoRUR(), 0, ts, e);
 	rob->mi_estacion = robotsEnEstacion.Obtener(e).Encolar(*rob);
 
@@ -83,6 +83,7 @@ void Ciudad::Mover(const RUR rur, const aed2::Estacion e){
 
 	rob->estacion = e;
 	delete rob->mi_estacion;
+	rob->mi_estacion = NULL;
 
 	rob->mi_estacion = robotsEnEstacion.Obtener(e).Encolar(*rob);
 }
