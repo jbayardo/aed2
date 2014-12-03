@@ -1,5 +1,4 @@
 #include "tests.h"
-#include "MiniTest.h"
 
 int main(int argc, char *argv[]) {
     RUN_TEST(test_cola_de_prioridad);
