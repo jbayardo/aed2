@@ -13,7 +13,6 @@ Ciudad::Ciudad(const Mapa *m): mapa(m){
 Ciudad::~Ciudad(){
 	for (int i = 0; i < robots.Longitud(); ++i) {
 		if (robots[i] != NULL){
-			delete robots[i]->tags;
 			delete robots[i];
 		}
 	}
@@ -87,7 +86,7 @@ void Ciudad::Mover(const RUR rur, const aed2::Estacion e){
 
 	rob->estacion = e;
 	delete rob->mi_estacion;
-	rob->mi_estacion = NULL;
+	rob->mi_estacion = NULL; // NO BORRAR; Se usa para distinguir robots de cola
 
 	rob->mi_estacion = robotsEnEstacion.Obtener(e).Encolar(*rob);
 }
@@ -108,7 +107,6 @@ void Ciudad::Inspeccion(const aed2::Estacion e){
 
 	if (cola.Tamano() > 0){
 		robot rob = cola.Desencolar();
-		delete robots[rob.rur]->tags;
 		delete robots[rob.rur];
 		robots[rob.rur] = NULL;
 	}

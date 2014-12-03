@@ -37,6 +37,9 @@ public:
 		~robot(){
 			if (mi_estacion != NULL){
 				delete mi_estacion;
+				if (tags != NULL){
+					delete tags;
+				}
 			}
 		}
 
