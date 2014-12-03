@@ -167,7 +167,7 @@ T ColaDePrioridad<T>::Desencolar(const Iterador *i) {
 }
 
 template <typename T>
-ColaDePrioridad<T>::Nodo* ColaDePrioridad<T>::Subir(Nodo *node) {
+typename ColaDePrioridad<T>::Nodo* ColaDePrioridad<T>::Subir(Nodo *node) {
     while (node->arr != NULL && *node->arr->dato < *node->dato) {
         T* tmp = node->arr->dato;
         node->arr->dato = node->dato;
