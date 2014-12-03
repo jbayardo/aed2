@@ -180,79 +180,44 @@ void test_ciudad_con_movimientos()
 
 int main(int argc, char **argv)
 {
-	RUN_TEST(test_ciudad_simple);
-	RUN_TEST(test_ciudad_con_movimientos);
+   RUN_TEST(test_ciudad_simple);
+   RUN_TEST(test_ciudad_con_movimientos);
 
-	/******************************************************************
-	 * TODO: escribir casos de test exhaustivos para todas            *
-	 * las funcionalidades del módulo.                                *
-	 * La interacción con el TAD Ciudad se debe hacer exclusivamente  *
-	 * a través de la interfaz del driver.                            *
-	 ******************************************************************/
+    /******************************************************************
+     * TODO: escribir casos de test exhaustivos para todas            *
+     * las funcionalidades del módulo.                                *
+     * La interacción con el TAD Ciudad se debe hacer exclusivamente  *
+     * a través de la interfaz del driver.                            *
+     ******************************************************************/
 	const std::string word_list[] = { "about", "after", "again", "air", "all", "along", "also", "an", "and", "another", "any", "are", "around", "as", "at", "away", "back", "be", "because", "been", "before", "below", "between", "both", "but", "by", "came", "can", "come", "could", "day", "did", "different", "do", "does", "do't", "down", "each", "end", "even", "every", "few", "find", "first", "for", "found", "from", "get", "give", "go", "good", "great", "had", "has", "have", "he", "help", "her", "here", "him", "his", "home", "house", "how", "I", "if", "in", "into", "is", "it", "its", "just", "know", "large", "last", "left", "like", "line", "little", "long", "look", "made", "make", "man", "many", "may", "me", "men", "might", "more", "most", "Mr.", "must", "my", "name", "never", "new", "next", "no", "not", "now", "number", "of", "off", "old", "on", "one", "only", "or", "other", "our", "out", "over", "own", "part", "people", "place", "put", "read", "right", "said", "same", "saw", "say", "see", "she", "should", "show", "small", "so", "some", "something", "sound", "still", "such", "take", "tell", "than", "that", "the", "them", "then", "there", "these", "they", "thing", "think", "this", "those", "thought", "three", "through", "time", "to", "together", "too", "two", "under", "up", "us", "use", "very", "want", "water", "way", "we", "well", "went", "were", "what", "when", "where", "which", "while", "who", "why", "will", "with", "word", "work", "world", "would", "write", "year", "you", "your", "was", };
 
-	DiccString<int>* dictest = new DiccString<int>();
-	for (int i = 0; i < 187; ++i) {
-		dictest->Definir(word_list[i], i);
-		ASSERT(dictest->Definido(word_list[i]));
-		ASSERT_EQ(dictest->Obtener(word_list[i]), i);
-	}
-	delete dictest;
+    DiccString<int>* dictest = new DiccString<int>();
+    for (int i = 0; i < 187; ++i) {
+        dictest->Definir(word_list[i], i);
+        ASSERT(dictest->Definido(word_list[i]));
+        ASSERT_EQ(dictest->Obtener(word_list[i]), i);
+    }
+    delete dictest;
 
-	DiccString<std::string>* dic_test_string = new DiccString<std::string>();
-	for (int i = 0; i < 187; ++i) {
-		dic_test_string->Definir(word_list[i], word_list[i]);
-		ASSERT(dic_test_string->Definido(word_list[i]));
-		ASSERT_EQ(dic_test_string->Obtener(word_list[i]), word_list[i]);
-	}
-	delete dic_test_string;
+    DiccString<std::string>* dic_test_string = new DiccString<std::string>();
+    for (int i = 0; i < 187; ++i) {
+        dic_test_string->Definir(word_list[i], word_list[i]);
+        ASSERT(dic_test_string->Definido(word_list[i]));
+        ASSERT_EQ(dic_test_string->Obtener(word_list[i]), word_list[i]);
+    }
+    delete dic_test_string;
 
-	DiccString<DiccString<int> >* compuesto = new DiccString<DiccString<int> >();
+    DiccString<DiccString<int> >* compuesto = new DiccString<DiccString<int> >();
 
-	for (int i = 0; i < 187; ++i){
-		compuesto->Definir(word_list[i], DiccString<int>());
-		compuesto->Obtener(word_list[i]).Definir(word_list[i], i);
+    for (int i = 0; i < 187; ++i){
+        compuesto->Definir(word_list[i], DiccString<int>());
+        compuesto->Obtener(word_list[i]).Definir(word_list[i], i);
 
-		ASSERT_EQ(compuesto->Obtener(word_list[i]).Obtener(word_list[i]), i);
-	}
-	delete compuesto;
-	std::cout << "El dicc string funca, falta ver memoria" << std::endl;
-
-
-
-
-	ColaDePrioridad<int>* cola = new ColaDePrioridad<int>();
-
-	int random_200[] = { 85, 115, 108, 55, 179, 170, 118, 70, 1, 96, 25, 156, 172, 192, 131, 197, 59, 69, 90, 19, 181, 128, 35, 64, 175, 147, 14, 157, 21, 139, 9, 165, 113, 187, 50, 153, 110, 168, 129, 196, 140, 159, 45, 66, 13, 141, 44, 158, 87, 176, 48, 146, 54, 184, 94, 86, 7, 133, 80, 29, 166, 144, 116, 31, 40, 177, 132, 0, 195, 167, 93, 76, 123, 151, 109, 199, 28, 105, 95, 51, 32, 149, 98, 198, 53, 134, 111, 84, 79, 89, 126, 16, 122, 154, 83, 162, 142, 183, 65, 136, 178, 190, 106, 119, 33, 148, 155, 169, 160, 77, 68, 104, 23, 194, 188, 41, 92, 5, 99, 72, 58, 52, 61, 67, 42, 20, 161, 57, 101, 117, 17, 71, 164, 125, 36, 56, 38, 78, 49, 137, 102, 150, 103, 8, 6, 43, 124, 22, 189, 174, 30, 121, 173, 193, 100, 171, 81, 127, 18, 74, 180, 152, 12, 26, 11, 27, 114, 182, 73, 120, 34, 75, 185, 107, 39, 97, 143, 88, 186, 15, 82, 138, 4, 130, 91, 112, 2, 46, 145, 191, 135, 60, 10, 24, 37, 47, 63, 3, 163, 62 };
-	int sorted_200[200];
-
-
-	for (int j = 0; j < 200; ++j) {
-		ColaDePrioridad<int>::Iterador* it = cola->Encolar(random_200[j]);
-		delete it;
-	}
-	std::cout << "Encole todo" << std::endl;
-
-
-	for (int k = 0; cola->Tamano(); k++) {
-		sorted_200[k] = cola->Desencolar();
-	}
-
-	std::cout << "Desencole todo" << std::endl;
-
-	ASSERT_EQ(cola->Tamano(), 0);
-
-	for (int l = 0; l < 200; l++) {
-		ASSERT_EQ(sorted_200[l], 199 - l);
-	}
-
-	std::cout << "La cola funca, falta ver memoria" << std::endl;
-
-	delete cola;
-
-
-
-	std::cout << "Test terminado" << std::endl;
+        ASSERT_EQ(compuesto->Obtener(word_list[i]).Obtener(word_list[i]), i);
+    }
+    delete compuesto;
+    std::cout << "El dicc string funca, falta ver memoria" << std::endl;
+    std::cout << "Test terminado" << std::endl;
 
 	Mapa* mapatest = new Mapa();
 	mapatest->Agregar("Belgrano");//
