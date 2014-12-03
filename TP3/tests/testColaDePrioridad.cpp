@@ -12,8 +12,7 @@ void test_es_max_heap(T arr[], aed2::Nat N)
         if (arr[i] > max) {
             max = arr[i];
         }
-
-        cola.Encolar(arr[i]);
+        delete cola.Encolar(arr[i]);
     }
 
     assert(cola.Desencolar() == max);
@@ -24,22 +23,22 @@ void test_desencolar_ordenado(T arr[], aed2::Nat N)
 {
     ColaDePrioridad<T> cola = ColaDePrioridad<T>();
 
-    for (aed2::Nat i = 0; i < N - 1; i++) {
+    for (aed2::Nat i = 0; i < N; i++) {
         delete cola.Encolar(arr[i]);
         assert(cola.Tamano() == i + 1);
     }
 
-    cola.Encolar(arr[N - 1]);
-
     assert(cola.Tamano() == N);
     T *ordenada = new T[N];
 
-    for (aed2::Nat i = N - 1; i >= 0; i--) {
+
+    for (int i = 0; i < N; ++i) {
         ordenada[i] = cola.Desencolar();
     }
 
+
     for (aed2::Nat i = 0; i < N - 1; i++) {
-        assert(ordenada[i] <= ordenada[i + 1]);
+        assert(ordenada[i] >= ordenada[i + 1]);
     }
 
     assert(cola.Tamano() == 0);

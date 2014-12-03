@@ -159,7 +159,7 @@ void test_ciudad_con_movimientos()
     assert(caba.CantidadDeSendasParaEstacion("Belgrano") == 2);
     assert(caba.IesimaEstacionDeSenda("Martinez", 1) == "Retiro");
     assert(caba.IesimaEstacionDeSenda("Retiro", 2) == "Martinez");
-    assert(caba.IesimaRestriccionDeSenda("Belgrano", 1) == "(trenDePasajeros | trenDeCarga) & !trenDeLaAlegria");
+    assert(caba.IesimaRestriccionDeSenda("Belgrano", 1) == "((trenDePasajeros) | (trenDeCarga)) & (!(trenDeLaAlegria))");
 
 
     caba.Mover(1, "Belgrano");
