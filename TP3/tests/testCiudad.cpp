@@ -1,6 +1,4 @@
 #include "tests.h"
-#include "Ciudad.h"
-#include "Driver.h"
 
 using namespace aed2;
 
@@ -8,14 +6,14 @@ using namespace aed2;
  * Imprime un elemento a un string, en vez de a una pantalla,
  * a través del operador <<
  */
-template <typename T>
-std::string to_str(const T &t)
-{
-    std::stringstream ss;
-    ss << t;
+// template <typename T>
+// std::string to_str(const T &t)
+// {
+//     std::stringstream ss;
+//     ss << t;
 
-    return ss.str();
-}
+//     return ss.str();
+// }
 
 /**
  * Esta función se puede utilizar para comparar dos colecciones
@@ -102,9 +100,9 @@ void test_ciudad_simple()
     caba.Entrar(r2, "Retiro");  // RUR 1
     caba.Entrar(r3, "Martinez"); // RUR 2
 
-    ASSERT_EQ(caba.CantidadEstaciones(), 3);
-    ASSERT_EQ(caba.CantidadRobotsActivos(), 3);
-    ASSERT_EQ(caba.CantidadDeSendasParaEstacion("Belgrano"), 2);
+    assert(caba.CantidadEstaciones() == 3);
+    assert(caba.CantidadRobotsActivos() == 3);
+    assert(caba.CantidadDeSendasParaEstacion("Belgrano") == 2);
 
     caba.Mover(0, "Retiro");   // RUR 0: 0 infracciones
     caba.Mover(0, "Martinez"); // RUR 0: 1 infracciones
@@ -122,15 +120,15 @@ void test_ciudad_simple()
         infraccionesRobots.Definir(caba.IesimoRobotActivo(i), caba.CantInfraccionesIesimoRobotActivo(i));
     }
 
-    ASSERT_EQ(infraccionesRobots.Significado(0), 1);
-    ASSERT_EQ(infraccionesRobots.Significado(1), 1);
-    ASSERT_EQ(infraccionesRobots.Significado(2), 2);
+    assert(infraccionesRobots.Significado(0) == 1);
+    assert(infraccionesRobots.Significado(1) == 1);
+    assert(infraccionesRobots.Significado(2) == 2);
 
-    ASSERT_EQ(caba.ElMasInfractor(), 2);
+    assert(caba.ElMasInfractor() == 2);
 
     // Vuela un robot
     caba.Inspeccion("Retiro");
-    ASSERT_EQ(caba.CantidadRobotsActivos(), 2);
+    assert(caba.CantidadRobotsActivos() == 2);
 
 }
 
@@ -155,28 +153,28 @@ void test_ciudad_con_movimientos()
     caba.Entrar(r1, "Belgrano"); // RUR 0
     caba.Entrar(r2, "Retiro");  // RUR 1
     caba.Entrar(r3, "Martinez"); // RUR 2
-    ASSERT_EQ(caba.IesimoRobotActivo(2), 2);
-    ASSERT_EQ(caba.IesimaEstacion(2), "Martinez");
-    ASSERT_EQ(caba.CantidadDeSendasParaEstacion("Martinez"), 2);
-    ASSERT_EQ(caba.CantidadDeSendasParaEstacion("Belgrano"), 2);
-    ASSERT_EQ(caba.IesimaEstacionDeSenda("Martinez", 1), "Retiro");
-    ASSERT_EQ(caba.IesimaEstacionDeSenda("Retiro", 2), "Martinez");
-    ASSERT_EQ(caba.IesimaRestriccionDeSenda("Belgrano", 1), "trenDePasajeros || trenDeCarga && !trenDeLaAlegria");
+    assert(caba.IesimoRobotActivo(2) == 2);
+    assert(caba.IesimaEstacion(2) == "Martinez");
+    assert(caba.CantidadDeSendasParaEstacion("Martinez") == 2);
+    assert(caba.CantidadDeSendasParaEstacion("Belgrano") == 2);
+    assert(caba.IesimaEstacionDeSenda("Martinez", 1) == "Retiro");
+    assert(caba.IesimaEstacionDeSenda("Retiro", 2) == "Martinez");
+    assert(caba.IesimaRestriccionDeSenda("Belgrano", 1) == "(trenDePasajeros | trenDeCarga) & !trenDeLaAlegria");
 
 
     caba.Mover(1, "Belgrano");
     caba.Mover(2, "Belgrano");
-    ASSERT_EQ(caba.ElMasInfractor(), 2);
-    ASSERT_EQ(caba.EstacionActualIesimoRobotActivo(2), "Belgrano");
-    ASSERT_EQ(caba.EstacionActualIesimoRobotActivo(1), "Belgrano");
+    assert(caba.ElMasInfractor() == 2);
+    assert(caba.EstacionActualIesimoRobotActivo(2) == "Belgrano");
+    assert(caba.EstacionActualIesimoRobotActivo(1) == "Belgrano");
 }
 
 void test_ciudad_cantidad_estaciones()
 {
     Conj<Estacion> estaciones;
 
-    Driver* caba = new Driver(estaciones);
-    ASSERT_EQ(caba->CantidadEstaciones(), 0);
+    Driver *caba = new Driver(estaciones);
+    assert(caba->CantidadEstaciones() == 0);
     delete(caba);
 
     estaciones.Agregar("Belgrano");
@@ -184,14 +182,14 @@ void test_ciudad_cantidad_estaciones()
     estaciones.Agregar("Martinez");
 
     caba = new Driver(estaciones);
-    ASSERT_EQ(caba->CantidadEstaciones(), 3);
+    assert(caba->CantidadEstaciones() == 3);
     delete(caba);
 
     estaciones.Agregar("Urquiza");
     estaciones.Agregar("Devoto");
 
     caba = new Driver(estaciones);
-    ASSERT_EQ(caba->CantidadEstaciones(), 5);
+    assert(caba->CantidadEstaciones() == 5);
     delete(caba);
 }
 
@@ -202,8 +200,8 @@ void test_ciudad_cantidad_de_robots_activos()
     estaciones.Agregar("Retiro");
     estaciones.Agregar("Martinez");
 
-    Driver* caba = new Driver(estaciones);
-    ASSERT_EQ(caba->CantidadRobotsActivos(), 0);
+    Driver *caba = new Driver(estaciones);
+    assert(caba->CantidadRobotsActivos() == 0);
 
     caba->AgregarSenda("Belgrano", "Retiro", "(trenDePasajeros | trenDeCarga) & !trenDeLaAlegria");
     caba->AgregarSenda("Martinez", "Retiro", "trenDeLaAlegria");
@@ -216,17 +214,10 @@ void test_ciudad_cantidad_de_robots_activos()
 
     caba->Entrar(r1, "Belgrano"); // RUR 0
     caba->Entrar(r2, "Retiro");  // RUR 1
-    ASSERT_EQ(caba->CantidadRobotsActivos(), 2);
+    assert(caba->CantidadRobotsActivos() == 2);
 
     caba->Entrar(r3, "Martinez"); // RUR 2
-    ASSERT_EQ(caba->CantidadRobotsActivos(), 3);
+    assert(caba->CantidadRobotsActivos() == 3);
 
     delete(caba);
-}
-
-void test_ciudad() {
-   RUN_TEST(test_ciudad_simple);
-   RUN_TEST(test_ciudad_con_movimientos);
-   RUN_TEST(test_ciudad_cantidad_estaciones);
-   RUN_TEST(test_ciudad_cantidad_de_robots_activos);
 }

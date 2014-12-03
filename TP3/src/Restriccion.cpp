@@ -23,23 +23,28 @@ Restriccion_::Restriccion_(Op t, std::string v, Restriccion_ *l, Restriccion_ *r
     type(t), value(v), left(l), right(r) {}
 
 
-Restriccion_ *Restriccion_::And(Restriccion_ *left, Restriccion_ *right) {
+Restriccion_ *Restriccion_::And(Restriccion_ *left, Restriccion_ *right)
+{
     return new Restriccion_(AND, "", left, right);
 }
 
-Restriccion_ *Restriccion_::Or(Restriccion_ *left, Restriccion_ *right) {
+Restriccion_ *Restriccion_::Or(Restriccion_ *left, Restriccion_ *right)
+{
     return new Restriccion_(OR, "", left, right);
 }
 
-Restriccion_ *Restriccion_::Not(Restriccion_ *left) {
+Restriccion_ *Restriccion_::Not(Restriccion_ *left)
+{
     return new Restriccion_(NOT, "", left, NULL);
 }
 
-Restriccion_ *Restriccion_::Var(std::string v) {
+Restriccion_ *Restriccion_::Var(std::string v)
+{
     return new Restriccion_(VAR, v, NULL, NULL);
 }
 
-bool Restriccion_::Verifica(const ConjRapidoString *tags) const {
+bool Restriccion_::Verifica(const ConjRapidoString *tags) const
+{
     switch (type) {
         case AND:
             return left->Verifica(tags) && right->Verifica(tags);
@@ -52,20 +57,8 @@ bool Restriccion_::Verifica(const ConjRapidoString *tags) const {
     }
 }
 
-Restriccion Restriccion_::toRestriccion() const {
-    switch (type) {
-        case AND:
-            return left->toRestriccion() + " && " + right->toRestriccion();
-        case OR:
-            return left->toRestriccion() + " || " + right->toRestriccion();
-        case NOT:
-            return "!" + left->toRestriccion();
-        case VAR:
-            return value;
-    }
-}
-
-Restriccion_::~Restriccion_() {
+Restriccion_::~Restriccion_()
+{
     if (type == AND || type == OR) {
         delete left;
         delete right;
@@ -74,7 +67,8 @@ Restriccion_::~Restriccion_() {
     }
 }
 
-Restriccion_::Restriccion_(const Restriccion_ &r) {
+Restriccion_::Restriccion_(const Restriccion_ &r)
+{
     switch (r.type) {
         case AND:
             And(new Restriccion_(*r.left), new Restriccion_(*r.right));
@@ -91,14 +85,15 @@ Restriccion_::Restriccion_(const Restriccion_ &r) {
     }
 }
 
-std::string Restriccion_::toString(Restriccion_ *r) {
-    switch (r->type){
+std::string Restriccion_::toString(Restriccion_ *r)
+{
+    switch (r->type) {
         case AND:
-            return "(" + toString(r->left) + ") & ("+ toString(r->right) + ")";
+            return "(" + toString(r->left) + ") & (" + toString(r->right) + ")";
         case OR:
-            return "(" + toString(r->left) + ") | ("+ toString(r->right) + ")";
+            return "(" + toString(r->left) + ") | (" + toString(r->right) + ")";
         case NOT:
-            return "!(" + toString(r->left) +")";
+            return "!(" + toString(r->left) + ")";
         case VAR:
             return r->value;
     }
