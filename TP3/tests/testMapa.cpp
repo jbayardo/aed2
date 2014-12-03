@@ -1,5 +1,4 @@
 #include "Mapa.h"
-#include "MiniTest.h"
 #include "tests.h"
 #include "Driver.h"
 
@@ -56,4 +55,8 @@ void test_agregar() {
 	delete expr;
 
 	delete mapatest;
+}
+
+void test_mapa() {
+
 }
