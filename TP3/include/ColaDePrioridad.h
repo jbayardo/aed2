@@ -33,11 +33,11 @@ public:
     ~ColaDePrioridad();
 
     Iterador* Encolar(const T &);
-    const T &Desencolar();
-    const T &Desencolar(const Iterador *);
+    T Desencolar();
+    T Desencolar(const Iterador *);
     aed2::Nat Tamano() const;
 private:
-    const T &Eliminar(Nodo *);
+    T Eliminar(Nodo *);
     void Subir(Nodo *);
     void Bajar(Nodo *);
 
@@ -154,12 +154,12 @@ typename ColaDePrioridad<T>::Iterador* ColaDePrioridad<T>::Encolar(const T &dato
 }
 
 template <typename T>
-const T &ColaDePrioridad<T>::Desencolar() {
+T ColaDePrioridad<T>::Desencolar() {
     return Eliminar(this->cabeza);
 }
 
 template <typename T>
-const T &ColaDePrioridad<T>::Desencolar(const Iterador *i) {
+T ColaDePrioridad<T>::Desencolar(const Iterador *i) {
     assert(i->heap == this);
 
     return Eliminar(i->nodo);
@@ -211,9 +211,9 @@ void ColaDePrioridad<T>::Bajar(Nodo *node) {
 }
 
 template <typename T>
-const T &ColaDePrioridad<T>::Eliminar(Nodo *node) {
+T ColaDePrioridad<T>::Eliminar(Nodo *node) {
     // Pre: node esta en la estructura
-    const T &tmp = node->dato;
+    T tmp = T(node->dato);
 
     if (this->Tamano() == 1) {
         delete this->cabeza;
