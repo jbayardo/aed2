@@ -2,7 +2,11 @@
 
 Mapa::Mapa() { }
 
-Mapa::~Mapa() { }
+Mapa::~Mapa() {
+	for (int i = 0; i < sendas.Longitud(); ++i){
+		delete sendas[i];
+	}
+}
 
 Mapa::Mapa(const Mapa &m) : sendas(m.sendas), conexiones(m.conexiones), estaciones(m.estaciones) { }
 

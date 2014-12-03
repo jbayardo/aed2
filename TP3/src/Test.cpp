@@ -141,7 +141,7 @@ void test_ciudad_simple()
 
 int main(int argc, char **argv)
 {
-    RUN_TEST(test_ciudad_simple);
+   RUN_TEST(test_ciudad_simple);
 
     /******************************************************************
      * TODO: escribir casos de test exhaustivos para todas            *
@@ -166,6 +166,22 @@ int main(int argc, char **argv)
         ASSERT_EQ(dic_test_string->Obtener(word_list[i]), word_list[i]);
     }
     delete dic_test_string;
+
+    DiccString<DiccString<int> >* compuesto = new DiccString<DiccString<int> >();
+
+    for (int i = 0; i < 187; ++i){
+        compuesto->Definir(word_list[i], DiccString<int>());
+        compuesto->Obtener(word_list[i]).Definir(word_list[i], i);
+
+        ASSERT_EQ(compuesto->Obtener(word_list[i]).Obtener(word_list[i]), i);
+    }
+
+    delete compuesto;
+
+
+
+
+
     std::cout << "El dicc string funca, falta ver memoria" << std::endl;
 
     ColaDePrioridad<int>* cola = new ColaDePrioridad<int>();

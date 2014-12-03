@@ -1,19 +1,23 @@
 #include "Ciudad.h"
 
-Ciudad::Ciudad(const Mapa &m){
-	Conj<aed2::Estacion>::const_Iterador it = m.Estaciones();
+Ciudad::Ciudad(const Mapa *m): mapa(m){
+	Conj<aed2::Estacion>::const_Iterador it = mapa->Estaciones();
 
 	while (it.HaySiguiente()){
 		robotsEnEstacion.Definir(it.Siguiente(), ColaDePrioridad<robot>());
 		it.Avanzar();
 	}
-	mapa = m;
+	//mapa = m;
 }
 
 Ciudad::~Ciudad(){
 	for (int i = 0; i < robots.Longitud(); ++i) {
-		delete robots[i];
+		if (robots[i] != NULL){
+			delete robots[i]->tags;
+			delete robots[i];
+		}
 	}
+	delete this->mapa;
 }
 
 void Ciudad::Entrar(ConjRapidoString* ts, const aed2::Estacion &e){
@@ -42,7 +46,7 @@ void Ciudad::Entrar(ConjRapidoString* ts, const aed2::Estacion &e){
 	robot* rob = new robot(ProximoRUR(), 0, ts, e);
 	rob->mi_estacion = robotsEnEstacion.Obtener(e).Encolar(*rob);
 
-	Vector<Restriccion_*>::const_Iterador it = this->mapa.Sendas();
+	Vector<Restriccion_*>::const_Iterador it = this->mapa->Sendas();
 
 	while (it.HaySiguiente()){
 		rob->infringe_restriccion.AgregarAtras(!it.Siguiente()->Verifica(ts));
@@ -75,7 +79,7 @@ void Ciudad::Mover(const RUR rur, const aed2::Estacion e){
 	robot* rob = robots[rur];
 	robotsEnEstacion.Obtener(rob->estacion).Desencolar(rob->mi_estacion);
 
-	Nat id_senda = mapa.idSenda(rob->estacion, e);
+	Nat id_senda = mapa->idSenda(rob->estacion, e);
 
 	if (rob->infringe_restriccion[id_senda]){
 		rob->infracciones++;
@@ -104,6 +108,7 @@ void Ciudad::Inspeccion(const aed2::Estacion e){
 
 	if (cola.Tamano() > 0){
 		robot rob = cola.Desencolar();
+		delete robots[rob.rur]->tags;
 		delete robots[rob.rur];
 		robots[rob.rur] = NULL;
 	}
@@ -114,7 +119,7 @@ RUR Ciudad::ProximoRUR() const{
 	return robots.Longitud();
 }
 
-Mapa Ciudad::iMapa(){ //referencia constante?
+const Mapa* Ciudad::iMapa() const{ //referencia constante?
 	return mapa;
 }
 

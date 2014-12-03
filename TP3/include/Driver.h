@@ -81,6 +81,7 @@ class Driver
 	private:
         Mapa *mapa;
         Ciudad *ciudad;
+        // Conj<ConjRapidoString*> con;
 
 }; // class Driver
 

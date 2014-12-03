@@ -109,13 +109,13 @@ public:
 				  mi_estacion(NULL){};
 	} ;
 
-	Ciudad(const Mapa &m);
+	Ciudad(const Mapa *m);
 	~Ciudad();
 	void Entrar(ConjRapidoString* ts, const aed2::Estacion &e);
 	void Mover(const RUR rur, const aed2::Estacion e);
 	void Inspeccion(const aed2::Estacion e);
 	RUR ProximoRUR() const;
-	Mapa iMapa();
+	const Mapa* iMapa() const;
 	Ciudad::const_Iterador Robots();
 	aed2::Estacion Estacion(const RUR u) const;
 	Conj<Restriccion>::const_Iterador Tags(const RUR u) const;
@@ -171,7 +171,7 @@ public:
 
 private:
 	Vector<robot*> robots;
-	Mapa mapa;
+	const Mapa* mapa;
 	DiccString<ColaDePrioridad<robot> > robotsEnEstacion;
 
 };

@@ -19,20 +19,24 @@ class DiccString {
             public:
 				~Nodo() {
 					for (int i = 0; i < 256; i++) {
-                        if (this->continuacion.Definido(i)){                           
+                        if (this->continuacion[i] != NULL){                           
 						  delete this->continuacion[i];
+                          this->continuacion[i] = NULL;
                         }
 					}
                     if (significado != NULL){
                         delete significado;
+                        significado = NULL;
                     }
 				}
 
 				Nodo(){
-                    continuacion = Arreglo<Nodo*>(256);          
+                    for (int i = 0; i < 256; ++i){
+                        continuacion[i] = NULL;
+                    }           
                     significado = NULL;
                 }
-                Arreglo<Nodo*> continuacion;
+                Nodo* continuacion[256];
                 T *significado;
         };
 
@@ -58,12 +62,12 @@ void DiccString<T>::Definir(const std::string k, T const &v) {
     bool nuevo = false;
 
     while (k.length() > i){
-        if (!t->continuacion.Definido((int)k[i])) {
-            t->continuacion.Definir((int)k[i], new Nodo());
+        if (t->continuacion[k[i]] == NULL) {
+            t->continuacion[k[i]] = new Nodo();
             nuevo = true;
         }
 
-        t = t->continuacion[(int)k[i]];
+        t = t->continuacion[k[i]];
         i++;
     }
 
@@ -83,8 +87,8 @@ bool DiccString<T>::Definido(const std::string k) const {
     int i = 0;
     const Nodo * t = &(this->significados);
 
-    while ((i < k.length()) && t->continuacion.Definido((int)k[i])) {
-        t = t->continuacion[(int)k[i]];
+    while ((i < k.length()) && t->continuacion[k[i]] != NULL) {
+        t = t->continuacion[k[i]];
         i++;
     }
 
@@ -97,7 +101,7 @@ T& DiccString<T>::Obtener(const std::string k) const {
     const Nodo *t = &(this->significados);
 
     while (i < k.length()) {
-        t = t->continuacion[(int)k[i]];
+        t = t->continuacion[k[i]];
         i++;
     }
 

@@ -2,7 +2,7 @@
 
 void ConjRapidoString::Agregar(std::string s)
 {
-    values.Definir(s, new bool(true));
+    values.Definir(s, true);
 }
 
 bool ConjRapidoString::Pertenece(std::string s) const

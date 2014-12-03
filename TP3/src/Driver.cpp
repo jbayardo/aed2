@@ -16,13 +16,20 @@ namespace aed2 {
 	}
 
 	Driver::~Driver() {
-		if (this->mapa != NULL) {
-			delete this->mapa;
-		}
-
 		if (this->ciudad != NULL) {
 			delete this->ciudad;
 		}
+
+		// Conj<ConjRapidoString*>::Iterador it = con.CrearIt();
+
+		// while(it.HaySiguiente()){
+		// 	delete it.Siguiente();
+		// 	it.Avanzar();
+		// }
+
+		// if (this->mapa != NULL) {
+		// 	delete this->mapa;
+		// }
 	}
 
 	Nat Driver::CantidadEstaciones() const {
@@ -185,13 +192,14 @@ void Driver::Entrar(const Conj<Caracteristica> &cs, const Estacion &estacionInic
  // TODO
 	Conj<Caracteristica>::const_Iterador it = cs.CrearIt();
 	ConjRapidoString* adapt = new ConjRapidoString();
+	// con.Agregar(adapt);
 
 	while (it.HaySiguiente()){
 		adapt->Agregar(it.Siguiente());
 		it.Avanzar();
 	}	
 	if (this->ciudad == NULL){
-		this->ciudad = new Ciudad(*this->mapa);
+		this->ciudad = new Ciudad(this->mapa);
 	}
 	this->ciudad->Entrar(adapt, estacionInicial);
 }
