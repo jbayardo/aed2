@@ -5,6 +5,13 @@ namespace aed2 {
 
 	Driver::Driver(const Conj<Estacion> &estacionesIniciales) {
 		this->mapa = new Mapa();
+
+		Conj<Estacion>::const_Iterador it = estacionesIniciales.CrearIt();
+		while(it.HaySiguiente()){
+			this->mapa->Agregar(it.Siguiente());
+			it.Avanzar();
+		}
+
 		this->ciudad = NULL;
 	}
 
@@ -109,8 +116,8 @@ Nat Driver::CantidadRobotsActivos() const {
 	Ciudad::const_Iterador it = this->ciudad->Robots();
 	Nat ret = 0;
 	while (it.HaySiguiente()){
-		it.Avanzar();
 		ret++;
+		it.Avanzar();
 	}
 	return ret;
 }
@@ -177,12 +184,15 @@ RUR Driver::ElMasInfractor() const {
 void Driver::Entrar(const Conj<Caracteristica> &cs, const Estacion &estacionInicial) {
  // TODO
 	Conj<Caracteristica>::const_Iterador it = cs.CrearIt();
-	ConjRapidoString adapt;
+	ConjRapidoString* adapt = new ConjRapidoString();
 
 	while (it.HaySiguiente()){
-		adapt.Agregar(it.Siguiente());
+		adapt->Agregar(it.Siguiente());
 		it.Avanzar();
 	}	
+	if (this->ciudad == NULL){
+		this->ciudad = new Ciudad(*this->mapa);
+	}
 	this->ciudad->Entrar(adapt, estacionInicial);
 }
 

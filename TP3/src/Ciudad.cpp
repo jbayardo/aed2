@@ -16,7 +16,7 @@ Ciudad::~Ciudad(){
 	}
 }
 
-void Ciudad::Entrar(ConjRapidoString &ts, const aed2::Estacion &e){
+void Ciudad::Entrar(ConjRapidoString* ts, const aed2::Estacion &e){
 //	iEntrar(in ts : conjRapidoString, in e : estacion, in/out c : city)
 //	var rob : robot =
 //		tags: &ts,
@@ -37,7 +37,9 @@ void Ciudad::Entrar(ConjRapidoString &ts, const aed2::Estacion &e){
 //end function
 
 
-	robot* rob = new robot(ProximoRUR(), 0, &ts, e);
+	assert(robotsEnEstacion.Definido(e));
+	
+	robot* rob = new robot(ProximoRUR(), 0, ts, e);
 	rob->mi_estacion = robotsEnEstacion.Obtener(e).Encolar(*rob);
 
 	Vector<Restriccion_*>::const_Iterador it = this->mapa.Sendas();

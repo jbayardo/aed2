@@ -109,7 +109,7 @@ public:
 
 	Ciudad(const Mapa &m);
 	~Ciudad();
-	void Entrar(ConjRapidoString &ts, const aed2::Estacion &e);
+	void Entrar(ConjRapidoString* ts, const aed2::Estacion &e);
 	void Mover(const RUR rur, const aed2::Estacion e);
 	void Inspeccion(const aed2::Estacion e);
 	RUR ProximoRUR() const;
@@ -132,7 +132,7 @@ public:
 		}
 
 		bool HaySiguiente()const{
-			Nat next = actual + 1;
+			Nat next = actual;
 
 			while (next < len && vec[next] == NULL){
 				next++;
@@ -148,7 +148,7 @@ public:
 		void Avanzar(){
 			Nat next = actual + 1;
 
-			while (vec[next] == NULL){
+			while (next < len && vec[next] == NULL){
 				next++;
 			}
 			actual = next;

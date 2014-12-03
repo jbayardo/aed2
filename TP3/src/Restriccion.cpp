@@ -39,7 +39,7 @@ Restriccion_ *Restriccion_::Var(std::string v) {
     return new Restriccion_(VAR, v, NULL, NULL);
 }
 
-bool Restriccion_::Verifica(const ConjRapidoString &tags) const {
+bool Restriccion_::Verifica(const ConjRapidoString *tags) const {
     switch (type) {
         case AND:
             return left->Verifica(tags) && right->Verifica(tags);
@@ -48,7 +48,7 @@ bool Restriccion_::Verifica(const ConjRapidoString &tags) const {
         case NOT:
             return !left->Verifica(tags);
         case VAR:
-            return tags.Pertenece(value);
+            return tags->Pertenece(value);
     }
 }
 
