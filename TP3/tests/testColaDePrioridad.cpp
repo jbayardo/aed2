@@ -1,13 +1,13 @@
 #include "ColaDePrioridad.h"
-#include "MiniTest.h"
+#include "aed2/TiposBasicos.h"
 #include "tests.h"
 
-template <typename T, size_t N>
-void test_es_max_heap(T[N] arr) {
+template <typename T>
+void test_es_max_heap(T arr[], aed2::Nat N) {
     ColaDePrioridad<T> cola = ColaDePrioridad<T>();
     T max = arr[0];
 
-    for (size_t i = 0; i < n; i++) {
+    for (aed2::Nat i = 0; i < N; i++) {
         if (arr[i] > max) {
             max = arr[i];
         }
@@ -15,51 +15,52 @@ void test_es_max_heap(T[N] arr) {
         cola.Encolar(arr[i]);
     }
 
-    ASSERT_EQ(cola.Desencolar(), max);
+    assert(cola.Desencolar() == max);
 }
 
-template <typename T, size_t N>
-void test_desencolar_ordenado(T[N] arr) {
+template <typename T>
+void test_desencolar_ordenado(T arr[], aed2::Nat N) {
     ColaDePrioridad<T> cola = ColaDePrioridad<T>();
 
-    for (int i = 0; i < N-1; i++) {
-        ColaDePrioridad<T>::Iterador *it = cola.Encolar(arr[i]);
-        delete it;
-        ASSERT_EQ(cola.Tamano(), i + 1);
+    for (aed2::Nat i = 0; i < N-1; i++) {
+        delete cola.Encolar(arr[i]);
+        assert(cola.Tamano() == i + 1);
     }
 
     cola.Encolar(arr[N-1]);
 
-    ASSERT_EQ(cola.Tamano(), N);
-    T[N] ordenada = new T[N]();
+    assert(cola.Tamano() == N);
+    T *ordenada = new T[N];
 
-    for (int i = N-1; i >= 0; i--) {
+    for (aed2::Nat i = N-1; i >= 0; i--) {
         ordenada[i] = cola.Desencolar();
     }
 
-    for (int i = 0; i < N-1; i++) {
+    for (aed2::Nat i = 0; i < N-1; i++) {
         ASSERT(ordenada[i] <= ordenada[i+1]);
     }
 
-    ASSERT_EQ(cola.Tamano(), 0);
+    assert(cola.Tamano() == 0);
     delete[] ordenada;
 }
 
-template <typename T, size_t N>
-void test_encolar_desencolar(T[N] arr) {
+template <typename T>
+void test_encolar_desencolar(T arr[], aed2::Nat N) {
     ColaDePrioridad<T> cola = ColaDePrioridad<T>();
+    typename ColaDePrioridad<T>::Iterador *it;
 
-    for (int i = 0; i < N; i++) {
-        ASSERT_EQ(cola.Tamano(), 0);
-        ColaDePrioridad<T>::Iterador *it = cola.Encolar(arr[i]);
-        ASSERT_EQ(cola.Tamano(), 1);
-        ASSERT_EQ(cola.Desencolar(it), arr[i]);
-        ASSERT_EQ(cola.Tamano(), 0);
+    for (aed2::Nat i = 0; i < N; i++) {
+        assert(cola.Tamano() == 0);
+        it = cola.Encolar(arr[i]);
+        assert(cola.Tamano() == 1);
+        assert(cola.Desencolar(it) == arr[i]);
+        delete it;
+        assert(cola.Tamano() == 0);
     }
 }
 
 void test_cola_de_prioridad() {
-    int[] arr = {47, 282, 282, 49, 343, 290, 28, 213, 83, 155, 89, 388, 409, 250,
+    int arr[] = {47, 282, 282, 49, 343, 290, 28, 213, 83, 155, 89, 388, 409, 250,
         203, 361, 43, 334, 5, 244, 347, 13, 219, 24, 0, 400, 367, 324, 288, 365,
         239, 225, 112, 263, 208, 180, 365, 406, 202, 163, 134, 147, 141, 5, 92,
         364, 18, 350, 27, 369, 317, 416, 436, 17, 250, 416, 64, 437, 128, 379, 324,
@@ -72,7 +73,7 @@ void test_cola_de_prioridad() {
         212, 166, 132, 4, 131, 351, 35, 301, 188, 80, 0, 387, 96, 287, 92, 116, 23,
         138, 6, 153, 10, 316, 233, 142, 41, 118, 47, 205, 265, 206, 274, 399, 433,
         190, 28, 339, 95, 39, 259, 85, 249, 100, 350, 70};
-    test_es_max_heap(arr);
-    test_desencolar_ordenado(arr);
-    test_encolar_desencolar(arr);
+    test_es_max_heap(arr, 199);
+    test_desencolar_ordenado(arr, 199);
+    test_encolar_desencolar(arr, 199);
 }
