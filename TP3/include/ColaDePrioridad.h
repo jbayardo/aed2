@@ -249,13 +249,12 @@ T ColaDePrioridad<T>::Eliminar(Nodo *node) {
             this->ultimo = this->ultimo->arr->izq;
             this->ultimo->arr->der = NULL;
         }
-        //si arr es nulo al horno!
         if ((node->der != NULL && *node->dato < *node->der->dato)
             || 
             (node->izq != NULL && *node->dato < *node->izq->dato)){
             Bajar(node);
         }
-
+        //si arr es nulo al horno!
         // else if (node->arr == NULL || node->dato < node->arr->dato) {
         //     std::cout << "Bajo pq padre NULL o valor menor padre" << std::endl;
         //     Bajar(node);
