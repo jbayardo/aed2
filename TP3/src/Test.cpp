@@ -165,7 +165,7 @@ void test_ciudad_con_movimientos()
     ASSERT_EQ(caba.IesimoRobotActivo(2), 2);
     ASSERT_EQ(caba.IesimaEstacion(2), "Martinez");
     ASSERT_EQ(caba.CantidadDeSendasParaEstacion("Martinez"), 2);
-    ASSERT_EQ(caba.CantidadDeSendasParaEstacion("Belgrano"), 2);
+    ASSERT_EQ(caba.CantidadDeSendasParaEstacion("Belgrano"), 2);    
     ASSERT_EQ(caba.IesimaEstacionDeSenda("Martinez", 1), "Retiro");
     ASSERT_EQ(caba.IesimaEstacionDeSenda("Retiro", 2), "Martinez");
     ASSERT_EQ(caba.IesimaRestriccionDeSenda("Belgrano", 1), "trenDePasajeros || trenDeCarga && !trenDeLaAlegria");
@@ -174,9 +174,8 @@ void test_ciudad_con_movimientos()
     caba.Mover(1, "Belgrano");
     caba.Mover(2, "Belgrano");
     ASSERT_EQ(caba.ElMasInfractor(), 2);
-    ASSERT_EQ(caba.EstacionActualIesimoRobotActivo(2), "Belgrano");
+    ASSERT_EQ(caba.EstacionActualIesimoRobotActivo(2), "Belgrano");    
     ASSERT_EQ(caba.EstacionActualIesimoRobotActivo(1), "Belgrano");
-
 }
 
 int main(int argc, char **argv)
@@ -190,7 +189,7 @@ int main(int argc, char **argv)
      * La interacción con el TAD Ciudad se debe hacer exclusivamente  *
      * a través de la interfaz del driver.                            *
      ******************************************************************/
-    const std::string word_list[] = {"about","after","again","air","all","along","also","an","and","another","any","are","around","as","at","away","back","be","because","been","before","below","between","both","but","by","came","can","come","could","day","did","different","do","does","do't","down","each","end","even","every","few","find","first","for","found","from","get","give","go","good","great","had","has","have","he","help","her","here","him","his","home","house","how","I","if","in","into","is","it","its","just","know","large","last","left","like","line","little","long","look","made","make","man","many","may","me","men","might","more","most","Mr.","must","my","name","never","new","next","no","not","now","number","of","off","old","on","one","only","or","other","our","out","over","own","part","people","place","put","read","right","said","same","saw","say","see","she","should","show","small","so","some","something","sound","still","such","take","tell","than","that","the","them","then","there","these","they","thing","think","this","those","thought","three","through","time","to","together","too","two","under","up","us","use","very","want","water","way","we","well","went","were","what","when","where","which","while","who","why","will","with","word","work","world","would","write","year","you","your","was",};
+	const std::string word_list[] = { "about", "after", "again", "air", "all", "along", "also", "an", "and", "another", "any", "are", "around", "as", "at", "away", "back", "be", "because", "been", "before", "below", "between", "both", "but", "by", "came", "can", "come", "could", "day", "did", "different", "do", "does", "do't", "down", "each", "end", "even", "every", "few", "find", "first", "for", "found", "from", "get", "give", "go", "good", "great", "had", "has", "have", "he", "help", "her", "here", "him", "his", "home", "house", "how", "I", "if", "in", "into", "is", "it", "its", "just", "know", "large", "last", "left", "like", "line", "little", "long", "look", "made", "make", "man", "many", "may", "me", "men", "might", "more", "most", "Mr.", "must", "my", "name", "never", "new", "next", "no", "not", "now", "number", "of", "off", "old", "on", "one", "only", "or", "other", "our", "out", "over", "own", "part", "people", "place", "put", "read", "right", "said", "same", "saw", "say", "see", "she", "should", "show", "small", "so", "some", "something", "sound", "still", "such", "take", "tell", "than", "that", "the", "them", "then", "there", "these", "they", "thing", "think", "this", "those", "thought", "three", "through", "time", "to", "together", "too", "two", "under", "up", "us", "use", "very", "want", "water", "way", "we", "well", "went", "were", "what", "when", "where", "which", "while", "who", "why", "will", "with", "word", "work", "world", "would", "write", "year", "you", "your", "was", };
 
     DiccString<int>* dictest = new DiccString<int>();
     for (int i = 0; i < 187; ++i) {
@@ -220,6 +219,58 @@ int main(int argc, char **argv)
     std::cout << "El dicc string funca, falta ver memoria" << std::endl;
     std::cout << "Test terminado" << std::endl;
 
+	Mapa* mapatest = new Mapa();
+	mapatest->Agregar("Belgrano");//
+	mapatest->Agregar("Palermo");//
+	mapatest->Agregar("Recoleta");//
+	mapatest->Agregar("Almagro");
+	mapatest->Agregar("Microcentro");
+	mapatest->Agregar("Retiro");//
+	mapatest->Agregar("Constitucion");//
+
+	ArbolSintactico* expr = ArbolSintactico::LeerDeString("negros & !autocheto & (bondi | taxi | subte | auto)");
+	mapatest->Conectar("Retiro", "Constitucion", Driver::ArboltoRestr(expr));
+	ASSERT(mapatest->Conectadas("Retiro", "Constitucion"));
+	ASSERT(mapatest->Conectadas("Constitucion", "Retiro"));
+	delete expr;
+
+	expr = ArbolSintactico::LeerDeString("!negros & !bondi & (autocheto | auto)");
+	mapatest->Conectar("Recoleta", "Palermo", Driver::ArboltoRestr(expr));
+	ASSERT(mapatest->Conectadas("Recoleta", "Palermo"));
+	ASSERT(mapatest->Conectadas("Palermo" ,"Recoleta"));
+	delete expr;
+
+	expr = ArbolSintactico::LeerDeString("bondi | auto | autocheto | taxi");
+	mapatest->Conectar("Palermo", "Belgrano", Driver::ArboltoRestr(expr));
+	ASSERT(mapatest->Conectadas("Belgrano", "Palermo"));
+	ASSERT(mapatest->Conectadas("Palermo", "Belgrano"));
+	delete expr;
+
+	expr = ArbolSintactico::LeerDeString("auto | !auto");
+	mapatest->Conectar("Microcentro", "Almagro", Driver::ArboltoRestr(expr));
+	ASSERT(mapatest->Conectadas("Microcentro", "Almagro"));
+	ASSERT(mapatest->Conectadas("Almagro", "Microcentro"));
+	delete expr;
+
+	expr = ArbolSintactico::LeerDeString("auto | !auto");
+	mapatest->Conectar("Palermo", "Almagro", Driver::ArboltoRestr(expr));
+	ASSERT(mapatest->Conectadas("Palermo", "Almagro"));
+	ASSERT(mapatest->Conectadas("Almagro", "Palermo"));
+	delete expr;
+
+	expr = ArbolSintactico::LeerDeString("bondi | subte");
+	mapatest->Conectar("Microcentro", "Retiro", Driver::ArboltoRestr(expr));
+	ASSERT(mapatest->Conectadas("Retiro", "Microcentro"));
+	ASSERT(mapatest->Conectadas("Microcentro", "Retiro"));
+	delete expr;
+
+	expr = ArbolSintactico::LeerDeString("bondi | subte");
+	mapatest->Conectar("Microcentro", "Constitucion", Driver::ArboltoRestr(expr));
+	ASSERT(mapatest->Conectadas("Constitucion", "Microcentro"));
+	ASSERT(mapatest->Conectadas("Microcentro", "Constitucion"));
+	delete expr;
+	
+	delete mapatest;
 
     return 0;
 }
