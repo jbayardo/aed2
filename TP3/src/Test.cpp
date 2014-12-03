@@ -179,6 +179,9 @@ int main(int argc, char **argv)
     }
     std::cout << "Encole todo" << std::endl;
 
+    cola->Desencolar();
+
+
     for (int k = 0; k < 200; ++k) {
         sorted_200[k] = cola->Desencolar();
     }
