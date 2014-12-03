@@ -179,10 +179,8 @@ int main(int argc, char **argv)
     }
     std::cout << "Encole todo" << std::endl;
 
-    cola->Desencolar();
 
-
-    for (int k = 0; k < 200; ++k) {
+    for (int k = 0; cola->Tamano(); k++) {
         sorted_200[k] = cola->Desencolar();
     }
 
@@ -190,8 +188,8 @@ int main(int argc, char **argv)
 
     ASSERT_EQ(cola->Tamano(), 0);
 
-    for (int l = 0; l < 200; ++l) {
-        ASSERT_EQ(sorted_200[l], l);
+    for (int l = 0; l < 200; l++) {
+        ASSERT_EQ(sorted_200[l], 199-l);
     }
 
     std::cout << "La cola funca, falta ver memoria" << std::endl;

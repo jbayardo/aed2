@@ -2,6 +2,7 @@
 #define ColaDePrioridad_H 1
 
 #include "aed2/aed2.h"
+#include <iostream>
 
 template <typename T>
 class ColaDePrioridad {
@@ -177,7 +178,7 @@ void ColaDePrioridad<T>::Subir(Nodo *node) {
 
 template <typename T>
 void ColaDePrioridad<T>::Bajar(Nodo *node) {
-    while (node->izq != NULL
+    while ( node->izq != NULL
             && node->der != NULL
             && node->dato <
             (node->izq->dato >= node->der->dato ? node->izq->dato : node->der->dato)
@@ -245,10 +246,17 @@ T ColaDePrioridad<T>::Eliminar(Nodo *node) {
             this->ultimo = this->ultimo->arr->izq;
             this->ultimo->arr->der = NULL;
         }
-
-        if (node->dato < node->arr->dato) {
+        //si arr es nulo al horno!
+        if ((node->der != NULL && node->dato < node->der->dato)
+            || 
+            (node->izq != NULL && node->dato < node->izq->dato)){
             Bajar(node);
         }
+
+        // else if (node->arr == NULL || node->dato < node->arr->dato) {
+        //     std::cout << "Bajo pq padre NULL o valor menor padre" << std::endl;
+        //     Bajar(node);
+        // }
         else {
             Subir(node);
         }
