@@ -2,6 +2,7 @@
 #define ColaDePrioridad_H 1
 
 #include "aed2/aed2.h"
+#include <iostream>
 
 template <typename T>
 class ColaDePrioridad {
@@ -10,10 +11,11 @@ public:
         friend class ColaDePrioridad<T>;
     public:
         Nodo(const Nodo*);
-        Nodo(const T &dato) : dato(dato), arr(NULL), izq(NULL), der(NULL)
-        { };
+        ~Nodo(){delete dato;};
+        Nodo(const T &dato) : arr(NULL), izq(NULL), der(NULL)
+        { this->dato = new T(dato); };
 
-        T dato;
+        T* dato;
         Nodo *arr;
         Nodo *izq;
         Nodo *der;
@@ -33,12 +35,12 @@ public:
     ~ColaDePrioridad();
 
     Iterador* Encolar(const T &);
-    const T &Desencolar();
-    const T &Desencolar(const Iterador *);
+    T Desencolar();
+    T Desencolar(const Iterador *);
     aed2::Nat Tamano() const;
 private:
-    const T &Eliminar(Nodo *);
-    void Subir(Nodo *);
+    T Eliminar(Nodo *);
+    Nodo* Subir(Nodo *);
     void Bajar(Nodo *);
 
     Nodo *cabeza;
@@ -67,7 +69,7 @@ ColaDePrioridad<T>::ColaDePrioridad(const ColaDePrioridad<T> &otra) {
     this->ultimo = NULL;
     this->_tamano = 0;
 
-    if (otra.Tamano() > 0) {
+    if (otra._tamano) {
         this->cabeza = new Nodo(otra.cabeza);
         this->_tamano = otra._tamano;
 
@@ -149,61 +151,61 @@ typename ColaDePrioridad<T>::Iterador* ColaDePrioridad<T>::Encolar(const T &dato
     this->ultimo = tmp;
     ++this->_tamano;
 
-    Subir(this->ultimo);
-    return new Iterador(this, this->ultimo);
+    return new Iterador(this, Subir(this->ultimo));
 }
 
 template <typename T>
-const T &ColaDePrioridad<T>::Desencolar() {
+T ColaDePrioridad<T>::Desencolar() {
     return Eliminar(this->cabeza);
 }
 
 template <typename T>
-const T &ColaDePrioridad<T>::Desencolar(const Iterador *i) {
+T ColaDePrioridad<T>::Desencolar(const Iterador *i) {
     assert(i->heap == this);
 
     return Eliminar(i->nodo);
 }
 
 template <typename T>
-void ColaDePrioridad<T>::Subir(Nodo *node) {
-    while (node->arr != NULL && node->arr->dato < node->dato) {
-        T tmp = node->arr->dato;
+typename ColaDePrioridad<T>::Nodo* ColaDePrioridad<T>::Subir(Nodo *node) {
+    while (node->arr != NULL && *node->arr->dato < *node->dato) {
+        T* tmp = node->arr->dato;
         node->arr->dato = node->dato;
         node->dato = tmp;
         node = node->arr;
     }
+    return node;
 }
 
 template <typename T>
 void ColaDePrioridad<T>::Bajar(Nodo *node) {
-    while (node->izq != NULL
+    while ( node->izq != NULL
             && node->der != NULL
-            && node->dato <
-            (node->izq->dato >= node->der->dato ? node->izq->dato : node->der->dato)
+            && *node->dato <
+            (*node->izq->dato >= *node->der->dato ? *node->izq->dato : *node->der->dato)
             ) {
-        if (node->izq->dato >= node->der->dato) {
-            T tmp = node->izq->dato;
+        if (*node->izq->dato >= *node->der->dato) {
+            T* tmp = node->izq->dato;
             node->izq->dato = node->dato;
             node->dato = tmp;
             node = node->izq;
         } else {
-            T tmp = node->der->dato;
+            T* tmp = node->der->dato;
             node->der->dato = node->dato;
             node->dato = tmp;
             node = node->der;
         }
     }
 
-    while (node->izq != NULL && node->izq->dato > node->dato) {
-        T tmp = node->izq->dato;
+    while (node->izq != NULL && *node->izq->dato > *node->dato) {
+        T* tmp = node->izq->dato;
         node->izq->dato = node->dato;
         node->dato = tmp;
         node = node->izq;
     }
 
-    while (node->der != NULL && node->der->dato > node->dato) {
-        T tmp = node->der->dato;
+    while (node->der != NULL && *node->der->dato > *node->dato) {
+        T* tmp = node->der->dato;
         node->der->dato = node->dato;
         node->dato = tmp;
         node = node->der;
@@ -211,9 +213,11 @@ void ColaDePrioridad<T>::Bajar(Nodo *node) {
 }
 
 template <typename T>
-const T &ColaDePrioridad<T>::Eliminar(Nodo *node) {
+T ColaDePrioridad<T>::Eliminar(Nodo *node) {
     // Pre: node esta en la estructura
-    const T &tmp = node->dato;
+    T tmp = T(*node->dato);
+
+    T* super_tmp = node->dato;
 
     if (this->Tamano() == 1) {
         delete this->cabeza;
@@ -245,14 +249,15 @@ const T &ColaDePrioridad<T>::Eliminar(Nodo *node) {
             this->ultimo = this->ultimo->arr->izq;
             this->ultimo->arr->der = NULL;
         }
-
-        if (node->dato < node->arr->dato) {
+        if ((node->der != NULL && *node->dato < *node->der->dato)
+            || 
+            (node->izq != NULL && *node->dato < *node->izq->dato)){
             Bajar(node);
         }
         else {
             Subir(node);
         }
-
+        backup->dato = super_tmp;
         delete backup;
     }
 

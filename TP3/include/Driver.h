@@ -5,6 +5,8 @@
 #include "Ciudad.h"
 #include "Mapa.h"
 #include "aed2/TiposBasicos.h"
+#include "Restriccion.h"
+#include "ArbolSintactico.h"
 
 //#include ...
 
@@ -74,9 +76,12 @@ class Driver
         /// PRE: e \in estaciones()
         void Inspeccion(const Estacion & e);
 
+        static Restriccion_ *ArboltoRestr(ArbolSintactico *);
+
 	private:
         Mapa *mapa;
         Ciudad *ciudad;
+
 }; // class Driver
 
 

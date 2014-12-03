@@ -2,7 +2,11 @@
 
 Mapa::Mapa() { }
 
-Mapa::~Mapa() { }
+Mapa::~Mapa() {
+	for (int i = 0; i < sendas.Longitud(); ++i){
+		delete sendas[i];
+	}
+}
 
 Mapa::Mapa(const Mapa &m) : sendas(m.sendas), conexiones(m.conexiones), estaciones(m.estaciones) { }
 
@@ -10,20 +14,20 @@ void Mapa::Agregar(const Estacion e){
 	this->estaciones.Agregar(e);
 }
 
-void Mapa::Conectar(const Estacion e1, const Estacion e2, Restriccion_ &r) {   //Fijarse si r se copia o no, si se pone constante no se puede agregar atras
+void Mapa::Conectar(const Estacion e1, const Estacion e2, Restriccion_* r) {   //Fijarse si r se copia o no, si se pone constante no se puede agregar atras
 	Nat i = this->sendas.Longitud();
-	this->sendas.AgregarAtras(&r);
+	this->sendas.AgregarAtras(r);
 
 	if (!this->conexiones.Definido(e1)) {
-		this->conexiones.Definir(e1, new DiccString<Nat>());
+		this->conexiones.Definir(e1, DiccString<Nat>());
 	}
 
 	if (!this->conexiones.Definido(e2)) {
-		this->conexiones.Definir(e2, new DiccString<Nat>());
+		this->conexiones.Definir(e2, DiccString<Nat>());
 	}
 
-	this->conexiones.Obtener(e1).Definir(e2, new Nat(i));
-	this->conexiones.Obtener(e2).Definir(e1, new Nat(i));
+	this->conexiones.Obtener(e1).Definir(e2, i);
+	this->conexiones.Obtener(e2).Definir(e1, i);
 }
 
 Conj<Estacion>::const_Iterador Mapa::Estaciones() const {

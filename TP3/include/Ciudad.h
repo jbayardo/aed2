@@ -29,14 +29,21 @@ class Ciudad
 public:
 
 	class const_Iterador;
-
+	friend class const_Iterador;
 	struct robot
 	{
 	friend class Ciudad;
 	public:
 		~robot(){
-			delete mi_estacion;
+			if (mi_estacion != NULL){
+				delete mi_estacion;
+				if (tags != NULL){
+					delete tags;
+				}
+			}
 		}
+
+		robot(){};
 
 		robot& operator=(const robot& other){
 			rur = other.rur;
@@ -82,20 +89,21 @@ public:
 			return infracciones;
 		}
 
-		ConjRapidoString tags_() const{
-			return tags;
+		const ConjRapidoString& tags_() const{
+			return *tags;
 		}
 
 	private:
 		RUR rur;
 		Nat infracciones;
-		ConjRapidoString &tags;
+		ConjRapidoString* tags;
 		aed2::Estacion estacion;
 		Vector<bool> infringe_restriccion;
 		ColaDePrioridad<robot>::Iterador* mi_estacion;
 
 		robot(const RUR rur,
-				const Nat infracciones, ConjRapidoString &tags,
+				const Nat infracciones,
+				ConjRapidoString* tags,
 				const aed2::Estacion estacion)
 				: rur(rur),
 				  infracciones(infracciones),
@@ -104,54 +112,69 @@ public:
 				  mi_estacion(NULL){};
 	} ;
 
-	Ciudad(const Mapa &m);
+	Ciudad(const Mapa *m);
 	~Ciudad();
-	void Entrar(ConjRapidoString &ts, const aed2::Estacion &e);
+	void Entrar(ConjRapidoString* ts, const aed2::Estacion &e);
 	void Mover(const RUR rur, const aed2::Estacion e);
 	void Inspeccion(const aed2::Estacion e);
 	RUR ProximoRUR() const;
-	Mapa iMapa();
-	Ciudad::const_Iterador Robots() const;
+	const Mapa* iMapa() const;
+	Ciudad::const_Iterador Robots();
 	aed2::Estacion Estacion(const RUR u) const;
 	Conj<Restriccion>::const_Iterador Tags(const RUR u) const;
 	Nat nInfracciones(const RUR u) const;
-
 
 	class const_Iterador
 	{
 	public:
 
-		const_Iterador(const const_Iterador& o): it(o.it) {};
+		const_Iterador(const const_Iterador& o): actual(o.actual), len(o.len), vec(o.vec) {};
 
 		const_Iterador& operator = (const const_Iterador& otra){
-			it = otra.it;
+			this->actual = otra.actual;
+			this->len = otra.len;
+			this->vec = otra.vec;
 		}
 
 		bool HaySiguiente()const{
-			return it.HaySiguiente();
+			Nat next = actual;
+
+			while (next < len && vec[next] == NULL){
+				next++;
+			}
+
+			return next < len;
 		}
 
 		const robot* Siguiente()const{
-			return it.Siguiente();
+			return vec[actual];
 		}
 
 		void Avanzar(){
-			while(it.HaySiguiente() && it.Siguiente() == NULL){
-				it.Avanzar();
+			Nat next = actual + 1;
+
+			while (next < len && vec[next] == NULL){
+				next++;
 			}
+			actual = next;
 		}
 
 	private:
-		Vector<robot*>::const_Iterador it;
-		const_Iterador(Vector<robot*>::const_Iterador i) : it(i){};
+		Nat actual;
+		Nat len;
+		Vector<robot*>& vec;
 
-		friend Ciudad::const_Iterador Ciudad::Robots() const;
+		const_Iterador(Vector<robot*>& r):vec(r){
+			actual = 0;
+			len = r.Longitud();
+		};
+
+		friend class Ciudad;
 	};
-
 
 private:
 	Vector<robot*> robots;
-	Mapa mapa;
+	const Mapa* mapa;
 	DiccString<ColaDePrioridad<robot> > robotsEnEstacion;
 
 };
