@@ -190,20 +190,21 @@ void Driver::Mover(RUR robot, const Estacion &destino) {
 void Driver::Inspeccion(const Estacion &e) {
 	this->ciudad->Inspeccion(e);
 }
-	Restriccion_ *Driver::ArboltoRestr(ArbolSintactico *a) {
-		if (a->raiz == "|") {
-			return Restriccion_::Or(ArboltoRestr(a->izq), ArboltoRestr(a->der));
-		}
-		else if (a->raiz == "&") {
-			return Restriccion_::And(ArboltoRestr(a->izq), ArboltoRestr(a->der));
-		}
-		else if (a->raiz == "!") {
-			return Restriccion_::Not(ArboltoRestr(a->izq));
-		}
-		else {
-			return Restriccion_::Var(a->raiz);
-		}
+
+Restriccion_ *Driver::ArboltoRestr(ArbolSintactico *a) {
+	if (a->raiz == "|") {
+		return Restriccion_::Or(ArboltoRestr(a->izq), ArboltoRestr(a->der));
 	}
+	else if (a->raiz == "&") {
+		return Restriccion_::And(ArboltoRestr(a->izq), ArboltoRestr(a->der));
+	}
+	else if (a->raiz == "!") {
+		return Restriccion_::Not(ArboltoRestr(a->izq));
+	}
+	else {
+		return Restriccion_::Var(a->raiz);
+	}
+}
 
 } // namespace aed2
 

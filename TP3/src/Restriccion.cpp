@@ -90,3 +90,16 @@ Restriccion_::Restriccion_(const Restriccion_ &r) {
             break;
     }
 }
+
+std::string Restriccion_::toString(Restriccion_ *r) {
+    switch (r->type){
+        case AND:
+            return "(" + toString(r->left) + ") & ("+ toString(r->right) + ")";
+        case OR:
+            return "(" + toString(r->left) + ") | ("+ toString(r->right) + ")";
+        case NOT:
+            return "!(" + toString(r->left) +")";
+        case VAR:
+            return r->value;
+    }
+}

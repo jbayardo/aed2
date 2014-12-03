@@ -19,6 +19,7 @@ class Restriccion_
         static Restriccion_ *Or(Restriccion_ *left, Restriccion_ *right);
         static Restriccion_ *Not(Restriccion_ *left);
         static Restriccion_ *Var(std::string v);
+        static std::string toString(Restriccion_* r);
 
         bool Verifica(const ConjRapidoString *tags) const;
         Restriccion toRestriccion() const;
