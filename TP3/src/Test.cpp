@@ -165,7 +165,7 @@ void test_ciudad_con_movimientos()
     ASSERT_EQ(caba.IesimoRobotActivo(2), 2);
     ASSERT_EQ(caba.IesimaEstacion(2), "Martinez");
     ASSERT_EQ(caba.CantidadDeSendasParaEstacion("Martinez"), 2);
-    ASSERT_EQ(caba.CantidadDeSendasParaEstacion("Belgrano"), 2);    
+    ASSERT_EQ(caba.CantidadDeSendasParaEstacion("Belgrano"), 2);
     ASSERT_EQ(caba.IesimaEstacionDeSenda("Martinez", 1), "Retiro");
     ASSERT_EQ(caba.IesimaEstacionDeSenda("Retiro", 2), "Martinez");
     ASSERT_EQ(caba.IesimaRestriccionDeSenda("Belgrano", 1), "trenDePasajeros || trenDeCarga && !trenDeLaAlegria");
@@ -174,7 +174,7 @@ void test_ciudad_con_movimientos()
     caba.Mover(1, "Belgrano");
     caba.Mover(2, "Belgrano");
     ASSERT_EQ(caba.ElMasInfractor(), 2);
-    ASSERT_EQ(caba.EstacionActualIesimoRobotActivo(2), "Belgrano");    
+    ASSERT_EQ(caba.EstacionActualIesimoRobotActivo(2), "Belgrano");
     ASSERT_EQ(caba.EstacionActualIesimoRobotActivo(1), "Belgrano");
 }
 
@@ -182,42 +182,4 @@ int main(int argc, char **argv)
 {
    RUN_TEST(test_ciudad_simple);
    RUN_TEST(test_ciudad_con_movimientos);
-
-    /******************************************************************
-     * TODO: escribir casos de test exhaustivos para todas            *
-     * las funcionalidades del módulo.                                *
-     * La interacción con el TAD Ciudad se debe hacer exclusivamente  *
-     * a través de la interfaz del driver.                            *
-     ******************************************************************/
-	const std::string word_list[] = { "about", "after", "again", "air", "all", "along", "also", "an", "and", "another", "any", "are", "around", "as", "at", "away", "back", "be", "because", "been", "before", "below", "between", "both", "but", "by", "came", "can", "come", "could", "day", "did", "different", "do", "does", "do't", "down", "each", "end", "even", "every", "few", "find", "first", "for", "found", "from", "get", "give", "go", "good", "great", "had", "has", "have", "he", "help", "her", "here", "him", "his", "home", "house", "how", "I", "if", "in", "into", "is", "it", "its", "just", "know", "large", "last", "left", "like", "line", "little", "long", "look", "made", "make", "man", "many", "may", "me", "men", "might", "more", "most", "Mr.", "must", "my", "name", "never", "new", "next", "no", "not", "now", "number", "of", "off", "old", "on", "one", "only", "or", "other", "our", "out", "over", "own", "part", "people", "place", "put", "read", "right", "said", "same", "saw", "say", "see", "she", "should", "show", "small", "so", "some", "something", "sound", "still", "such", "take", "tell", "than", "that", "the", "them", "then", "there", "these", "they", "thing", "think", "this", "those", "thought", "three", "through", "time", "to", "together", "too", "two", "under", "up", "us", "use", "very", "want", "water", "way", "we", "well", "went", "were", "what", "when", "where", "which", "while", "who", "why", "will", "with", "word", "work", "world", "would", "write", "year", "you", "your", "was", };
-
-    DiccString<int>* dictest = new DiccString<int>();
-    for (int i = 0; i < 187; ++i) {
-        dictest->Definir(word_list[i], i);
-        ASSERT(dictest->Definido(word_list[i]));
-        ASSERT_EQ(dictest->Obtener(word_list[i]), i);
-    }
-    delete dictest;
-
-    DiccString<std::string>* dic_test_string = new DiccString<std::string>();
-    for (int i = 0; i < 187; ++i) {
-        dic_test_string->Definir(word_list[i], word_list[i]);
-        ASSERT(dic_test_string->Definido(word_list[i]));
-        ASSERT_EQ(dic_test_string->Obtener(word_list[i]), word_list[i]);
-    }
-    delete dic_test_string;
-
-    DiccString<DiccString<int> >* compuesto = new DiccString<DiccString<int> >();
-
-    for (int i = 0; i < 187; ++i){
-        compuesto->Definir(word_list[i], DiccString<int>());
-        compuesto->Obtener(word_list[i]).Definir(word_list[i], i);
-
-        ASSERT_EQ(compuesto->Obtener(word_list[i]).Obtener(word_list[i]), i);
-    }
-    delete compuesto;
-    std::cout << "El dicc string funca, falta ver memoria" << std::endl;
-    std::cout << "Test terminado" << std::endl;
-
-    return 0;
 }
