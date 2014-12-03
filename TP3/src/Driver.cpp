@@ -19,17 +19,6 @@ namespace aed2 {
 		if (this->ciudad != NULL) {
 			delete this->ciudad;
 		}
-
-		// Conj<ConjRapidoString*>::Iterador it = con.CrearIt();
-
-		// while(it.HaySiguiente()){
-		// 	delete it.Siguiente();
-		// 	it.Avanzar();
-		// }
-
-		// if (this->mapa != NULL) {
-		// 	delete this->mapa;
-		// }
 	}
 
 	Nat Driver::CantidadEstaciones() const {
@@ -85,7 +74,6 @@ namespace aed2 {
 	}
 
 Restriccion Driver::IesimaRestriccionDeSenda(const Estacion &e1, Nat i) const {
- // TODO
 	//Encuentro la senda iesima de una estacion
 	Conj<Estacion>::const_Iterador itE = this->mapa->Estaciones();
 	Nat x = 0;
@@ -110,7 +98,6 @@ Restriccion Driver::IesimaRestriccionDeSenda(const Estacion &e1, Nat i) const {
 
 
 	void Driver::AgregarSenda(const Estacion &e1, const Estacion &e2, Restriccion r) {
-		// TODO
 		ArbolSintactico* expr = ArbolSintactico::LeerDeString(r);
 		this->mapa->Conectar(e1, e2, ArboltoRestr(expr));
 		delete expr;
@@ -119,7 +106,6 @@ Restriccion Driver::IesimaRestriccionDeSenda(const Estacion &e1, Nat i) const {
 
 
 Nat Driver::CantidadRobotsActivos() const {
- // TODO
 	Ciudad::const_Iterador it = this->ciudad->Robots();
 	Nat ret = 0;
 	while (it.HaySiguiente()){
@@ -130,7 +116,6 @@ Nat Driver::CantidadRobotsActivos() const {
 }
 
 RUR Driver::IesimoRobotActivo(Nat i) const {
- // TODO
 	Ciudad::const_Iterador it = this->ciudad->Robots();
 	for (int x = 0; x < i; x++){
 		it.Avanzar();
@@ -139,7 +124,6 @@ RUR Driver::IesimoRobotActivo(Nat i) const {
 }
 
 Estacion Driver::EstacionActualIesimoRobotActivo(Nat i) const {
- // TODO
 	Ciudad::const_Iterador it = this->ciudad->Robots();
 	for (int x = 0; x < i; x++){
 		it.Avanzar();
@@ -148,7 +132,6 @@ Estacion Driver::EstacionActualIesimoRobotActivo(Nat i) const {
 }
 
 Conj<Caracteristica> Driver::CaracteristicasIesimoRobotActivo(Nat i) const {
- // TODO
     Ciudad::const_Iterador it = this->ciudad->Robots();
 	for (int x = 0; x < i; x++){
 		it.Avanzar();
@@ -166,7 +149,6 @@ Conj<Caracteristica> Driver::CaracteristicasIesimoRobotActivo(Nat i) const {
 }
 
 Nat Driver::CantInfraccionesIesimoRobotActivo(Nat i) const {
- // TODO
     Ciudad::const_Iterador it = this->ciudad->Robots();
 	for (int x = 0; x < i; x++){
 		it.Avanzar();
@@ -175,7 +157,6 @@ Nat Driver::CantInfraccionesIesimoRobotActivo(Nat i) const {
 }
 
 RUR Driver::ElMasInfractor() const {
- // TODO
 	Ciudad::const_Iterador r = this->ciudad->Robots();
     RUR max = -1;
     Nat inf = 0;
@@ -189,10 +170,8 @@ RUR Driver::ElMasInfractor() const {
 }
 
 void Driver::Entrar(const Conj<Caracteristica> &cs, const Estacion &estacionInicial) {
- // TODO
 	Conj<Caracteristica>::const_Iterador it = cs.CrearIt();
 	ConjRapidoString* adapt = new ConjRapidoString();
-	// con.Agregar(adapt);
 
 	while (it.HaySiguiente()){
 		adapt->Agregar(it.Siguiente());
@@ -205,13 +184,11 @@ void Driver::Entrar(const Conj<Caracteristica> &cs, const Estacion &estacionInic
 }
 
 void Driver::Mover(RUR robot, const Estacion &destino) {
- // TODO
 	this->ciudad->Mover(robot, destino);
 }
 
 void Driver::Inspeccion(const Estacion &e) {
 	this->ciudad->Inspeccion(e);
-    // TODO
 }
 	Restriccion_ *Driver::ArboltoRestr(ArbolSintactico *a) {
 		if (a->raiz == "|") {

@@ -7,7 +7,6 @@ Ciudad::Ciudad(const Mapa *m): mapa(m){
 		robotsEnEstacion.Definir(it.Siguiente(), ColaDePrioridad<robot>());
 		it.Avanzar();
 	}
-	//mapa = m;
 }
 
 Ciudad::~Ciudad(){
@@ -20,26 +19,6 @@ Ciudad::~Ciudad(){
 }
 
 void Ciudad::Entrar(ConjRapidoString* ts, const aed2::Estacion &e){
-//	iEntrar(in ts : conjRapidoString, in e : estacion, in/out c : city)
-//	var rob : robot =
-//		tags: &ts,
-//		infracciones: 0,
-//		rur: ProximoRUR(city),
-//		infringe_restriccion: Vacia(),
-//		estacion: e,
-//		mi_estacion: Encolar(obtener(robotsEnEstacion, e), rob)
-//
-//	var it : ItVectorPointer(Restriccion) = Sendas(c.mapa)
-//
-//	while HayMas?(it) do
-//		AgregarAtras(rob.infringe_restriccion, no Verifica?(ts, *Actual(it)))
-//        Avanzar(it)
-//	end while
-//
-//	AgregarAtras(c.robots, &rob)
-//end function
-
-
 	assert(robotsEnEstacion.Definido(e));
 
 	robot* rob = new robot(ProximoRUR(), 0, ts, e);
@@ -56,25 +35,6 @@ void Ciudad::Entrar(ConjRapidoString* ts, const aed2::Estacion &e){
 }
 
 void Ciudad::Mover(const RUR rur, const aed2::Estacion e){
-	/*
-	iMover(in rur : nat, in e : estacion, in/out c : city)
-		var rob : puntero(robot) ← c.robots[rur]
-
-		Borrar(Obtener(c.robotsEnEstacion, rob→estacion), rob→mi_estacion)
-
-		var infringe : nat ← rob→infracciones
-		var id_senda : nat ← idSenda(c.mapa, rob→estacion, e)
-
-		if rob→infringe_restriccion[id_senda] then
-			infringe++
-		end if
-
-		rob→infracciones ← infringe
-		rob→estacion ← e
-		rob→mi_estacion ← Encolar(obtener(c.robotsEnEstacion,  e), *rob)
-	end function
-	 */
-
 	robot* rob = robots[rur];
 	robotsEnEstacion.Obtener(rob->estacion).Desencolar(rob->mi_estacion);
 
@@ -93,16 +53,6 @@ void Ciudad::Mover(const RUR rur, const aed2::Estacion e){
 
 
 void Ciudad::Inspeccion(const aed2::Estacion e){
-	/*
-	iInspeccion(in e : estacion, in/out c : city)
-		var cola : colaPrioridad(robot) ← Obtener(c.robotsEnEstacion, e)
-
-		if tamaño(cola) > 0 then
-			var rob : robot ← Desencolar(cola)
-			c.robots[rob.rur] ← NULL
-		end if
-	end function
-	 */
 	ColaDePrioridad<robot>& cola = robotsEnEstacion.Obtener(e);
 
 	if (cola.Tamano() > 0){
@@ -117,7 +67,7 @@ RUR Ciudad::ProximoRUR() const{
 	return robots.Longitud();
 }
 
-const Mapa* Ciudad::iMapa() const{ //referencia constante?
+const Mapa* Ciudad::iMapa() const{
 	return mapa;
 }
 

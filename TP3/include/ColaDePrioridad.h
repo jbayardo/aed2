@@ -58,7 +58,7 @@ ColaDePrioridad<T>::Nodo::Nodo(const Nodo* otro)
     arr = NULL;
     izq = new Nodo(otro->izq);
     der = new Nodo(otro->der);
-    dato = otro->dato; // cambiar para que se haga una copia??
+    dato = otro->dato;
     izq->arr = this;
     der->arr = this;
 }
@@ -254,11 +254,6 @@ T ColaDePrioridad<T>::Eliminar(Nodo *node) {
             (node->izq != NULL && *node->dato < *node->izq->dato)){
             Bajar(node);
         }
-        //si arr es nulo al horno!
-        // else if (node->arr == NULL || node->dato < node->arr->dato) {
-        //     std::cout << "Bajo pq padre NULL o valor menor padre" << std::endl;
-        //     Bajar(node);
-        // }
         else {
             Subir(node);
         }
