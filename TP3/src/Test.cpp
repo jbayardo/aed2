@@ -139,9 +139,50 @@ void test_ciudad_simple()
 
 }
 
+void test_ciudad_con_movimientos()
+{
+    Conj<Estacion> estaciones;
+    estaciones.Agregar("Belgrano");
+    estaciones.Agregar("Retiro");
+    estaciones.Agregar("Martinez");
+
+    Driver caba(estaciones);
+
+    caba.AgregarSenda("Belgrano", "Retiro", "(trenDePasajeros | trenDeCarga) & !trenDeLaAlegria");
+    caba.AgregarSenda("Martinez", "Retiro", "trenDeLaAlegria");
+    caba.AgregarSenda("Martinez", "Belgrano", "trenDePasajeros");
+
+    Conj<Caracteristica> r1, r2, r3;
+    r1.Agregar("trenDePasajeros");
+    r2.Agregar("trenDeCarga");
+    r3.Agregar("trenDeLaAlegria");
+
+    caba.Entrar(r1, "Belgrano"); // RUR 0
+    caba.Entrar(r2, "Retiro");  // RUR 1
+    caba.Entrar(r3, "Martinez"); // RUR 2
+    ASSERT_EQ(caba.CantidadEstaciones(), 3);
+    ASSERT_EQ(caba.CantidadRobotsActivos(), 3);
+    ASSERT_EQ(caba.IesimoRobotActivo(2), 2);
+    ASSERT_EQ(caba.IesimaEstacion(2), "Martinez");
+    ASSERT_EQ(caba.CantidadDeSendasParaEstacion("Martinez"), 2);
+    ASSERT_EQ(caba.CantidadDeSendasParaEstacion("Belgrano"), 2);    
+    ASSERT_EQ(caba.IesimaEstacionDeSenda("Martinez", 1), "Retiro");
+    ASSERT_EQ(caba.IesimaEstacionDeSenda("Retiro", 2), "Martinez");
+    ASSERT_EQ(caba.IesimaRestriccionDeSenda("Belgrano", 1), "trenDePasajeros || trenDeCarga && !trenDeLaAlegria");
+
+
+    caba.Mover(1, "Belgrano");
+    caba.Mover(2, "Belgrano");
+    ASSERT_EQ(caba.ElMasInfractor(), 2);
+    ASSERT_EQ(caba.EstacionActualIesimoRobotActivo(2), "Belgrano");    
+    ASSERT_EQ(caba.EstacionActualIesimoRobotActivo(1), "Belgrano");
+
+}
+
 int main(int argc, char **argv)
 {
    RUN_TEST(test_ciudad_simple);
+   RUN_TEST(test_ciudad_con_movimientos);
 
     /******************************************************************
      * TODO: escribir casos de test exhaustivos para todas            *
@@ -175,14 +216,11 @@ int main(int argc, char **argv)
 
         ASSERT_EQ(compuesto->Obtener(word_list[i]).Obtener(word_list[i]), i);
     }
-
     delete compuesto;
-
-
-
-
-
     std::cout << "El dicc string funca, falta ver memoria" << std::endl;
+
+
+
 
     ColaDePrioridad<int>* cola = new ColaDePrioridad<int>();
     
@@ -212,6 +250,7 @@ int main(int argc, char **argv)
     std::cout << "La cola funca, falta ver memoria" << std::endl;
 
     delete cola;
+
 
 
     std::cout << "Test terminado" << std::endl;
