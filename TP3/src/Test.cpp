@@ -173,8 +173,10 @@ int main(int argc, char **argv)
     int sorted_200[200];
 
     for (int j = 0; j < 200; ++j) {
-        cola->Encolar(random_200[j]);
+       ColaDePrioridad<int>::Iterador* it = cola->Encolar(random_200[j]);
+        delete it;
     }
+    std::cout << "Encole todo" << std::endl;
 
     for (int k = 0; k < 200; ++k) {
         sorted_200[k] = cola->Desencolar();
