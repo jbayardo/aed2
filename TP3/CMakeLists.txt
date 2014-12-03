@@ -4,7 +4,12 @@ project(TP3)
 INCLUDE_DIRECTORIES(include)
 set(CMAKE_CXX_FLAGS "-g")
 set(SOURCE_FILES
-	src/Test.cpp
+	tests/tests.cpp
+    tests/testCiudad.cpp
+    tests/testColaDePrioridad.cpp
+    tests/testDiccString.cpp
+    tests/testMapa.cpp
+    tests/testRestriccion.cpp
 	src/ArbolSintactico.cpp
 	src/Driver.cpp
 	src/Restriccion.cpp

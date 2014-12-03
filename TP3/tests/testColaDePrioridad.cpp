@@ -1,5 +1,6 @@
 #include "ColaDePrioridad.h"
 #include "MiniTest.h"
+#include "tests.h"
 
 template <typename T, size_t N>
 void test_es_max_heap(T[N] arr) {

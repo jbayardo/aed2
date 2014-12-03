@@ -1,5 +1,6 @@
 #include "Mapa.h"
 #include "MiniTest.h"
+#include "tests.h"
 
 void test_agregar() {
     Mapa mapa = Mapa();
