@@ -40,7 +40,7 @@ public:
     aed2::Nat Tamano() const;
 private:
     T Eliminar(Nodo *);
-    void Subir(Nodo *);
+    Nodo* Subir(Nodo *);
     void Bajar(Nodo *);
 
     Nodo *cabeza;
@@ -151,8 +151,7 @@ typename ColaDePrioridad<T>::Iterador* ColaDePrioridad<T>::Encolar(const T &dato
     this->ultimo = tmp;
     ++this->_tamano;
 
-    Subir(this->ultimo);
-    return new Iterador(this, this->ultimo);
+    return new Iterador(this, Subir(this->ultimo));
 }
 
 template <typename T>
@@ -168,13 +167,14 @@ T ColaDePrioridad<T>::Desencolar(const Iterador *i) {
 }
 
 template <typename T>
-void ColaDePrioridad<T>::Subir(Nodo *node) {
+ColaDePrioridad<T>::Nodo* ColaDePrioridad<T>::Subir(Nodo *node) {
     while (node->arr != NULL && *node->arr->dato < *node->dato) {
         T* tmp = node->arr->dato;
         node->arr->dato = node->dato;
         node->dato = tmp;
         node = node->arr;
     }
+    return node;
 }
 
 template <typename T>
