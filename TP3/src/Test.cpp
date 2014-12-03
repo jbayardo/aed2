@@ -160,8 +160,6 @@ void test_ciudad_con_movimientos()
     caba.Entrar(r1, "Belgrano"); // RUR 0
     caba.Entrar(r2, "Retiro");  // RUR 1
     caba.Entrar(r3, "Martinez"); // RUR 2
-    ASSERT_EQ(caba.CantidadEstaciones(), 3);
-    ASSERT_EQ(caba.CantidadRobotsActivos(), 3);
     ASSERT_EQ(caba.IesimoRobotActivo(2), 2);
     ASSERT_EQ(caba.IesimaEstacion(2), "Martinez");
     ASSERT_EQ(caba.CantidadDeSendasParaEstacion("Martinez"), 2);
@@ -178,8 +176,64 @@ void test_ciudad_con_movimientos()
     ASSERT_EQ(caba.EstacionActualIesimoRobotActivo(1), "Belgrano");
 }
 
+void test_ciudad_cantidad_estaciones()
+{
+    Conj<Estacion> estaciones;
+
+    Driver* caba = new Driver(estaciones);
+    ASSERT_EQ(caba->CantidadEstaciones(), 0);
+    delete(caba);
+
+    estaciones.Agregar("Belgrano");
+    estaciones.Agregar("Retiro");
+    estaciones.Agregar("Martinez");
+
+    caba = new Driver(estaciones);
+    ASSERT_EQ(caba->CantidadEstaciones(), 3);
+    delete(caba);
+
+    estaciones.Agregar("Urquiza");
+    estaciones.Agregar("Devoto");
+
+    caba = new Driver(estaciones);
+    ASSERT_EQ(caba->CantidadEstaciones(), 5);
+    delete(caba);
+}
+
+void test_ciudad_cantidad_de_robots_activos()
+{
+    Conj<Estacion> estaciones;
+    estaciones.Agregar("Belgrano");
+    estaciones.Agregar("Retiro");
+    estaciones.Agregar("Martinez");
+
+    Driver* caba = new Driver(estaciones);
+    ASSERT_EQ(caba->CantidadRobotsActivos(), 0);
+
+    caba->AgregarSenda("Belgrano", "Retiro", "(trenDePasajeros | trenDeCarga) & !trenDeLaAlegria");
+    caba->AgregarSenda("Martinez", "Retiro", "trenDeLaAlegria");
+    caba->AgregarSenda("Martinez", "Belgrano", "trenDePasajeros");
+
+    Conj<Caracteristica> r1, r2, r3;
+    r1.Agregar("trenDePasajeros");
+    r2.Agregar("trenDeCarga");
+    r3.Agregar("trenDeLaAlegria");
+
+    caba->Entrar(r1, "Belgrano"); // RUR 0
+    caba->Entrar(r2, "Retiro");  // RUR 1
+    ASSERT_EQ(caba->CantidadRobotsActivos(), 2);
+
+    caba->Entrar(r3, "Martinez"); // RUR 2
+    ASSERT_EQ(caba->CantidadRobotsActivos(), 3);
+
+    delete(caba);
+}
+
 int main(int argc, char **argv)
 {
    RUN_TEST(test_ciudad_simple);
    RUN_TEST(test_ciudad_con_movimientos);
+   RUN_TEST(test_ciudad_cantidad_estaciones);
+   RUN_TEST(test_ciudad_cantidad_de_robots_activos);
+   return 0;
 }

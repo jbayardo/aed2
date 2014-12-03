@@ -1,4 +1,6 @@
 #include "tests.h"
+#include "DiccString.h"
+#include <string>
 
 const std::string word_list[] = {"about", "after", "again", "air", "all",
 "along", "also", "an", "and", "another", "any", "are", "around", "as", "at",

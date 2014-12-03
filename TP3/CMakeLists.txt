@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.4)
 project(TP3)
 
 INCLUDE_DIRECTORIES(include)
-set(CMAKE_CXX_FLAGS "-g -std=c++11")
+set(CMAKE_CXX_FLAGS "-g -Wall")
 set(SOURCE_FILES
 	tests/tests.cpp
     tests/testCiudad.cpp

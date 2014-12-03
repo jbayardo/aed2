@@ -3,7 +3,7 @@
 
 namespace aed2 {
 
-	Driver::Driver(const Conj<Estacion> &estacionesIniciales) {
+	Driver::Driver(const Conj<Estacion> &estacionesIniciales):ciudad(NULL) {
 		this->mapa = new Mapa();
 
 		Conj<Estacion>::const_Iterador it = estacionesIniciales.CrearIt();
@@ -11,13 +11,14 @@ namespace aed2 {
 			this->mapa->Agregar(it.Siguiente());
 			it.Avanzar();
 		}
-
-		this->ciudad = NULL;
 	}
 
 	Driver::~Driver() {
 		if (this->ciudad != NULL) {
 			delete this->ciudad;
+		}
+		else{
+			delete this->mapa;
 		}
 	}
 
@@ -106,11 +107,14 @@ Restriccion Driver::IesimaRestriccionDeSenda(const Estacion &e1, Nat i) const {
 
 
 Nat Driver::CantidadRobotsActivos() const {
-	Ciudad::const_Iterador it = this->ciudad->Robots();
 	Nat ret = 0;
-	while (it.HaySiguiente()){
-		ret++;
-		it.Avanzar();
+	if (this->ciudad != NULL){
+		Ciudad::const_Iterador it = this->ciudad->Robots() ;
+		while (it.HaySiguiente()){
+			ret++;
+			it.Avanzar();
+		}
+		return ret;
 	}
 	return ret;
 }
