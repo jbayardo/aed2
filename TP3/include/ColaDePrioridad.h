@@ -11,10 +11,11 @@ public:
         friend class ColaDePrioridad<T>;
     public:
         Nodo(const Nodo*);
-        Nodo(const T &dato) : dato(dato), arr(NULL), izq(NULL), der(NULL)
-        { };
+        ~Nodo(){delete dato;};
+        Nodo(const T &dato) : arr(NULL), izq(NULL), der(NULL)
+        { this->dato = new T(dato); };
 
-        T dato;
+        T* dato;
         Nodo *arr;
         Nodo *izq;
         Nodo *der;
@@ -57,7 +58,7 @@ ColaDePrioridad<T>::Nodo::Nodo(const Nodo* otro)
     arr = NULL;
     izq = new Nodo(otro->izq);
     der = new Nodo(otro->der);
-    dato = otro->dato;
+    dato = otro->dato; // cambiar para que se haga una copia??
     izq->arr = this;
     der->arr = this;
 }
@@ -168,8 +169,8 @@ T ColaDePrioridad<T>::Desencolar(const Iterador *i) {
 
 template <typename T>
 void ColaDePrioridad<T>::Subir(Nodo *node) {
-    while (node->arr != NULL && node->arr->dato < node->dato) {
-        T tmp = node->arr->dato;
+    while (node->arr != NULL && *node->arr->dato < *node->dato) {
+        T* tmp = node->arr->dato;
         node->arr->dato = node->dato;
         node->dato = tmp;
         node = node->arr;
@@ -180,31 +181,31 @@ template <typename T>
 void ColaDePrioridad<T>::Bajar(Nodo *node) {
     while ( node->izq != NULL
             && node->der != NULL
-            && node->dato <
-            (node->izq->dato >= node->der->dato ? node->izq->dato : node->der->dato)
+            && *node->dato <
+            (*node->izq->dato >= *node->der->dato ? *node->izq->dato : *node->der->dato)
             ) {
-        if (node->izq->dato >= node->der->dato) {
-            T tmp = node->izq->dato;
+        if (*node->izq->dato >= *node->der->dato) {
+            T* tmp = node->izq->dato;
             node->izq->dato = node->dato;
             node->dato = tmp;
             node = node->izq;
         } else {
-            T tmp = node->der->dato;
+            T* tmp = node->der->dato;
             node->der->dato = node->dato;
             node->dato = tmp;
             node = node->der;
         }
     }
 
-    while (node->izq != NULL && node->izq->dato > node->dato) {
-        T tmp = node->izq->dato;
+    while (node->izq != NULL && *node->izq->dato > *node->dato) {
+        T* tmp = node->izq->dato;
         node->izq->dato = node->dato;
         node->dato = tmp;
         node = node->izq;
     }
 
-    while (node->der != NULL && node->der->dato > node->dato) {
-        T tmp = node->der->dato;
+    while (node->der != NULL && *node->der->dato > *node->dato) {
+        T* tmp = node->der->dato;
         node->der->dato = node->dato;
         node->dato = tmp;
         node = node->der;
@@ -214,7 +215,9 @@ void ColaDePrioridad<T>::Bajar(Nodo *node) {
 template <typename T>
 T ColaDePrioridad<T>::Eliminar(Nodo *node) {
     // Pre: node esta en la estructura
-    T tmp = T(node->dato);
+    T tmp = T(*node->dato);
+
+    T* super_tmp = node->dato;
 
     if (this->Tamano() == 1) {
         delete this->cabeza;
@@ -247,9 +250,9 @@ T ColaDePrioridad<T>::Eliminar(Nodo *node) {
             this->ultimo->arr->der = NULL;
         }
         //si arr es nulo al horno!
-        if ((node->der != NULL && node->dato < node->der->dato)
+        if ((node->der != NULL && *node->dato < *node->der->dato)
             || 
-            (node->izq != NULL && node->dato < node->izq->dato)){
+            (node->izq != NULL && *node->dato < *node->izq->dato)){
             Bajar(node);
         }
 
@@ -260,7 +263,7 @@ T ColaDePrioridad<T>::Eliminar(Nodo *node) {
         else {
             Subir(node);
         }
-
+        backup->dato = super_tmp;
         delete backup;
     }
 
