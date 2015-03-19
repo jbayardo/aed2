@@ -1,0 +1,106 @@
+%% Compilar usando PDFLaTeX
+\documentclass[10pt,a4paper,notitlepage]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{graphicx}
+
+\newtheorem{deftn}{Definición}
+\newtheorem{defthm}{Teorema}
+
+\author{Julián Bayardo}
+\title{Resumen de Especificación}
+\begin{document}
+
+
+
+Daban un enunciado y un TAD ya especificado y había que encontrar errores. Había funciones que violaban la congruencia, dado el problema a modelar faltaban otros observadores y generadores, también faltaban restricciones en algunas funciones, había un TAD auxiliar que era dependiente del TAD que se estaba modelando, etc.
+
+Explicar las consecuencias en el desarrollo de un software si se tienen en la especificacion los siguientes errores:
+Funciones inconsistentes
+Funciones que violan la congruencia
+Funciones que cumplen con todo pero tienen nombres de una letra
+Etc.
+
+Daban 5 errores comunes en los TADS y habia que explicar cual era su consecuencia en el diseño. No recuerdo todos, pero algunos eran:
+Incongruencia
+Inconsistencia (contradiccion logica)
+Axiomatizacion muy complicada
+Sub Especificacion
+Se usan muchos cuantificadores en la axiomatizacion
+Tambien habia que decir cual era el error menos grave.
+
+Responda justificando.
+¿Cuándo decimos que una función no es congruente con la igualdad observacional?
+Cuando diferencia más instancias que los observadores básicos.
+Cuando es redundante con respecto a los observadores básicos.
+Ambas.
+Ninguna.
+¿Cuál es la diferencia entre tipo y género (por ejemplo, entre NAT y nat)?
+¿Qué criterio utilizaría para definir si una operación puede ser generador o ser otra operación?
+
+Dada la siguiente especificación de un TAD..
+a. Explicar en palabras las características principales del tipo.
+b. Escribir la igualdad observacional.
+c. El tipo tal como está especificado tiene un problema (podríamos decir que está incorrectamente especificado)) Indique cuál es y proponga una solución.
+
+Dada la siguiente especificación sobre una cena con participantes, encuentre los errores y corríjalos (axiomatice o describa como arreglar el error)
+Tad Persona
+generadores
+nueva edad × dni → persona
+observadores
+. = . persona × persona → bool
+
+Tad Cena
+generadores
+crear conj(personas) → cena
+llega_invitado persona × plato x × cena → cena
+observadores
+invitados cena → conj(personas)
+que_plato_trajo? persona p × cena c → plato { p ∊ invitados(c) }
+suma_de_edades cena → nat
+Tad Regalo es Nat
+
+Responda verdadero o falso justificando
+Lo que hace que una operación sea observador básico es que deba escribirse en base a los generadores.
+Si una operación rompe la congruencia debe ser transformada en observador básico
+Dos instancias del mismo TAD pueden ser observacionalmente iguales y aún así ser distingibles por una operación.
+Si un enunciado dice "siempre que sucede A sucede inmeditamente B y B no puede suceder de ninguna otra manera" y la correspondiente axiomatización incluye las operaciones A y B entonces el TAD está mal escrito
+
+Explicar qué es un observador básico y cuál es su utilidad en la especificación de TADs.
+
+El sistema de especificación TADSOB es como el de los TAD pero no tiene observadores básicos. Cuenta solamente con generadores y operaciones en general. Piense en los TADs básicos que conoce y discuta las limitaciones de los TADSOB.
+
+Se tiene el siguiente TAD:
+TAD PUNTO
+generadores:
+comenzar: → punto
+subir: punto × nat → punto
+derecha: punto × nat → punto
+
+observadores:
+X: punto → nat
+Y: punto → nat
+
+otras operaciones:
+mover: punto × nat n × nat m → punto
+
+axiomas:
+X(comenzar) = 0
+Y(comenzar) = 0
+X(subir(p,n)) = X(p)
+Y(subir(p,n)) = Y(p)+n
+X(derecha(p,n)) = X(p)+n
+Y(derecha(p,n)) = Y(p)
+mover(p,n,m) = subir(derecha(p,n),m)
+
+¿Se puede plantear la demostración por inducción estructural de una propiedad sobre el TAD punto utilizando en los teoremas a demostrar sólo comenzar(), mover(), X() e Y()? Justifique.
+
+\end{document}

@@ -1,0 +1,7 @@
+1)
+
+Utilizando la siguiente estructura:
+
+biblioteca se representa con dicc(dicc(Nat))
+
+con dicc un diccionario implementado sobre Trie, que tiene las operaciones Definir, Definido? y Obtener en O(|l|) donde |l| es la longitud de la clave.
